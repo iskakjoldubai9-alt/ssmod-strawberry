@@ -8,4 +8,5 @@ urlpatterns = [
     path('price/', views.price, name='price'), 
     path('reviews/', views.reviews, name='reviews'),
     path('contact/', views.contact, name='contact'),
+path('strawberry-chat/', views.strawberry_chat_api, name='strawberry_chat'),
 ]

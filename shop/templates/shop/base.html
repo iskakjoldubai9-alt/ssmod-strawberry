@@ -62,83 +62,9 @@
         }
         .logo span { color: var(--accent); }
 
-        /* --- Floating Order Button + Pulse --- */
-        .floating-order-btn {
-            position: fixed;
-            bottom: 30px;
-            left: 30px;
-            background: var(--accent);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            z-index: 999;
-            border: none;
-            box-shadow: 0 10px 25px rgba(255, 77, 109, 0.3);
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: pulse-animation 2.5s infinite;
-        }
-
-        @keyframes pulse-animation {
-            0% { box-shadow: 0 0 0 0px rgba(255, 77, 109, 0.6); }
-            70% { box-shadow: 0 0 0 15px rgba(255, 77, 109, 0); }
-            100% { box-shadow: 0 0 0 0px rgba(255, 77, 109, 0); }
-        }
-
-        /* --- Glassmorphism Modal Overlay --- */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            z-index: 3000;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        .modal-content {
-            background: var(--glass);
-            padding: 40px;
-            border-radius: 30px;
-            width: 90%;
-            max-width: 420px;
-            position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-            transform: scale(0.85) translateY(30px);
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .modal-overlay.active .modal-content {
-            transform: scale(1) translateY(0);
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 20px; right: 25px;
-            cursor: pointer;
-            font-size: 1.3rem;
-            opacity: 0.5;
-            transition: 0.3s;
-        }
-
         /* --- UI Controls --- */
         .controls { display: flex; align-items: center; gap: 15px; }
-        
+
         .theme-switch {
             width: 50px; height: 26px;
             background: var(--toggle-bg);
@@ -174,7 +100,162 @@
             transition: 0.3s;
         }
 
-        /* --- Navigation --- */
+        /* --- Floating Buttons (Order & AI Chat) --- */
+        .floating-order-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: var(--accent);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            z-index: 999;
+            border: none;
+            box-shadow: 0 10px 25px rgba(255, 77, 109, 0.3);
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: pulse-animation 2.5s infinite;
+        }
+
+        .ai-chat-trigger {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(255, 77, 109, 0.4);
+            z-index: 2500;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 24px;
+            border: none;
+        }
+        .ai-chat-trigger:hover { transform: scale(1.1) rotate(10deg); }
+
+        @keyframes pulse-animation {
+            0% { box-shadow: 0 0 0 0px rgba(255, 77, 109, 0.6); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 77, 109, 0); }
+            100% { box-shadow: 0 0 0 0px rgba(255, 77, 109, 0); }
+        }
+
+        /* --- AI Chat Window --- */
+        .chat-window {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            height: 500px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            display: none;
+            flex-direction: column;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            z-index: 2501;
+            overflow: hidden;
+        }
+        .chat-window.active { display: flex; animation: slideUp 0.4s ease; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chat-header {
+            padding: 20px;
+            background: var(--accent);
+            color: white;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .msg {
+            max-width: 85%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .msg.bot { background: rgba(150, 150, 150, 0.1); align-self: flex-start; color: var(--text); border-bottom-left-radius: 4px; }
+        .msg.user { background: var(--accent); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+
+        .chat-footer {
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid var(--border);
+        }
+        .chat-footer input {
+            flex: 1;
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.05);
+            color: var(--text);
+            outline: none;
+        }
+        .chat-footer button {
+            background: var(--accent);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* --- Modal & Nav styling --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(12px);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-content {
+            background: var(--glass);
+            padding: 40px;
+            border-radius: 30px;
+            width: 90%;
+            max-width: 420px;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            transform: scale(0.85) translateY(30px);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
+        .close-modal { position: absolute; top: 20px; right: 25px; cursor: pointer; font-size: 1.3rem; opacity: 0.5; }
+
         nav {
             position: fixed;
             top: 0; right: -100%;
@@ -191,11 +272,10 @@
         nav ul li { margin-bottom: 25px; }
         nav ul li a { text-decoration: none; color: var(--text); font-size: 1.1rem; font-weight: 500; }
 
-        /* Form styling inside modal */
         .modal-content input, .modal-content textarea {
             width: 100%; padding: 15px; margin-bottom: 15px;
             background: rgba(255,255,255,0.1); border: 1px solid var(--border);
-            border-radius: 12px; color: var(--text); outline: none; font-family: inherit;
+            border-radius: 12px; color: var(--text); outline: none;
         }
         .modal-content button {
             width: 100%; padding: 18px; background: var(--accent);
@@ -216,12 +296,26 @@
     </header>
 
     <button class="floating-order-btn" id="openModal">Заказ берүү</button>
+    <button class="ai-chat-trigger" id="chatBtn">🍓</button>
+
+    <div class="chat-window" id="chatWin">
+        <div class="chat-header">
+            <span>SSMOD AI Жардамчы</span>
+            <span style="cursor:pointer" id="closeChat">✕</span>
+        </div>
+        <div class="chat-messages" id="chatMsgs">
+            <div class="msg bot">Салам! Мен SSMOD жардамчысымын. Биздин клубникалар жана десерттер боюнча сурооңуз барбы? 🍓</div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="chatInput" placeholder="Жазыңыз...">
+            <button id="sendBtn">➤</button>
+        </div>
+    </div>
 
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-content">
             <span class="close-modal" id="closeModal">✕</span>
             <h3 style="text-align:center; margin-bottom:25px; font-family:'Playfair Display'; font-size:1.8rem;">Заказ берүү</h3>
-            
             <form id="orderForm" method="POST">
                 {% csrf_token %}
                 <input type="text" id="userName" name="userName" placeholder="Атыңыз" required>
@@ -292,15 +386,49 @@
         closeModalBtn.onclick = closeAll;
         document.getElementById('menuOpen').onclick = () => sideNav.classList.add('active');
         document.getElementById('menuClose').onclick = closeAll;
-        window.onclick = (e) => { if(e.target == modal) closeAll(); }
 
-        // --- ТЕЛЕГРАМ ИНТЕГРАЦИЯ (DJANGO БОЮНЧА ОҢДОЛДУ) ---
+        // --- AI ЧАТ ЛОГИКАСЫ ---
+        const chatBtn = document.getElementById('chatBtn');
+        const chatWin = document.getElementById('chatWin');
+        const closeChat = document.getElementById('closeChat');
+        const chatInput = document.getElementById('chatInput');
+        const chatMsgs = document.getElementById('chatMsgs');
+        const sendBtn = document.getElementById('sendBtn');
+
+        chatBtn.onclick = () => chatWin.classList.toggle('active');
+        closeChat.onclick = () => chatWin.classList.remove('active');
+
+        async function handleChat() {
+            const text = chatInput.value.trim();
+            if(!text) return;
+
+            chatMsgs.innerHTML += `<div class="msg user">${text}</div>`;
+            chatInput.value = '';
+            chatMsgs.scrollTop = chatMsgs.scrollHeight;
+
+            const loadingId = "load-" + Date.now();
+            chatMsgs.innerHTML += `<div class="msg bot" id="${loadingId}">...</div>`;
+
+            try {
+                const response = await fetch(`/strawberry-chat/?message=${encodeURIComponent(text)}`);
+                const data = await response.json();
+                document.getElementById(loadingId).innerText = data.reply;
+            } catch (err) {
+                document.getElementById(loadingId).innerText = "Кечириңиз, байланышта ката кетти.";
+            }
+            chatMsgs.scrollTop = chatMsgs.scrollHeight;
+        }
+
+        sendBtn.onclick = handleChat;
+        chatInput.onkeypress = (e) => { if(e.key === 'Enter') handleChat(); };
+
+        // --- ТЕЛЕГРАМ/ORDER ФОРМА ---
         document.getElementById('orderForm').onsubmit = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
             const resp = document.getElementById('responseMsg');
             const formData = new FormData(e.target);
-            
+
             btn.innerText = "ЖӨНӨТҮЛҮҮДӨ...";
             btn.disabled = true;
 
@@ -308,9 +436,7 @@
                 const response = await fetch("{% url 'home' %}", {
                     method: 'POST',
                     body: formData,
-                    headers: {
-                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                    }
+                    headers: { 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value }
                 });
 
                 if(response.ok) {
@@ -318,15 +444,9 @@
                     resp.style.display = "block";
                     e.target.reset();
                     setTimeout(closeAll, 2500);
-                } else {
-                    alert("Ката кетти, кайра аракет кылыңыз.");
                 }
-            } catch (err) { 
-                alert("Интернетти текшериңиз!"); 
-            } finally { 
-                btn.innerText = "ЖӨНӨТҮҮ"; 
-                btn.disabled = false; 
-            }
+            } catch (err) { alert("Ката кетти!"); }
+            finally { btn.innerText = "ЖӨНӨТҮҮ"; btn.disabled = false; }
         };
     </script>
 </body>
