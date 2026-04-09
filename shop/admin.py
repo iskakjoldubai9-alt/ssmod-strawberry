@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from .models import ProductSet, BackgroundMusic  # BackgroundMusic кошулду
+from .models import ProductSet, BackgroundMusic
 
 
 # 1. МУЗЫКА ҮЧҮН АДМИН ПАНЕЛЬ
@@ -23,12 +23,30 @@ class BackgroundMusicAdmin(admin.ModelAdmin):
     get_audio_player.short_description = "Угуп көрүү"
 
 
-# 2. ПРОДУКЦИЯ ҮЧҮН АДМИН ПАНЕЛЬ (Сиздин кодуңуз өзгөртүүсүз калды)
+# 2. ПРОДУКЦИЯ ҮЧҮН АДМИН ПАНЕЛЬ (ЛАЙК МЕНЕН ЖАҢЫРТЫЛДЫ)
 @admin.register(ProductSet)
 class ProductSetAdmin(admin.ModelAdmin):
-    list_display = ('title', 'price', 'pieces', 'get_media_preview')
-    readonly_fields = ('get_media_preview',)
-    fields = ('title', 'pieces', 'price', 'ready_time', 'image', 'video', 'get_media_preview', 'whatsapp_msg')
+    # Тизмеге 'likes' талаасы кошулду, эми канча лайк басылганын көрөсүз
+    list_display = ('title', 'price', 'pieces', 'likes', 'get_media_preview')
+
+    # Лайктарды кокустан өзгөртүп албаш үчүн 'readonly_fields' кылып койдук
+    readonly_fields = ('likes', 'get_media_preview')
+
+    # Популярдуу товарларды башында көрсөтүү үчүн лайк боюнча иреттөө
+    ordering = ('-likes',)
+
+    # Админ панелдин ичиндеги форманын талаалары
+    fields = (
+        'title',
+        'pieces',
+        'price',
+        'likes',  # Бул жерден да көрүнүп турат
+        'ready_time',
+        'image',
+        'video',
+        'get_media_preview',
+        'whatsapp_msg'
+    )
 
     def get_media_preview(self, obj):
         if obj.video:

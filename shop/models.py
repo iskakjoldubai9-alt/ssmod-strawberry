@@ -2,7 +2,7 @@ from django.db import models
 from cloudinary.models import CloudinaryField
 
 
-# Сиздин мурунку моделиңиз (өзгөртүүсүз калды)
+# --- ТОПТОМДОР МОДЕЛИ (Лайк кошулду) ---
 class ProductSet(models.Model):
     title = models.CharField(max_length=200, verbose_name="Топтомдун аталышы")
     pieces = models.IntegerField(verbose_name="Даана саны")
@@ -27,19 +27,26 @@ class ProductSet(models.Model):
     )
     whatsapp_msg = models.TextField(verbose_name="WhatsApp билдирүүсү")
 
+    # ЖАҢЫ: Лайктардын санын сактоочу талаа
+    # Бул аркылуу кайсы товар өтүмдүү экенин админ панелден көрө аласыз
+    likes = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Лайктардын саны"
+    )
+
     def __str__(self):
-        return f"{self.title} ({self.pieces} даана)"
+        return f"{self.title} ({self.pieces} даана) — ❤️ {self.likes}"
 
     class Meta:
         verbose_name = "Топтом"
         verbose_name_plural = "Топтомдор"
 
 
-# --- ЖАҢЫ КОШУЛГОН МУЗЫКА МОДЕЛИ ---
+# --- ЖАҢЫ КОШУЛГОН МУЗЫКА МОДЕЛИ (Өзгөртүүсүз) ---
 class BackgroundMusic(models.Model):
     title = models.CharField(max_length=100, verbose_name="Музыканын аталышы (мис: Luxury Jazz)")
 
-    # Музыканы Cloudinary'ге же түз серверге жүктөө (Cloudinary сунушталат)
+    # Музыканы Cloudinary'ге же түз серверге жүктөө
     audio_file = CloudinaryField(
         resource_type='video',  # Cloudinary аудиону 'video' тибинде кабыл алат
         folder='sets/music/',

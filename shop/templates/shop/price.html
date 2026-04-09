@@ -2,236 +2,318 @@
 {% load static %}
 
 {% block content %}
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@200;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 
 <style>
-:root {
-    --royal-gold: #d4af37;
-    --gold-gradient: linear-gradient(135deg, #d4af37, #f1d37e, #d4af37);
-}
+    :root {
+        --royal-gold: #d4af37;
+        --gold-gradient: linear-gradient(135deg, #d4af37, #f1d37e, #d4af37);
+        --accent-green: #2ecc71;
+        --mbank-blue: #0067f4;
+        /* Айнек эффектилери үчүн өзгөрмөлөр */
+        --glass-pink: rgba(255, 105, 180, 0.25);
+        --glass-gray: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
+    }
 
-/* WRAPPER */
-.showcase-wrapper {
-    max-width: 1400px;
-    margin: auto;
-    padding: 100px 20px;
-    font-family: 'Montserrat', sans-serif;
+    .showcase-wrapper { max-width: 1400px; margin: auto; padding: 20px 15px; }
+    .showcase-header { text-align: center; margin-bottom: 30px; }
+    .showcase-header h1 {
+        font-family: 'Cinzel', serif; font-size: clamp(1.5rem, 5vw, 2.5rem);
+        background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        text-transform: uppercase; letter-spacing: 3px;
+    }
 
-    /* ✅ ТЕКСТ ДАЙЫМА АК */
-    color: #ffffff;
-}
+    .royal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
 
-/* HEADER */
-.showcase-header {
-    text-align: center;
-    margin-bottom: 100px;
-}
+    .royal-card {
+        position: relative; height: 480px; border-radius: 20px; overflow: hidden;
+        transition: 0.3s; border: 1px solid var(--glass-border); background: #1a1a1a;
+        cursor: pointer;
+    }
 
-.showcase-header h1 {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(2.5rem, 8vw, 5rem);
-    letter-spacing: 12px;
-    background: linear-gradient(120deg, #d4af37, #fff2b0, #d4af37);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: shine 5s linear infinite;
-}
+    .card-overlay {
+        position: absolute; inset: 0; padding: 20px;
+        display: flex; flex-direction: column; justify-content: flex-end;
+        align-items: flex-start;
+        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        z-index: 2; opacity: 0; transform: translateY(20px);
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-@keyframes shine {
-    to { background-position: 200% center; }
-}
+    .royal-card:hover .card-overlay, .royal-card:active .card-overlay {
+        opacity: 1; transform: translateY(0);
+    }
 
-/* GRID */
-.royal-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 40px;
-}
+    .card-overlay h3 {
+        font-family: 'Cinzel', serif; font-size: 1.2rem; color: #ffffff !important;
+        margin: 5px 0; text-shadow: 2px 2px 5px rgba(0,0,0,0.9);
+    }
+    .royal-price {
+        font-size: 1.4rem; color: var(--royal-gold) !important;
+        margin-bottom: 15px; font-weight: 700; text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+    }
 
-/* CARD */
-.royal-card {
-    position: relative;
-    height: 520px;
-    border-radius: 40px;
-    overflow: hidden;
-    background: transparent;
-    cursor: pointer;
-    transition: 0.6s;
-}
+    .like-container { position: absolute; top: 15px; right: 15px; z-index: 11; display: flex; flex-direction: column; align-items: center; }
+    .like-btn {
+        background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(5px); border: 1px solid var(--glass-border);
+        color: #fff; width: 42px; height: 42px; border-radius: 50%; cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .like-btn.active { color: #ff4757; background: #fff; }
 
-.royal-card:hover {
-    transform: scale(1.03);
-}
+    /* ЛАЙКТЫН САНЫ ҮЧҮН: Ар дайым ак түс жана көлөкө */
+    .like-count {
+        color: #ffffff !important;
+        font-weight: 700;
+        text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+        font-size: 0.9rem;
+        margin-top: 4px;
+        display: block;
+    }
 
-/* MEDIA */
-.card-video-wrap {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-}
+    .card-video-wrap { width: 100%; height: 100%; position: absolute; inset: 0; z-index: 1; }
+    .card-video-wrap video, .card-video-wrap img { width: 100%; height: 100%; object-fit: cover; }
 
-.card-video-wrap video,
-.card-video-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+    .royal-btn {
+        background: var(--glass-pink);
+        backdrop-filter: blur(10px);
+        color: #fff;
+        padding: 10px 25px;
+        border-radius: 50px;
+        cursor: pointer;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        transition: 0.3s;
+        box-shadow: 0 4px 15px rgba(255, 105, 180, 0.2);
+    }
 
-/* OVERLAY */
-.card-overlay {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    padding: 30px;
-    display: flex;
-    align-items: flex-end;
-    background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
-}
+    .lux-modal {
+        display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+        backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center; padding: 10px;
+    }
+    .lux-modal-content {
+        width: 100%; max-width: 370px; padding: 25px; border-radius: 30px;
+        background: rgba(40, 40, 40, 0.85);
+        backdrop-filter: blur(20px); color: #fff; position: relative;
+        border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        max-height: 95vh; overflow-y: auto;
+    }
 
-/* CONTENT */
-.card-content {
-    transform: translateY(40px);
-    opacity: 0;
-    transition: 0.6s;
-    color: #ffffff;
-}
+    .close-x { position: absolute; top: 15px; right: 20px; font-size: 1.2rem; cursor: pointer; border:none; background:none; color: inherit; }
+    .input-group { margin-bottom: 15px; }
+    .input-group label { display: block; font-size: 0.75rem; margin-bottom: 5px; font-weight: 700; opacity: 0.9; }
+    .input-group input {
+        width: 100%; padding: 12px; background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; color: inherit; outline: none;
+    }
 
-.royal-card:hover .card-content {
-    transform: translateY(0);
-    opacity: 1;
-}
+    .sliding-toggle {
+        display: flex; background: rgba(0,0,0,0.2); border-radius: 15px; position: relative;
+        margin-bottom: 20px; padding: 4px; border: 1px solid rgba(255,255,255,0.1);
+    }
+    .toggle-slider {
+        position: absolute; height: calc(100% - 8px); width: calc(50% - 4px);
+        background: var(--accent-green); border-radius: 12px; transition: 0.3s; z-index: 1;
+    }
+    .toggle-opt { flex: 1; text-align: center; padding: 10px; cursor: pointer; position: relative; z-index: 2; font-weight: 600; font-size: 0.85rem; }
+    .toggle-opt.active-text { color: #fff !important; }
 
-.royal-tag {
-    color: var(--royal-gold);
-    font-size: 0.7rem;
-    letter-spacing: 3px;
-}
+    .qr-container { display: none; text-align: center; margin: 15px 0; padding: 15px; background: #fff; border-radius: 20px; border: 2px solid var(--mbank-blue); }
+    .qr-container img { width: 140px; border-radius: 10px; }
 
-/* TITLE FIX */
-.card-content h3 {
-    font-family: 'Cinzel', serif;
-    font-size: 1.8rem;
-    margin: 10px 0;
-    color: #ffffff;
+    .summary-box { background: rgba(0,0,0,0.2); padding: 18px; border-radius: 20px; margin-top: 15px; }
+    .sum-row { display: flex; justify-content: space-between; align-items: center; }
+    .final-total { font-size: 1.3rem; color: var(--accent-green); font-weight: 800; }
+    .delivery-note { font-size: 0.75rem; color: #ff6b6b; margin-top: 5px; display: block; font-weight: 600; }
 
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-/* PRICE */
-.royal-price {
-    font-size: 2rem;
-    margin-bottom: 15px;
-    color: #ffffff;
-
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* LIKE */
-.royal-like {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    font-size: 1.4rem;
-    color: #ffffff;
-    cursor: pointer;
-    z-index: 5;
-}
-
-/* ❤️ КЫЗЫЛ LIKE */
-.royal-like.active {
-    color: #ff2e63;
-    transform: scale(1.2);
-    text-shadow: 0 0 10px rgba(255, 46, 99, 0.7);
-}
-
-/* BUTTON */
-.royal-btn {
-    display: inline-block;
-    background: var(--gold-gradient);
-    color: #000;
-    padding: 12px 25px;
-    border-radius: 15px;
-    text-decoration: none;
-    font-size: 0.8rem;
-}
-
-/* MOBILE */
-@media (max-width: 480px) {
-    .royal-card { height: 450px; }
-}
+    .send-btn {
+        width: 100%; margin-top: 20px; padding: 16px; border-radius: 15px; border: none;
+        background: var(--gold-gradient); color: #000; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 0.95rem;
+    }
 </style>
 
 <div class="showcase-wrapper">
-
-    <div class="showcase-header">
-        <h1>Баалары</h1>
-    </div>
-
+    <div class="showcase-header"><h1>Биздин Меню</h1></div>
     <div class="royal-grid">
         {% for set in sets %}
-        <div class="royal-card">
-
+        <div class="royal-card" data-id="{{ set.id }}" data-title="{{ set.title }}" data-price="{{ set.price }}">
+            <div class="like-container">
+                <button class="like-btn" id="like-btn-{{ set.id }}" onclick="toggleLike(this, event, {{ set.id }})">
+                    <i class="fas fa-heart"></i>
+                </button>
+                <span class="like-count" id="like-count-{{ set.id }}">{{ set.likes }}</span>
+            </div>
             <div class="card-video-wrap">
-                {% if set.video %}
-                <video autoplay muted loop playsinline preload="auto" poster="{{ set.image.url }}">
-                    <source src="{{ set.video.url }}" type="video/mp4">
-                </video>
-                {% else %}
-                <img src="{{ set.image.url }}">
-                {% endif %}
+                {% if set.video %}<video autoplay muted loop playsinline><source src="{{ set.video.url }}" type="video/mp4"></video>
+                {% else %}<img src="{{ set.image.url }}" alt="{{ set.title }}">{% endif %}
             </div>
-
-            <div class="royal-like" onclick="toggleLike(this)">
-                <i class="far fa-heart"></i>
-            </div>
-
             <div class="card-overlay">
-                <div class="card-content">
-                    <span class="royal-tag">штук • {{ set.pieces }}</span>
-
-                    <h3>{{ set.title }}</h3>
-
-                    <div class="royal-price">{{ set.price }} сом</div>
-
-                    <a href="https://wa.me/996704034209?text={{ set.whatsapp_msg|urlencode }}" class="royal-btn">
-                        Брондоо
-                    </a>
-                </div>
+                <span style="color:var(--royal-gold); font-weight:700;">{{ set.pieces }} шт</span>
+                <h3>{{ set.title }}</h3>
+                <div class="royal-price">{{ set.price }} сом</div>
+                <button onclick="openBooking(this, event)" class="royal-btn">Брондоо</button>
             </div>
-
         </div>
         {% endfor %}
     </div>
+</div>
 
+<div id="bookingModal" class="lux-modal">
+    <div class="lux-modal-content">
+        <button class="close-x" onclick="closeModal()">✕</button>
+        <h3 id="modalTitle" style="text-align:center; font-family:'Cinzel'; margin-bottom:20px;">Заказ</h3>
+
+        <div class="input-group">
+            <label>Атыңыз</label>
+            <input type="text" id="userName" placeholder="Атыңыз">
+        </div>
+        <div class="input-group">
+            <label>Телефон номериңиз</label>
+            <input type="tel" id="userPhone" value="+996">
+        </div>
+
+        <div class="sliding-toggle">
+            <div id="typeSlider" class="toggle-slider" style="left: 4px;"></div>
+            <div class="toggle-opt active-text" id="optDelivery" onclick="switchDelivery(true)">Доставка</div>
+            <div class="toggle-opt" id="optSelf" onclick="switchDelivery(false)">Өзүм келем</div>
+        </div>
+
+        <div class="input-group">
+            <label id="extraLabel">📍 Дарегиңиз</label>
+            <input type="text" id="extraInput" placeholder="Ош шаары, дарек...">
+        </div>
+
+        <div class="sliding-toggle">
+            <div id="paySlider" class="toggle-slider" style="left: 4px;"></div>
+            <div class="toggle-opt active-text" id="payCash" onclick="switchPayment('cash')">Наличка</div>
+            <div class="toggle-opt" id="payMbank" onclick="switchPayment('mbank')">МБанк</div>
+        </div>
+
+        <div id="qrArea" class="qr-container">
+            <div style="color:var(--mbank-blue); font-weight:800; font-size:0.9rem; margin-bottom:10px;">MBANK QR</div>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://mbank.kg/qr/0553956070&color=0067f4">
+            <div style="color:#333; margin-top:8px; font-size: 0.8rem; font-weight:600;">0553 956 070</div>
+        </div>
+
+        <div class="summary-box">
+            <div class="sum-row">
+                <span style="opacity:0.8;">Жалпы сумма:</span>
+                <div id="finalTotal" class="final-total">0 сом</div>
+            </div>
+            <span id="deliveryInfo" class="delivery-note">Жеткирүү акысы: +150 сом</span>
+        </div>
+
+        <button onclick="sendOrder()" class="send-btn">Заказды жөнөтүү</button>
+    </div>
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll("video").forEach(video => {
-        video.muted = true;
-        video.play().catch(() => {});
-    });
-});
+let currentSet = {};
+let isDelivery = true;
+let paymentMethod = 'cash'; // Баштапкы маани
+const DELIVERY_FEE = 150;
+const WHATSAPP_PHONE = "996553956070";
 
-function toggleLike(el) {
-    el.classList.toggle('active');
-    let icon = el.querySelector('i');
-    icon.classList.toggle('fas');
-    icon.classList.toggle('far');
+function openBooking(btn, event) {
+    if(event) event.stopPropagation();
+    const card = btn.closest('.royal-card');
+    currentSet = { title: card.dataset.title, price: parseInt(card.dataset.price) };
+    document.getElementById('modalTitle').textContent = currentSet.title;
+    document.getElementById('bookingModal').style.display = 'flex';
+    updateTotal();
 }
 
-document.querySelectorAll("video").forEach(v => {
-    v.addEventListener("error", () => {
-        v.style.display = "none";
-    });
-});
-</script>
+function closeModal() { document.getElementById('bookingModal').style.display = 'none'; }
 
+function switchDelivery(val) {
+    isDelivery = val;
+    document.getElementById('typeSlider').style.left = val ? '4px' : 'calc(50% - 4px)';
+    document.getElementById('optDelivery').classList.toggle('active-text', val);
+    document.getElementById('optSelf').classList.toggle('active-text', !val);
+
+    document.getElementById('extraLabel').textContent = val ? "📍 Дарегиңиз" : "🕒 Саат канчада келесиз?";
+    document.getElementById('extraInput').placeholder = val ? "Ош шаары, дарек..." : "Мисалы: 18:00";
+    document.getElementById('deliveryInfo').style.display = val ? 'block' : 'none';
+    updateTotal();
+}
+
+function switchPayment(method) {
+    paymentMethod = method;
+    const paySlider = document.getElementById('paySlider');
+    const qrArea = document.getElementById('qrArea');
+
+    if (method === 'cash') {
+        paySlider.style.left = '4px';
+        paySlider.style.background = 'var(--accent-green)';
+        document.getElementById('payCash').classList.add('active-text');
+        document.getElementById('payMbank').classList.remove('active-text');
+        qrArea.style.display = 'none';
+    } else {
+        paySlider.style.left = 'calc(50% - 4px)';
+        paySlider.style.background = 'var(--mbank-blue)';
+        document.getElementById('payCash').classList.remove('active-text');
+        document.getElementById('payMbank').classList.add('active-text');
+        qrArea.style.display = 'block';
+    }
+}
+
+function updateTotal() {
+    let total = currentSet.price + (isDelivery ? DELIVERY_FEE : 0);
+    document.getElementById('finalTotal').textContent = total + ' сом';
+}
+
+async function sendOrder() {
+    const name = document.getElementById('userName').value.trim();
+    const phone = document.getElementById('userPhone').value.trim();
+    const extra = document.getElementById('extraInput').value.trim();
+    const total = document.getElementById('finalTotal').textContent;
+
+    if(!name || phone.length < 10 || !extra) { alert("Маалыматты толук толтуруңуз!"); return; }
+
+    const payType = (paymentMethod === 'cash') ? 'Наличка' : 'МБанк';
+
+    try {
+        await fetch('/submit-order/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}' },
+            body: JSON.stringify({
+                name: name, phone: phone, title: currentSet.title,
+                delivery: isDelivery ? "Доставка" : "Өзүм келем",
+                extra: extra, total: total, payment: payType
+            })
+        });
+    } catch (e) { }
+
+    let msg = `*ЖАҢЫ ЗАКАЗ*\n\n🛍 *Set:* ${currentSet.title}\n👤 *Аты:* ${name}\n📞 *Тел:* ${phone}\n🚚 *Түрү:* ${isDelivery ? 'Доставка' : 'Өзүм келем'}\n📍 *Маалымат:* ${extra}\n💳 *Төлөм:* ${payType}\n💰 *Жалпы:* ${total}`;
+
+    if (paymentMethod === 'mbank') {
+        msg += `\n\n⚠️ *МБанк чегин тиркеп коюңуз!*`;
+    }
+
+    window.location.href = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(msg)}`;
+}
+
+async function toggleLike(btn, event, setId) {
+    event.stopPropagation();
+    let isActive = btn.classList.contains('active');
+    try {
+        const response = await fetch(`/toggle-like/${setId}/`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': '{{ csrf_token }}', 'Content-Type': 'application/json' },
+            body: JSON.stringify({ is_active: !isActive })
+        });
+        if (response.ok) {
+            const data = await response.json();
+            document.getElementById(`like-count-${setId}`).textContent = data.total_likes;
+            btn.classList.toggle('active');
+        }
+    } catch (e) {}
+}
+
+window.onclick = e => { if(e.target == document.getElementById('bookingModal')) closeModal(); }
+</script>
 {% endblock %}

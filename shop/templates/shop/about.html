@@ -6,17 +6,18 @@
 {% block content %}
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
 <style>
     /* --- Жалпы стилдер --- */
-    .about-page { 
-        overflow-x: hidden; 
-        background-color: var(--bg); 
-        color: var(--text); 
-        transition: 0.5s ease;
+    .about-page {
+        overflow-x: hidden;
+        background-color: var(--bg);
+        color: var(--text);
     }
 
-    /* --- Hero Section Анимациясы менен --- */
+    /* --- Hero Section --- */
     .about-hero {
         height: 55vh;
         min-height: 400px;
@@ -25,81 +26,65 @@
         align-items: center;
         justify-content: center;
         text-align: center;
-        background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+        background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
                     url('https://effect-buket.ru/wp-content/uploads/2023/05/photo1683915856.jpeg');
         background-size: cover;
         background-position: center;
-        background-attachment: scroll;
         color: white !important;
         border-radius: 0 0 80px 80px;
-        padding: 20px;
         position: relative;
     }
 
     .about-hero h1 {
         font-family: 'Cinzel', serif;
-        font-size: clamp(2.2rem, 10vw, 4.5rem);
+        font-size: clamp(2.5rem, 10vw, 5rem);
         letter-spacing: 6px;
-        margin-bottom: 15px;
         text-transform: uppercase;
         color: white;
-        text-shadow: 2px 4px 10px rgba(0,0,0,0.3);
     }
 
-    /* --- Сүрөт эффекттери --- */
     .story-section {
         padding: 80px 20px;
         max-width: 1200px;
         margin: 0 auto;
     }
 
+    /* --- Story Grid --- */
     .story-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1.2fr 0.8fr;
         gap: 60px;
         align-items: center;
+        margin-bottom: 100px;
     }
 
     .image-stack {
         position: relative;
-        display: flex;
-        justify-content: center;
-        perspective: 1000px;
+        width: 100%;
     }
 
     .main-img {
-        width: 85%;
-        border-radius: 25px;
+        width: 100%;
+        max-height: 600px;
+        object-fit: cover;
+        border-radius: 30px;
         z-index: 2;
-        box-shadow: 0 25px 50px rgba(0,0,0,0.2);
-        transition: all 0.7s cubic-bezier(0.23, 1, 0.32, 1);
-        filter: brightness(0.95);
-    }
-
-    .image-stack:hover .main-img {
-        transform: scale(1.05) rotateY(-5deg);
-        filter: brightness(1.1);
-        box-shadow: 0 35px 70px rgba(255, 77, 109, 0.2);
+        box-shadow: 0 30px 60px rgba(0,0,0,0.25);
+        position: relative;
     }
 
     .decoration-box {
         position: absolute;
-        width: 85%;
+        width: 100%;
         height: 100%;
         border: 2px solid var(--accent);
         top: -20px;
         left: -20px;
-        border-radius: 25px;
+        border-radius: 30px;
         z-index: 1;
-        transition: 0.6s ease-in-out;
     }
 
-    .image-stack:hover .decoration-box {
-        transform: translate(15px, 15px);
-        border-color: var(--text);
-    }
-
-    /* --- Статистика карталары (Hover Effect) --- */
+    /* --- СТАТИСТИКА (Телефонго ынгайлаштырылды) --- */
     .stats-row {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -109,140 +94,273 @@
 
     .stat-luxury-card {
         background: var(--glass);
-        padding: 40px 15px;
+        padding: 30px 15px; /* Ички боштуктар бир аз азайтылды */
         text-align: center;
-        border-radius: 20px;
+        border-radius: 25px;
         border: 1px solid var(--border);
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        cursor: pointer;
-    }
-
-    .stat-luxury-card:hover {
-        background: var(--accent);
-        transform: translateY(-15px);
-        box-shadow: 0 20px 40px rgba(255, 77, 109, 0.3);
+        min-width: 0; /* Контенттин сыртка чыгып кетишин алдын алат */
     }
 
     .stat-luxury-card h3 {
         font-family: 'Cinzel', serif;
-        font-size: 1.8rem;
         color: var(--accent);
-        margin-bottom: 8px;
-        transition: 0.3s;
+        font-size: clamp(1.2rem, 3vw, 1.8rem); /* Өлчөмү экранга жараша өзгөрөт */
+        margin-bottom: 5px;
     }
 
     .stat-luxury-card p {
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        transition: 0.3s;
+        font-size: clamp(0.8rem, 2vw, 1rem);
+        margin: 0;
     }
 
-    .stat-luxury-card:hover h3, 
-    .stat-luxury-card:hover p {
-        color: white !important;
-    }
-
-    /* --- Философия блогу --- */
-    .philosophy-box {
-        background: var(--nav-bg);
-        border: 1px solid var(--border);
+    /* --- АВТОРДУК КАРТА --- */
+    .author-card {
+        display: flex;
+        align-items: center;
+        gap: 60px;
+        margin: 120px 0;
+        padding: 50px;
+        background: var(--glass);
         border-radius: 60px;
-        padding: 80px 30px;
-        text-align: center;
-        margin-bottom: 80px;
+        border: 1px solid var(--border);
+        box-shadow: 0 40px 80px rgba(0,0,0,0.05);
         position: relative;
     }
 
-    .philosophy-box blockquote {
-        font-family: 'Playfair Display', serif;
-        font-size: clamp(1.4rem, 4vw, 2.5rem);
-        font-style: italic;
-        line-height: 1.5;
-        max-width: 800px;
-        margin: 0 auto;
+    .author-image-wrapper {
+        flex: 0 0 380px;
+        position: relative;
+        z-index: 10;
+        cursor: grab; /* Жылдырса болорун көрсөтөт */
     }
 
-    /* --- Мобилдик адаптация --- */
+    .author-image-wrapper:active {
+        cursor: grabbing;
+    }
+
+    .author-swiper {
+        width: 100%;
+        height: 500px;
+        border-radius: 45px;
+        overflow: hidden;
+        transform: rotate(-3deg);
+        transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        border: 8px solid white;
+        box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+    }
+
+    .swiper-slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Иконкалар */
+    .glass-social-sidebar {
+        position: absolute;
+        left: -30px;
+        top: 50%;
+        transform: translateY(-50%) scale(0.7);
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        z-index: 30;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .author-image-wrapper.active .glass-social-sidebar {
+        opacity: 1;
+        visibility: visible;
+        left: 25px;
+        transform: translateY(-50%) scale(1);
+    }
+
+    .author-image-wrapper.active .author-swiper {
+        transform: rotate(0deg) scale(0.98);
+        filter: brightness(0.7);
+    }
+
+    .glass-item {
+        width: 50px;
+        height: 50px;
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-decoration: none;
+        font-size: 1.4rem;
+        transition: 0.3s ease;
+    }
+
+    .glass-item:hover {
+        background: var(--accent);
+        transform: translateX(5px);
+    }
+
+    .author-info h2 {
+        font-family: 'Cinzel', serif;
+        font-size: 3.2rem;
+        font-weight: 700;
+        line-height: 1.1;
+        margin-bottom: 30px;
+    }
+
+    .author-quote {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.3rem;
+        line-height: 1.7;
+        font-style: italic;
+        border-left: 5px solid var(--accent);
+        padding-left: 30px;
+        margin-bottom: 35px;
+    }
+
+    /* --- Философия --- */
+    .philosophy-box {
+        background: var(--nav-bg);
+        border: 1px solid var(--border);
+        border-radius: 80px;
+        padding: 100px 40px;
+        text-align: center;
+        margin-bottom: 100px;
+    }
+
+    /* --- Адаптация (Мобилдик версияга оңдоо) --- */
     @media (max-width: 991px) {
-        .story-grid { grid-template-columns: 1fr; text-align: center; }
-        .stats-row { grid-template-columns: repeat(2, 1fr); }
-        .about-hero { height: 45vh; border-radius: 0 0 40px 40px; }
-        .image-stack { margin-bottom: 40px; }
+        .story-grid { grid-template-columns: 1fr; gap: 40px; }
+        .author-card { flex-direction: column; text-align: center; padding: 40px 20px; }
+        .author-image-wrapper { flex: 0 0 auto; width: 100%; max-width: 320px; }
+        .author-swiper { height: 400px; transform: rotate(0); }
+
+        /* Статистика мобилдикте 2ден тизилет */
+        .stats-row {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 60px 0;
+        }
+        .stat-luxury-card { padding: 20px 10px; }
     }
 
     @media (max-width: 480px) {
-        .stats-row { grid-template-columns: 1fr; }
-        .philosophy-box { border-radius: 30px; padding: 50px 20px; }
+        .author-info h2 { font-size: 2.2rem; }
+        .about-hero h1 { font-size: 2.5rem; }
+        .philosophy-box { padding: 60px 20px; border-radius: 40px; }
     }
 </style>
 
 <div class="about-page">
-    <section class="about-hero" data-aos="fade-down" data-aos-duration="1500">
-        <p style="letter-spacing: 5px; font-size: 0.75rem; margin-bottom: 10px; color: white; opacity: 0.8;">EST. 2024 • OSH CITY</p>
-        <h1 data-aos="zoom-in" data-aos-delay="500">SSMOD Studio</h1>
-        <div style="width: 50px; height: 2px; background: var(--accent);" data-aos="width" data-aos-delay="800"></div>
+    <section class="about-hero" data-aos="fade-down">
+        <p style="letter-spacing: 5px; font-size: 0.8rem; margin-bottom: 15px; color: white; opacity: 0.9;">EST. 2024 • OSH CITY</p>
+        <h1 data-aos="zoom-in" data-aos-delay="300">SSMOD Studio</h1>
+        <div style="width: 80px; height: 3px; background: var(--accent);"></div>
     </section>
 
     <div class="story-section">
         <div class="story-grid">
-            <div class="image-stack" data-aos="zoom-out-right" data-aos-duration="1200">
+            <div class="image-stack" data-aos="fade-right">
                 <div class="decoration-box"></div>
-                <img src="https://static.insales-cdn.com/images/articles/1/1601/1795649/252544_0008_1633111942_6-mykaleidoscope-ru-p-klubnika-v-shokolade-na-stole-krasivo-foto-8.jpg" class="main-img" alt="SSMOD Strawberry Art">
+                <img src="https://static.insales-cdn.com/images/articles/1/1601/1795649/252544_0008_1633111942_6-mykaleidoscope-ru-p-klubnika-v-shokolade-na-stole-krasivo-foto-8.jpg" class="main-img" alt="Strawberry Art">
             </div>
-            
-            <div class="story-content" data-aos="fade-left" data-aos-duration="1200" data-aos-delay="200">
-                <h2 style="font-family: 'Playfair Display', serif; color: var(--accent); margin-bottom: 20px;">Шоколад жана Кулпунайдын Назик Гармониясы</h2>
-                <p>
-                    <strong>SSMOD</strong> — бул жөн гана десерт эмес, бул ар бир мөмөгө берилген өзгөчө көңүл. Биздин студия Ош шаарында премиум класстагы кулпунайларды чыныгы Бельгия шоколады менен кооздоп, эстетикалык ырахат тартуулайт.
-                </p>
-                <p>
-                    Биз эң таттуу кулпунайларды жана дүйнөгө белгилүү <b>Callebaut</b> шоколадын тандап алабыз, анткени сиздин жакындарыңыз эң мыктысына татыктуу.
-                </p>
-                <a href="{% url 'price' %}" style="display: inline-block; margin-top: 20px; color: var(--accent); text-decoration: none; font-weight: 600; border-bottom: 2px solid var(--accent); padding-bottom: 5px; transition: 0.3s;">
-                    КОЛЛЕКЦИЯНЫ КӨРҮҮ →
-                </a>
+            <div class="story-content" data-aos="fade-left">
+                <h2 style="font-family: 'Playfair Display', serif; color: var(--accent); font-size: 2.5rem; margin-bottom: 25px;">Назик Гармония</h2>
+                <p style="font-size: 1.1rem; line-height: 1.8;"><b>SSMOD</b> — бул жөн гана десерт эмес, бул ар бир мөмөгө берилген өзгөчө көңүл. Биз эң таттуу мөмөлөрдү жана дүйнөгө белгилүү Callebaut шоколадын колдонобуз.</p>
+                <a href="{% url 'price' %}" style="display: inline-block; margin-top: 30px; color: var(--accent); text-decoration: none; font-weight: 600; border-bottom: 2px solid var(--accent); font-size: 1rem;">КОЛЛЕКЦИЯНЫ КӨРҮҮ →</a>
             </div>
         </div>
 
         <div class="stats-row">
-            <div class="stat-luxury-card" data-aos="flip-left" data-aos-delay="100">
-                <h3>Fresh</h3>
-                <p>Жаңы мөмөлөр</p>
+            <div class="stat-luxury-card" data-aos="zoom-in" data-aos-delay="100"><h3>Fresh</h3><p>Мөмөлөр</p></div>
+            <div class="stat-luxury-card" data-aos="zoom-in" data-aos-delay="200"><h3>Premium</h3><p>Шоколад</p></div>
+            <div class="stat-luxury-card" data-aos="zoom-in" data-aos-delay="300"><h3>Handmade</h3><p>Дизайн</p></div>
+            <div class="stat-luxury-card" data-aos="zoom-in" data-aos-delay="400"><h3>Luxury</h3><p>Таңгактоо</p></div>
+        </div>
+
+        <div class="author-card" data-aos="fade-up">
+            <div class="author-image-wrapper" id="authorWrapper">
+                <div class="glass-social-sidebar">
+                    <a href="https://www.instagram.com/_i_99_k_?igsh=MXFkN3BjMHRoMGR2eA==" class="glass-item" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://wa.me/996553956070" class="glass-item" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="https://t.me/Iskhak_99" class="glass-item" target="_blank">
+                        <i class="fab fa-telegram"></i>
+                    </a>
+                </div>
+
+                <div class="swiper author-swiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <img src="{% static 'images/isi1.jpg' %}" alt="Iskhak 1">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="{% static 'images/isi2.jpg' %}" alt="Iskhak 2">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="{% static 'images/isi3.jpg' %}" alt="Iskhak 3">
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="stat-luxury-card" data-aos="flip-left" data-aos-delay="200">
-                <h3>Callebaut</h3>
-                <p>Бельгия шоколады</p>
-            </div>
-            <div class="stat-luxury-card" data-aos="flip-left" data-aos-delay="300">
-                <h3>Handmade</h3>
-                <p>Автордук дизайн</p>
-            </div>
-            <div class="stat-luxury-card" data-aos="flip-left" data-aos-delay="400">
-                <h3>Elite</h3>
-                <p>Премиум таңгактоо</p>
+
+            <div class="author-info">
+                <div class="founder-badge">Негиздөөчү</div>
+                <h2 data-aos="fade-up">Жолдубай уулу <br> <span style="color: var(--accent);">Искак</span></h2>
+                <div class="author-quote" data-aos="fade-up" data-aos-delay="200">
+                    "Менин максатым — жөн гана таттууларды сатуу эмес, ар бир кардардын эң баалуу көз ирмемдеринде эстетикалык жана даамдык гармонияны тартуулоо."
+                </div>
+                <p style="opacity: 0.85; line-height: 1.9; font-size: 1.05rem;" data-aos="fade-up" data-aos-delay="300">
+                    SSMOD Studio 2024-жылы негизделгенден бери, биз ар бир заказга автордук мамиле жасап келебиз.
+                    Биздин десерттер — бул сапаттын, стилдин жана чын ыкластан берилген сүйүүнүн айкалышы.
+                </p>
             </div>
         </div>
 
-        <div class="philosophy-box" data-aos="fade-up" data-aos-duration="1000">
-            <blockquote style="color: var(--text);">
-                "Биз десерт эмес, шоколадга оролгон назик сезимдерди жана кулпунайдын унутулгус даамын сунуштайбыз."
+        <div class="philosophy-box" data-aos="fade-up">
+            <blockquote style="color: var(--text); font-family: 'Playfair Display', serif; font-size: clamp(1.6rem, 5vw, 2.8rem); font-style: italic;">
+                "Биз десерт эмес, шоколадга оролгон назик сезимдерди сунуштайбыз."
             </blockquote>
-            <span style="display: block; margin-top: 30px; color: var(--accent); font-size: 0.8rem; letter-spacing: 3px; font-weight: 600;">SSMOD STRAWBERRY PHILOSOPHY</span>
+            <span style="display: block; margin-top: 35px; color: var(--accent); font-size: 0.8rem; letter-spacing: 4px; font-weight: 600;">SSMOD STRAWBERRY PHILOSOPHY</span>
         </div>
     </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        AOS.init({ 
-            duration: 1000, 
-            once: false, // Скролл кылганда анимация кайталанып турат
-            mirror: true, 
-            offset: 120,
-            easing: 'ease-in-out-sine'
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 120
+        });
+
+        // Swiper Инициализациясы
+        const swiper = new Swiper('.author-swiper', {
+            loop: true,
+            grabCursor: true, // Колдун сүрөтү чыгат
+            resistanceRatio: 0.85, // Сүрүү сезими ынгайлуу болушу үчүн
+            autoplay: false, // Автоматтык жылбайт, кол менен гана
+        });
+
+        const authorWrapper = document.getElementById('authorWrapper');
+
+        // Экранды же сүрөттү басканда иконкаларды чыгаруу
+        document.addEventListener('click', function(event) {
+            if (authorWrapper.contains(event.target)) {
+                authorWrapper.classList.toggle('active');
+            } else {
+                authorWrapper.classList.remove('active');
+            }
         });
     });
 </script>
