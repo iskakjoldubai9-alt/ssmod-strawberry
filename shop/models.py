@@ -2,7 +2,7 @@ from django.db import models
 from cloudinary.models import CloudinaryField
 
 
-# --- ТОПТОМДОР МОДЕЛИ (Лайк кошулду) ---
+# ====================== 🎁 ТОПТОМДОР МОДЕЛИ ======================
 class ProductSet(models.Model):
     title = models.CharField(max_length=200, verbose_name="Топтомдун аталышы")
     pieces = models.IntegerField(verbose_name="Даана саны")
@@ -27,8 +27,7 @@ class ProductSet(models.Model):
     )
     whatsapp_msg = models.TextField(verbose_name="WhatsApp билдирүүсү")
 
-    # ЖАҢЫ: Лайктардын санын сактоочу талаа
-    # Бул аркылуу кайсы товар өтүмдүү экенин админ панелден көрө аласыз
+    # Лайктардын санын сактоочу талаа
     likes = models.PositiveIntegerField(
         default=0,
         verbose_name="Лайктардын саны"
@@ -42,24 +41,37 @@ class ProductSet(models.Model):
         verbose_name_plural = "Топтомдор"
 
 
-# --- ЖАҢЫ КОШУЛГОН МУЗЫКА МОДЕЛИ (Өзгөртүүсүз) ---
-class BackgroundMusic(models.Model):
-    title = models.CharField(max_length=100, verbose_name="Музыканын аталышы (мис: Luxury Jazz)")
+# ====================== 💬 ПИКИРЛЕР МОДЕЛИ (ЖАҢЫ) ======================
+class Review(models.Model):
+    name = models.CharField(max_length=100, verbose_name="Кардардын аты")
+    message = models.TextField(verbose_name="Пикирдин тексти")
+    stars = models.IntegerField(default=5, verbose_name="Жылдыз саны")
+    likes = models.PositiveIntegerField(default=0, verbose_name="Лайктар")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Кошулган убактысы")
 
-    # Музыканы Cloudinary'ге же түз серверге жүктөө
+    def __str__(self):
+        return f"{self.name} — {self.stars} ★"
+
+    class Meta:
+        verbose_name = "Пикир"
+        verbose_name_plural = "Пикирлер"
+
+
+# ====================== 🎵 МУЗЫКА МОДЕЛИ ======================
+class BackgroundMusic(models.Model):
+    title = models.CharField(max_length=100, verbose_name="Музыканын аталышы")
     audio_file = CloudinaryField(
-        resource_type='video',  # Cloudinary аудиону 'video' тибинде кабыл алат
+        resource_type='video',  # Cloudinary аудиону 'video' катары сактайт
         folder='sets/music/',
         verbose_name="MP3 файл"
     )
-
     is_active = models.BooleanField(
         default=False,
-        verbose_name="Азыр ушул музыка ойносунбу?"
+        verbose_name="Азыр ойнолсунбу?"
     )
 
     def save(self, *args, **kwargs):
-        # Эгерде бир музыка активдүү болсо, калган баарын автоматтык түрдө өчүрөт
+        # Бир музыка иштесе, калгандарын автоматтык түрдө өчүрүү
         if self.is_active:
             BackgroundMusic.objects.filter(is_active=True).exclude(id=self.id).update(is_active=False)
         super().save(*args, **kwargs)

@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}SSMOD | Luxury Strawberry{% endblock %}</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
     <style>
         :root {
             --accent: #ff4d6d;
@@ -25,7 +27,16 @@
             --input-bg: rgba(255,255,255,0.1);
         }
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:'Montserrat',sans-serif; background:var(--bg); color:var(--text); overflow-x:hidden; transition: 0.4s; }
+
+        body {
+            top: 0 !important;
+            position: static !important;
+            font-family:'Montserrat',sans-serif;
+            background:var(--bg);
+            color:var(--text);
+            overflow-x:hidden;
+            transition: 0.4s;
+        }
 
         header {
             padding:15px 5%; display:flex; justify-content:space-between; align-items:center;
@@ -33,7 +44,23 @@
             border-bottom:1px solid var(--border);
         }
 
-        /* ЖАШЫРУУН АДМИН ПАНЕЛ */
+        .lang-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            min-width: 48px;
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            transition: 0.3s;
+        }
+        .lang-btn:hover { border-color: var(--accent); color: var(--accent); }
+
         .logo-box { display: flex; align-items: center; text-decoration: none; }
         .logo { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; text-decoration:none; color:var(--text); }
         .logo span { color:var(--accent); text-decoration: none; }
@@ -47,7 +74,6 @@
 
         .menu-btn { cursor:pointer; padding:8px 20px; border:1px solid var(--text); border-radius:50px; font-weight:600; font-size:.7rem; letter-spacing: 1px; color: var(--text); }
 
-        /* МЕНЮ */
         nav {
             position:fixed; top:0; right:-100%; width:300px; height:100vh; z-index:9999;
             background:var(--nav-bg); backdrop-filter:blur(25px); padding:60px 40px; transition: 0.5s;
@@ -57,7 +83,6 @@
         nav #menuClose { cursor: pointer; text-align: right; margin-bottom: 40px; font-weight: 700; color: var(--accent); }
         nav a { text-decoration:none; color:var(--text); font-size: 1.3rem; font-weight: 600; display: block; margin-bottom: 25px; }
 
-        /* FAB ЖАНА МУЗЫКА */
         .fab-wrap { position:fixed; right:30px; bottom:30px; z-index:2600; }
         .fab-main {
             width:64px; height:64px; border:none; border-radius:50%; cursor:pointer;
@@ -85,7 +110,6 @@
             position: relative; overflow: hidden;
         }
 
-        /* МУЗЫКА ЭФФЕКТТЕРИ */
         .visualizer-fab { display:flex; align-items:flex-end; gap:3px; height:16px; }
         .bar-fab { width:3px; background: currentColor; border-radius: 10px; animation: musicWave 0.8s infinite alternate; animation-play-state: paused; }
         @keyframes musicWave { 0% { height: 4px; } 100% { height: 14px; } }
@@ -97,7 +121,6 @@
         }
         @keyframes pulseBtn { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
-        /* МОДАЛДАР ЖАНА ИНПУТТАР (DARK MODE FIX) */
         .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(10px); z-index:5000; align-items:center; justify-content:center; }
         .modal-overlay.active { display:flex; }
         .modal-content { background:var(--bg); padding:40px; border-radius:30px; width:90%; max-width:400px; position:relative; color: var(--text); }
@@ -108,7 +131,6 @@
             color: var(--text) !important; outline: none; font-family: inherit;
         }
 
-        /* ЧАТ ТЕРЕЗЕСИ */
         .chat-window {
             position:fixed; bottom:110px; right:30px; width:330px; height:480px;
             background:var(--nav-bg); backdrop-filter:blur(20px); border:1px solid var(--border);
@@ -126,69 +148,76 @@
         .chat-footer input { flex:1; background:none; border:none; outline:none; color:var(--text); font-size: 0.85rem; }
     </style>
 </head>
-<body id="body">
+<body id="body" data-lang="ky">
 
     <header>
         <div class="logo-box">
             <a href="{% url 'home' %}" class="logo">SS</a>
             <a href="/admin/" class="logo"><span>mod.</span></a>
         </div>
+
         <div style="display:flex; align-items:center; gap:12px;">
+            <button class="lang-btn" id="langCycleBtn">KG</button>
             <button class="theme-switch" id="themeToggle">☀️</button>
-            <div class="menu-btn" id="menuOpen">MENU</div>
+            <div class="menu-btn" id="menuOpen" data-lang-key="menu_btn">MENU</div>
         </div>
     </header>
 
     <nav id="sideNav">
-        <div id="menuClose">✕ ЖАБУУ</div>
-        <a href="{% url 'home' %}">Башкы бет</a>
-        <a href="{% url 'about' %}">Биз жөнүндө</a>
-        <a href="{% url 'price' %}">Топтомдор</a>
-        <a href="{% url 'contact' %}">Байланыш</a>
+        <div id="menuClose" data-lang-key="menu_close">✕ ЖАБУУ</div>
+        <a href="{% url 'home' %}" data-lang-key="nav_home">Башкы бет</a>
+        <a href="{% url 'about' %}" data-lang-key="nav_about">Биз жөнүндө</a>
+        <a href="{% url 'price' %}" data-lang-key="nav_price">Топтомдор</a>
+        <a href="{% url 'contact' %}" data-lang-key="nav_contact">Байланыш</a>
+        <a href="{% url 'reviews' %}" data-lang-key="nav_reviews">Отзывтар</a>
     </nav>
 
     <div class="fab-wrap" id="fabWrap">
         <div class="fab-actions">
-            <button class="fab-action" id="musicFabBtn" title="Музыка">
+           <button class="fab-action" id="musicFabBtn" title="🎵">
                 <div class="visualizer-fab">
                     <div class="bar-fab" style="animation-delay: 0.1s;"></div>
-                    <div class="bar-fab" style="animation-delay: 0.3s;"></div>
+                    <div class="bar-fab" style="animation-delay: 0.4s;"></div>
                     <div class="bar-fab" style="animation-delay: 0.2s;"></div>
+                    <div class="bar-fab" style="animation-delay: 0.5s;"></div>
                 </div>
                 <audio id="bg-audio" loop preload="auto">
                     {% if active_music %}
                         <source src="{{ active_music.audio_file.url }}" type="audio/mpeg">
-                    {% else %}
-                        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
                     {% endif %}
                 </audio>
             </button>
-            <button class="fab-action" id="openModal">🛍️</button>
-            <button class="fab-action" id="chatBtn">🍓</button>
+            <button class="fab-action" id="openModal" data-lang-key="order_fab">🛍️</button>
+            <button class="fab-action" id="chatBtn" data-lang-key="chat_fab">🍓</button>
         </div>
         <button class="fab-main" id="fabMain">◢</button>
     </div>
 
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-content">
-            <span id="closeModal" style="position:absolute; top:20px; right:25px; cursor:pointer;">✕</span>
-            <h3 style="text-align:center; margin-bottom:25px; font-family: 'Playfair Display';">Заказ берүү</h3>
+            <span id="closeModal" style="position:absolute; top:20px; right:25px; cursor:pointer;" data-lang-key="close">✕</span>
+            <h3 style="text-align:center; margin-bottom:25px; font-family: 'Playfair Display';" data-lang-key="order_title">Заказ берүү</h3>
             <form id="orderForm">
                 {% csrf_token %}
-                <input type="text" name="userName" placeholder="Атыңыз" required>
-                <input type="tel" name="userPhone" placeholder="Телефон" required>
-                <textarea name="userMsg" rows="3" placeholder="Каалооңуздар..."></textarea>
-                <button type="submit" id="submitBtn" style="width:100%; padding:15px; border:none; border-radius:12px; background:var(--accent); color:white; font-weight:700; cursor:pointer;">ЖӨНӨТҮҮ</button>
-                <div id="responseMsg" style="display:none; text-align:center; margin-top:15px; color:var(--accent); font-weight:600;"></div>
+                <input type="text" name="userName" placeholder="Атыңыз" data-lang-key="placeholder_name" required>
+                <input type="tel" name="userPhone" placeholder="Телефон" data-lang-key="placeholder_phone" required>
+                <textarea name="userMsg" rows="3" placeholder="Каалооңуздар..." data-lang-key="placeholder_wishes"></textarea>
+                <button type="submit" id="submitBtn" style="width:100%; padding:15px; border:none; border-radius:12px; background:var(--accent); color:white; font-weight:700; cursor:pointer;" data-lang-key="submit_btn">ЖӨНӨТҮҮ</button>
+                <div id="responseMsg" style="display:none; text-align:center; margin-top:15px; color:var(--accent); font-weight:600;" data-lang-key="order_success">Заказ кабыл алынды! ✨</div>
             </form>
         </div>
     </div>
 
     <div class="chat-window" id="chatWin">
-        <div class="chat-header"><span>SSMOD CONCIERGE</span><span id="closeChat" style="cursor:pointer;">✕</span></div>
-        <div id="chatMsgs"><div class="msg bot">Саламатсызбы! Кантип жардам бере алам? 🍓</div></div>
+        <div class="chat-header">
+            <span data-lang-key="chat_header">SSMOD CONCIERGE</span>
+            <span id="closeChat" style="cursor:pointer;" data-lang-key="close">✕</span>
+        </div>
+        <div id="chatMsgs">
+            <div class="msg bot" data-lang-key="chat_welcome">Саламатсызбы! Кантип жардам бере алам? 🍓</div>
+        </div>
         <div class="chat-footer">
-            <input type="text" id="chatInput" placeholder="Жазыңыз...">
+            <input type="text" id="chatInput" placeholder="Жазыңыз..." data-lang-key="chat_placeholder">
             <button id="sendBtn" style="background:none; border:none; color:var(--accent); font-weight:700;">➤</button>
         </div>
     </div>
@@ -196,111 +225,137 @@
     <main>{% block content %}{% endblock %}</main>
 
     <script>
-        // --- 1. NAVIGATION & THEME ---
+        // ==================== ТИЛ КОТОРУУ ====================
+        const translations = {
+            ky: {
+                nav_home: "Башкы бет", nav_about: "Биз жөнүндө", nav_price: "Топтомдор", nav_contact: "Байланыш", nav_reviews: "Отзывтар",
+                menu_btn: "MENU", menu_close: "✕ ЖАБУУ", music_title: "Музыка", order_fab: "🛍️", chat_fab: "🍓",
+                order_title: "Заказ берүү", placeholder_name: "Атыңыз", placeholder_phone: "Телефон", placeholder_wishes: "Каалооңуздар...",
+                submit_btn: "ЖӨНӨТҮҮ", order_success: "Заказ кабыл алынды! ✨", chat_header: "SSMOD CONCIERGE",
+                chat_welcome: "Саламатсызбы! Кантип жардам бере алам? 🍓", chat_placeholder: "Жазыңыз...", close: "✕"
+            },
+            ru: {
+                nav_home: "Главная", nav_about: "О нас", nav_price: "Пакеты", nav_contact: "Контакты", nav_reviews: "Отзывы",
+                menu_btn: "MENU", menu_close: "✕ ЗАКРЫТЬ", music_title: "Музыка", order_fab: "🛍️", chat_fab: "🍓",
+                order_title: "Оформить заказ", placeholder_name: "Ваше имя", placeholder_phone: "Телефон", placeholder_wishes: "Ваши пожелания...",
+                submit_btn: "ОТПРАВИТЬ", order_success: "Заказ принят! ✨", chat_header: "SSMOD CONCIERGE",
+                chat_welcome: "Здравствуйте! Чем могу помочь? 🍓", chat_placeholder: "Напишите...", close: "✕"
+            },
+            en: {
+                nav_home: "Home", nav_about: "About Us", nav_price: "Packages", nav_contact: "Contact", nav_reviews: "Reviews",
+                menu_btn: "MENU", menu_close: "✕ CLOSE", music_title: "Music", order_fab: "🛍️", chat_fab: "🍓",
+                order_title: "Place Order", placeholder_name: "Your Name", placeholder_phone: "Phone", placeholder_wishes: "Your wishes...",
+                submit_btn: "SEND", order_success: "Order received! ✨", chat_header: "SSMOD CONCIERGE",
+                chat_welcome: "Hello! How can I help you? 🍓", chat_placeholder: "Type here...", close: "✕"
+            }
+        };
+
+        let currentLang = localStorage.getItem('selectedLanguage') || 'ky';
+        function changeLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('selectedLanguage', lang);
+            document.getElementById('body').setAttribute('data-lang', lang);
+            document.documentElement.setAttribute('lang', lang);
+            document.querySelectorAll('[data-lang-key]').forEach(el => {
+                const key = el.getAttribute('data-lang-key');
+                if (translations[lang] && translations[lang][key]) {
+                    if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") el.placeholder = translations[lang][key];
+                    else el.textContent = translations[lang][key];
+                }
+            });
+            document.getElementById('langCycleBtn').innerText = lang.toUpperCase();
+        }
+        document.getElementById('langCycleBtn').onclick = () => {
+            const order = ['ky', 'ru', 'en'];
+            changeLanguage(order[(order.indexOf(currentLang) + 1) % order.length]);
+        };
+        window.addEventListener('load', () => changeLanguage(currentLang));
+
+        // --- Тема ---
+        const themeBtn = document.getElementById('themeToggle');
+        if (localStorage.getItem('theme') === 'dark') {
+            document.getElementById('body').setAttribute('data-theme', 'dark');
+            themeBtn.innerText = '🌙';
+        }
+        themeBtn.onclick = () => {
+            const b = document.getElementById('body');
+            if (b.getAttribute('data-theme') === 'dark') {
+                b.removeAttribute('data-theme'); themeBtn.innerText = '☀️'; localStorage.setItem('theme', 'light');
+            } else {
+                b.setAttribute('data-theme', 'dark'); themeBtn.innerText = '🌙'; localStorage.setItem('theme', 'dark');
+            }
+        };
+
+        // --- Меню ---
         const sideNav = document.getElementById('sideNav');
         document.getElementById('menuOpen').onclick = () => sideNav.classList.add('active');
         document.getElementById('menuClose').onclick = () => sideNav.classList.remove('active');
 
-        const body = document.getElementById('body');
-        const themeBtn = document.getElementById('themeToggle');
-        if (localStorage.getItem('theme') === 'dark') { body.setAttribute('data-theme', 'dark'); themeBtn.innerText = '🌙'; }
-        themeBtn.onclick = () => {
-            if (body.getAttribute('data-theme') === 'dark') {
-                body.removeAttribute('data-theme'); themeBtn.innerText = '☀️'; localStorage.setItem('theme', 'light');
-            } else {
-                body.setAttribute('data-theme', 'dark'); themeBtn.innerText = '🌙'; localStorage.setItem('theme', 'dark');
-            }
-        };
-
-        // --- 2. PERSISTENT MUSIC ENGINE ---
+        // ==================== МУЗЫКА САКТОО ЖАНА ПАУЗА ====================
         const audio = document.getElementById('bg-audio');
         const musicBtn = document.getElementById('musicFabBtn');
         const bars = document.querySelectorAll('.bar-fab');
         const fabWrap = document.getElementById('fabWrap');
         document.getElementById('fabMain').onclick = () => fabWrap.classList.toggle('active');
 
-        function updateUI(playing) {
+        function updateMusicUI(playing) {
             if (playing) {
                 bars.forEach(b => b.style.animationPlayState = 'running');
-                musicBtn.style.color = 'var(--accent)';
                 musicBtn.classList.add('music-playing');
-                localStorage.setItem('music_on', 'true');
             } else {
                 bars.forEach(b => b.style.animationPlayState = 'paused');
-                musicBtn.style.color = 'inherit';
                 musicBtn.classList.remove('music-playing');
-                localStorage.setItem('music_on', 'false');
             }
         }
 
-        function syncMusic() {
-            const isPlaying = localStorage.getItem('music_on') === 'true';
-            const savedTime = localStorage.getItem('music_pos');
-            if (savedTime) audio.currentTime = parseFloat(savedTime);
+        window.addEventListener('load', () => {
+            const musicTime = localStorage.getItem('music_time');
+            const isMusicOn = localStorage.getItem('music_on') === 'true';
 
-            if (isPlaying) {
-                const playAudio = () => {
-                    audio.play().then(() => {
-                        updateUI(true);
-                        document.removeEventListener('click', playAudio);
-                    }).catch(e => console.log("Браузер аракетти күтүүдө..."));
-                };
-                document.addEventListener('click', playAudio);
-                playAudio();
+            if (musicTime) audio.currentTime = parseFloat(musicTime);
+
+            // Эгер мурда күйгүзүлгөн болсо, ойнотобуз
+            if (isMusicOn) {
+                audio.play().then(() => updateMusicUI(true)).catch(() => {
+                    // Браузер бөгөттөсө, 'music_on' маанисин сактайбыз, бирок UI өчүк турат
+                    updateMusicUI(false);
+                });
             }
-        }
+        });
+
+        // Убакытты сактоо
+        audio.ontimeupdate = () => {
+            localStorage.setItem('music_time', audio.currentTime);
+        };
 
         musicBtn.onclick = (e) => {
             e.stopPropagation();
-            if (audio.paused) { audio.play().then(() => updateUI(true)); }
-            else { audio.pause(); updateUI(false); }
+            if (audio.paused) {
+                audio.play().then(() => {
+                    updateMusicUI(true);
+                    localStorage.setItem('music_on', 'true');
+                });
+            } else {
+                audio.pause();
+                updateMusicUI(false);
+                localStorage.setItem('music_on', 'false');
+            }
         };
 
-        audio.ontimeupdate = () => {
-            if(!audio.paused) localStorage.setItem('music_pos', audio.currentTime);
-        };
-        window.addEventListener('load', syncMusic);
-
-        // --- 3. MODALS & CHAT ---
+        // --- Модалдар жана Чат ---
         document.getElementById('openModal').onclick = () => { document.getElementById('modalOverlay').classList.add('active'); fabWrap.classList.remove('active'); };
         document.getElementById('closeModal').onclick = () => document.getElementById('modalOverlay').classList.remove('active');
         document.getElementById('chatBtn').onclick = () => { document.getElementById('chatWin').classList.add('active'); fabWrap.classList.remove('active'); };
         document.getElementById('closeChat').onclick = () => document.getElementById('chatWin').classList.remove('active');
 
-        async function sendMsg() {
-            const input = document.getElementById('chatInput');
-            const text = input.value.trim(); if (!text) return;
-            const msgs = document.getElementById('chatMsgs');
-            msgs.innerHTML += `<div class="msg user">${text}</div>`;
-            input.value = '';
-            msgs.scrollTop = msgs.scrollHeight;
-            try {
-                const res = await fetch(`/strawberry-chat/?message=${encodeURIComponent(text)}`);
-                const data = await res.json();
-                msgs.innerHTML += `<div class="msg bot">${data.reply}</div>`;
-            } catch { msgs.innerHTML += `<div class="msg bot">Ката кетти...</div>`; }
-            msgs.scrollTop = msgs.scrollHeight;
-        }
-        document.getElementById('sendBtn').onclick = sendMsg;
-        document.getElementById('chatInput').onkeypress = (e) => { if(e.key==='Enter') sendMsg(); };
-
-        // --- 4. ORDER FORM ---
+        // --- Заказ формасы ---
         document.getElementById('orderForm').onsubmit = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
-            btn.innerText = 'ЖӨНӨТҮҮДӨ...'; btn.disabled = true;
-            const res = await fetch("{% url 'home' %}", {
-                method: 'POST',
-                body: new FormData(e.target),
-                headers: { 'X-CSRFToken': '{{ csrf_token }}' }
-            });
-            if (res.ok) {
-                document.getElementById('responseMsg').innerText = 'Заказ кабыл алынды! ✨';
-                document.getElementById('responseMsg').style.display = 'block';
-                e.target.reset();
-                setTimeout(() => { document.getElementById('modalOverlay').classList.remove('active'); }, 2000);
-            }
-            btn.innerText = 'ЖӨНӨТҮҮ'; btn.disabled = false;
+            btn.disabled = true;
+            const res = await fetch("{% url 'home' %}", { method: 'POST', body: new FormData(e.target), headers: { 'X-CSRFToken': '{{ csrf_token }}' } });
+            if (res.ok) { document.getElementById('responseMsg').style.display = 'block'; e.target.reset(); setTimeout(() => { document.getElementById('modalOverlay').classList.remove('active'); }, 2000); }
+            btn.disabled = false;
         };
     </script>
 </body>

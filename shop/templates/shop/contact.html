@@ -21,14 +21,15 @@
 
     .contact-content h1 {
         font-family: 'Playfair Display', serif;
-        font-size: 4rem;
+        font-size: clamp(2.5rem, 8vw, 4rem);
         margin-bottom: 10px;
         letter-spacing: -2px;
+        padding-top: 50px;
     }
 
     .contact-content p {
         font-size: 1.1rem;
-        opacity: 0.5;
+        opacity: 0.6;
         margin-bottom: 50px;
     }
 
@@ -44,17 +45,17 @@
         align-items: center;
         justify-content: space-between;
         padding: 22px 30px;
-        background: var(--glass);
-        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 100px;
         text-decoration: none;
-        color: var(--text);
+        color: inherit;
         transition: 0.5s cubic-bezier(0.2, 1, 0.3, 1);
     }
 
     .social-card:hover {
-        background: var(--text);
-        color: var(--bg);
+        background: #fff;
+        color: #000;
         transform: scale(1.02);
     }
 
@@ -84,21 +85,22 @@
         height: 500px;
         border-radius: 40px;
         overflow: hidden;
-        border: 1px solid var(--border);
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .loc-tag {
         position: absolute;
         top: 30px;
         right: 30px;
-        background: var(--glass);
+        background: rgba(0, 0, 0, 0.6);
         backdrop-filter: blur(10px);
         padding: 12px 25px;
         border-radius: 50px;
         font-size: 0.8rem;
         font-weight: 600;
-        border: 1px solid var(--border);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         z-index: 10;
+        color: #fff;
     }
 
     @media (max-width: 900px) {
@@ -111,13 +113,13 @@
 
 <div class="contact-wrapper">
     <div class="contact-grid">
-        
+
         <div class="contact-content" data-aos="fade-up">
-            <h1>Байланыш.</h1>
-            <p>Биз менен бир тийүү аркылуу байланышыңыз.</p>
-            
+            <h1 data-lang-key="contact_title">Байланыш.</h1>
+            <p data-lang-key="contact_subtitle">Биз менен бир тийүү аркылуу байланышыңыз.</p>
+
             <div class="social-stack">
-                <a href="https://wa.me/996704034209" class="social-card">
+                <a href="https://wa.me/996553956070" class="social-card">
                     <div class="brand-info">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WA">
                         <span class="brand-name">WhatsApp</span>
@@ -125,7 +127,7 @@
                     <span class="arrow-icon">↗</span>
                 </a>
 
-                <a href="https://instagram.com/osh.ssmod" class="social-card">
+                <a href="https://instagram.com/ssmod.strawberry" class="social-card">
                     <div class="brand-info">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="IG">
                         <span class="brand-name">Instagram</span>
@@ -133,7 +135,7 @@
                     <span class="arrow-icon">↗</span>
                 </a>
 
-                <a href="https://t.me/+996704034209" class="social-card">
+                <a href="https://t.me/joldubai_uulu" class="social-card">
                     <div class="brand-info">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="TG">
                         <span class="brand-name">Telegram</span>
@@ -144,15 +146,52 @@
         </div>
 
         <div class="map-box" data-aos="fade-up" data-aos-delay="200">
-            <div class="loc-tag">📍 Салиева 62, Ош</div>
-            <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3039.6105847668406!2d72.82136!3d40.53128!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38bdad0303030303%3A0x0!2zNDDCsDMxJzUyLjYiTiA3MsKwNDknMTYuOSJF!5e0!3m2!1sky!2skg!4v1700000000000" 
+            <div class="loc-tag">📍 <span data-lang-key="address_text">Салиева 62, Ош</span></div>
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3034.250567086882!2d72.8184!3d40.5333!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDMyJzAwLjAiTiA3MsKwNDknMDYuMiJF!5e0!3m2!1skg!2skg!4v1700000000000"
                 width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
             </iframe>
         </div>
 
     </div>
 </div>
+
+<script>
+    const contactTranslations = {
+        ky: {
+            contact_title: "Байланыш.",
+            contact_subtitle: "Биз менен бир тийүү аркылуу байланышыңыз.",
+            address_text: "Салиева 62, Ош"
+        },
+        ru: {
+            contact_title: "Контакты.",
+            contact_subtitle: "Свяжитесь с нами одним касанием.",
+            address_text: "Салиева 62, Ош"
+        },
+        en: {
+            contact_title: "Contact.",
+            contact_subtitle: "Connect with us in one touch.",
+            address_text: "Salieva 62, Osh"
+        }
+    };
+
+    function updateContactLang() {
+        const lang = localStorage.getItem('selectedLanguage') || 'ky';
+        const t = contactTranslations[lang];
+
+        document.querySelectorAll('[data-lang-key]').forEach(el => {
+            const key = el.getAttribute('data-lang-key');
+            if (t[key]) {
+                el.textContent = t[key];
+            }
+        });
+    }
+
+    // Тилди дароо текшерүү
+    document.addEventListener('DOMContentLoaded', updateContactLang);
+    // Башка бетте тил алмашса, бул жерде да өзгөрүшү үчүн
+    setInterval(updateContactLang, 1000);
+</script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 <script>AOS.init({ duration: 1000, once: true });</script>

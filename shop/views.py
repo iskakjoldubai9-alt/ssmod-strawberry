@@ -1,69 +1,100 @@
-import time
 import json
-import random
+import time
 import requests
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from django.conf import settings
 from django.http import JsonResponse
-from .models import ProductSet, BackgroundMusic
+from django.shortcuts import get_object_or_404, render, redirect
+from django.conf import settings
+from .models import ProductSet, BackgroundMusic, Review
 from fuzzywuzzy import fuzz
 
-# --- ❤️ ЛАЙК БАСУУ ФУНКЦИЯСЫ (ОҢДОЛГОН) ---
-import json
 
+# ====================== ❤️ ЛАЙК СИСТЕМАСЫ (SESSION МЕНЕН) ======================
 
+# --- ТОПТОМДОР ҮЧҮН ЛАЙК (Home/Price баракчалары үчүн) ---
 def toggle_like(request, set_id):
+    """
+    Бир колдонуучу (сессия) бир топтомго бир эле жолу лайк баса алат.
+    Кайра басса - лайк алынат.
+    """
     if request.method == "POST":
-        try:
-            # JavaScript'тен келген JSON маалыматты окуйбуз (is_active: true/false)
-            data = json.loads(request.body)
-            is_active = data.get('is_active', True)
+        product = get_object_or_404(ProductSet, id=set_id)
+        # Сессиядан лайк басылган топтомдордун ID тизмесин алабыз
+        liked_sets = request.session.get('liked_sets', [])
 
-            product = get_object_or_404(ProductSet, id=set_id)
+        if set_id not in liked_sets:
+            # Эгер тизмеде жок болсо - кошулат (Лайк)
+            liked_sets.append(set_id)
+            product.likes += 1
+            is_liked = True
+        else:
+            # Эгер тизмеде бар болсо - өчүрүлөт (Анлайк)
+            liked_sets.remove(set_id)
+            if product.likes > 0:
+                product.likes -= 1
+            is_liked = False
 
-            if is_active:
-                # Эгер колдонуучу лайк басса - кошобуз
-                product.likes += 1
-            else:
-                # Эгер колдонуучу лайкты кайра алса - азайтабыз (бирок 0дон төмөн түшүрбөйбүз)
-                if product.likes > 0:
-                    product.likes -= 1
+        product.save()
+        request.session['liked_sets'] = liked_sets
+        request.session.modified = True
 
-            product.save()
-
-            return JsonResponse({
-                'status': 'success',
-                'total_likes': product.likes
-            })
-        except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-
+        # total_likes - бул JavaScript тараптан келген суроого так жооп
+        return JsonResponse({
+            'status': 'success',
+            'total_likes': product.likes,
+            'is_liked': is_liked
+        })
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
 
-# --- 📩 TELEGRAM БИЛДИРҮҮ ЖӨНӨТҮҮ ФУНКЦИЯСЫ ---
+# --- ПИКИРЛЕР ҮЧҮН ЛАЙК (Reviews баракчасы үчүн) ---
+def toggle_review_like(request, review_id):
+    """
+    Пикирлер үчүн өзүнчө сессия тизмеси колдонулат.
+    """
+    if request.method == "POST":
+        review = get_object_or_404(Review, id=review_id)
+        liked_reviews = request.session.get('liked_reviews', [])
+
+        if review_id not in liked_reviews:
+            liked_reviews.append(review_id)
+            review.likes += 1
+            is_liked = True
+        else:
+            liked_reviews.remove(review_id)
+            if review.likes > 0:
+                review.likes -= 1
+            is_liked = False
+
+        review.save()
+        request.session['liked_reviews'] = liked_reviews
+        request.session.modified = True
+
+        return JsonResponse({
+            'status': 'success',
+            'total_likes': review.likes,
+            'is_liked': is_liked
+        })
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+
+
+# ====================== 📩 TELEGRAM БИЛДИРҮҮ ЖӨНӨТҮҮ ======================
+
 def send_telegram_message(chat_id, name, phone, message, title="🍓 ЖАҢЫ ЗАКАЗ (SSMOD)"):
     token = settings.TELEGRAM_BOT_TOKEN
     url = f"https://api.telegram.org/bot{token}/sendMessage"
 
-    # Текстти кооздоо жана калыпка салуу
     text = (
         f"*{title}*\n"
         f"━━━━━━━━━━━━━━━\n"
         f"👤 *Кардар:* {name}\n"
         f"📞 *Телефон:* {phone}\n"
         f"━━━━━━━━━━━━━━━\n"
-        f"📝 *ЗАКАЗДЫН МАНЫЗЫ:*\n{message}\n"
+        f"📝 *МААЛЫМАТ:*\n{message}\n"
         f"━━━━━━━━━━━━━━━\n"
         f"⏰ *Убактысы:* {time.strftime('%d.%m.%Y %H:%M:%S')}"
     )
 
-    payload = {
-        'chat_id': chat_id,
-        'text': text,
-        'parse_mode': 'Markdown'
-    }
+    payload = {'chat_id': chat_id, 'text': text, 'parse_mode': 'Markdown'}
 
     try:
         response = requests.post(url, data=payload)
@@ -73,115 +104,114 @@ def send_telegram_message(chat_id, name, phone, message, title="🍓 ЖАҢЫ З
         return False
 
 
-# --- 📥 ЗАКАЗДЫ КАБЫЛ АЛУУ (AJAX/FETCH ҮЧҮН) ---
+# ====================== 📥 ЗАКАЗ КАБЫЛ АЛУУ ======================
+
 def submit_order(request):
     if request.method == "POST":
         try:
-            # JavaScript'тен келген JSON маалыматты окуу
             data = json.loads(request.body)
-
-            # 1. Маалыматтарды алуу
             name = data.get('name', 'Жазылган эмес')
             phone = data.get('phone', 'Жазылган эмес')
-            title = data.get('title', 'Белгисиз топтом')
-            qty = data.get('qty', 1)
+            product_title = data.get('product', 'Белгисиз топтом')
             total = data.get('total', '0 сом')
-            delivery_type = data.get('delivery', 'Көрсөтүлгөн эмес')
-            extra_info = data.get('extra', 'Маалымат жок')
-            payment_method = data.get('payment', 'Накталай')
+            address = data.get('address', 'Маалымат жок')
+            payment_method = data.get('payment_method', 'Накталай')
+            is_delivery = data.get('is_delivery', True)
+            note = data.get('note', '')
 
-            # 2. АДМИНГЕ толук маалыматты даярдоо
             admin_details = (
-                f"🎁 *Топтом:* {title}\n"
-                f"🔢 *Саны:* {qty} даана\n"
+                f"🎁 *Топтом:* {product_title}\n"
                 f"💰 *Жалпы сумма:* {total}\n"
                 f"💳 *Төлөм ыкмасы:* {payment_method}\n"
-                f"🚚 *Жеткирүү:* {delivery_type}\n"
-                f"🏠 *Дарек/Убакыт:* {extra_info}"
+                f"🚚 *Жеткирүү:* {'Доставка' if is_delivery else 'Өзүм келем'}\n"
+                f"📍 *Дарек/Убакыт:* {address}\n"
+                f"📝 *Кошумча:* {note}"
             )
 
-            # Негизги админдин чатына билдирүү жөнөтүү
+            # Админге жөнөтүү
             send_telegram_message(settings.TELEGRAM_CHAT_ID, name, phone, admin_details)
 
-            # 3. КУРЬЕРГЕ ЖӨНӨТҮҮ
-            if delivery_type == "Доставка":
+            # Эгер доставка болсо, курьерге жөнөтүү
+            if is_delivery:
                 courier_id = getattr(settings, 'DELIVERY_USER_CHAT_ID', None)
                 if courier_id:
                     courier_details = (
-                        f"📦 *Заказ:* {title} ({qty} шт)\n"
-                        f"📍 *Дареги:* {extra_info}\n"
-                        f"📱 *Кардардын телефону:* {phone}\n"
+                        f"📦 *Заказ:* {product_title}\n"
+                        f"📍 *Дареги:* {address}\n"
+                        f"📱 *Кардар телефону:* {phone}\n"
                         f"💰 *Алынуучу сумма:* {total}"
                     )
-                    send_telegram_message(
-                        courier_id,
-                        name,
-                        phone,
-                        courier_details,
-                        title="🚚 КУРЬЕРГЕ ТАПШЫРМА"
-                    )
+                    send_telegram_message(courier_id, name, phone, courier_details, title="🚚 КУРЬЕРГЕ ТАПШЫРМА")
 
-            return JsonResponse({
-                'status': 'success',
-                'message': 'Заказыңыз кабыл алынды! 🍓 Чекти WhatsApp аркылуу жөнөтүүнү унутпаңыз.'
-            })
-
-        except json.JSONDecodeError:
-            return JsonResponse({'status': 'error', 'message': 'Маалымат форматында ката бар!'}, status=400)
+            return JsonResponse({'status': 'success', 'message': 'Заказыңыз кабыл алынды! 🍓'})
         except Exception as e:
-            return JsonResponse({'status': 'error', 'message': f'Системалык ката: {str(e)}'}, status=500)
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
-    return JsonResponse({'status': 'error', 'message': 'Жараксыз сурам (Invalid request)'}, status=400)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
 
-# --- 🤖 AI ЧАТ (АКЫЛДУУ ЖАРДАМЧЫ) ---
+# ====================== 💬 ПИКИРЛЕРДИ БАШКАРУУ ======================
+
+def reviews(request):
+    if request.method == "POST":
+        try:
+            name = request.POST.get('userName')
+            message = request.POST.get('userMsg')
+            stars = request.POST.get('stars', 5)
+
+            if name and message:
+                Review.objects.create(name=name, message=message, stars=int(stars))
+                return JsonResponse({'status': 'success'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+    all_reviews = Review.objects.all().order_by('-created_at')
+    active_music = BackgroundMusic.objects.filter(is_active=True).first()
+
+    # ПИКИРЛЕР үчүн лайк басылган IDлерди сессиядан алабыз
+    liked_reviews = request.session.get('liked_reviews', [])
+
+    return render(request, 'shop/reviews.html', {
+        'reviews': all_reviews,
+        'active_music': active_music,
+        'liked_reviews': liked_reviews
+    })
+
+
+def delete_review(request, review_id):
+    if request.method == "POST":
+        review = get_object_or_404(Review, id=review_id)
+        review.delete()
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error'}, status=400)
+
+
+# ====================== 🤖 AI ЧАТ ======================
+
 def strawberry_chat_api(request):
     user_query = request.GET.get('message') or request.POST.get('message', '')
     user_query = user_query.lower().strip()
 
     if not user_query:
-        return JsonResponse({'reply': "Салам! 🍓 Мен SSMOD жардамчысымын. Сизге кантип жардам бере алам?"})
+        return JsonResponse({'reply': "Салам! 🍓 Мен SSMOD жардамчысымын."})
 
     knowledge_base = {
-        "саламдашуу": {
-            "keywords": ["салам", "привет", "hello", "амансызбы", "кандай", "кеч жарык", "саламатсызбы"],
-            "reply": "Саламатсызбы! 😊 Сизге эң таттуу белектерди тандоого жардам берем. Биздин менюну көрдүңүзбү?"
-        },
-        "ыраазычылык": {
-            "keywords": ["рахмат", "спасибо", "чоң рахмат", "ыраазы", "жакшы", "ок", "макул"],
-            "reply": "Ар дайым кызматыңыздабыз! Таттуу маанай каалайм ✨"
-        },
-        "клубника": {
-            "keywords": ["клубника", "кулпунай", "шоколад", "белек", "набор", "коробка"],
-            "reply": "Биздин кулпунайлар чыныгы Бельгия шоколады менен капталат. 🍫🍓 Жаңы жана өтө таттуу! 'Меню' бөлүмүнөн тандасаңыз болот."
-        },
-        "торттор": {
-            "keywords": ["торт", "вупи пай", "красный бархат", "молочная девочка", "заказ торт", "бисквит"],
-            "reply": "Тортторду 24-48 саат мурун заказ кылууну сунуштайбыз. 🍰 Ар бир торт жаңы бышырылат!"
-        },
-        "баалар": {
-            "keywords": ["баа", "канча", "сом", "цена", "прайс", "арзан", "стоимость"],
-            "reply": "Топтомдор 800 сомдон башталат. Ичиндеги кулпунайдын санына жана шоколаддын түрүнө жараша өзгөрөт. 💸"
-        },
-        "жеткирүү": {
-            "keywords": ["жеткирүү", "доставка", "курьер", "алып келүү", "акысы"],
-            "reply": "Ош шаары ичинде жеткирүү бар. 🚚 Акысы аралыкка жараша 100-150 сом. 1500 сомдон жогору заказ кылсаңыз, кээде акциялар болот!"
-        },
-        "дарек": {
-            "keywords": ["кайда", "адрес", "жер", "ориентир", "локация", "офис"],
-            "reply": "Биз Ош шаарында жайгашканбыз. 📍 Так даректи 'Байланыш' (Contact) бөлүмүнөн карта аркылуу көрө аласыз."
-        },
-        "иштөө_убактысы": {
-            "keywords": ["качан", "убакыт", "саат канча", "иштейсиз", "график"],
-            "reply": "Биз күн сайын саат 09:00дөн 21:00гө чейин заказдарды кабыл алабыз. 🕘"
-        }
+        "саламдашуу": {"keywords": ["салам", "привет", "hello", "саламатсызбы"],
+                       "reply": "Саламатсызбы! 😊 Сизге жардам керекпи?"},
+        "баалар": {"keywords": ["баа", "канча", "сом", "цена"], "reply": "Топтомдор 800 сомдон башталат. 💸"},
+        "жеткирүү": {"keywords": ["жеткирүү", "доставка", "курьер"],
+                     "reply": "Ош шаары ичинде жеткирүү бар. 🚚 Акысы 100-150 сом."},
+        "дарек": {"keywords": ["кайда", "адрес", "локация"],
+                  "reply": "Биз Ош шаарындабыз. 📍 Так дарек 'Байланыш' бөлүмүндө."}
     }
 
+    # Түз дал келүү (Direct match)
     for category in knowledge_base.values():
         for keyword in category["keywords"]:
             if keyword in user_query:
                 return JsonResponse({'reply': category["reply"]})
 
+    # Окшоштукту текшерүү (Fuzzy match)
     best_match = None
     highest_score = 0
     for category in knowledge_base.values():
@@ -191,63 +221,47 @@ def strawberry_chat_api(request):
                 highest_score = score
                 best_match = category["reply"]
 
-    if highest_score > 65:
-        reply = best_match
-    else:
-        reply = random.choice([
-            "Кечириңиз, сурооңузду толук түшүнбөй калдым 🤔",
-            "Бул суроо боюнча оператор менен байланышып көрүңүз же менюну карап чыгыңыз 🍓",
-            "Мен азырынча үйрөнүп жатам, сурооңузду кыскараак берип көрүңүзчү 😊"
-        ])
-
+    reply = best_match if highest_score > 65 else "Кечириңиз, түшүнбөй калдым. Операторго жазып көрүңүзчү 😊"
     return JsonResponse({'reply': reply})
 
 
-# --- 📄 БААРДЫК БАТТАР (PAGES) ---
+# ====================== 📄 БАРАКЧАЛАР ======================
 
 def home(request):
     active_music = BackgroundMusic.objects.filter(is_active=True).first()
-    # Башкы бетте эң көп лайк алгандар жана эң жаңылары "Рек" катары чыгат
+    # Эң көп лайк алган 6 топтомду чыгаруу
     products = ProductSet.objects.all().order_by('-likes', '-id')[:6]
+    liked_sets = request.session.get('liked_sets', [])
+
     return render(request, 'shop/index.html', {
         'products': products,
-        'active_music': active_music
+        'active_music': active_music,
+        'liked_sets': liked_sets
     })
 
 
 def price(request):
-    """
-    Бул жерде 'Рек' системасы ишке ашат.
-    Лайкы эң көп топтомдор тизменин башына чыгат.
-    """
     active_music = BackgroundMusic.objects.filter(is_active=True).first()
-
-    # Сиз сурагандай: Лайкы эң көптөрү биринчи чыгат (Рекке)
-    # '-likes' эң көп лайктан азга карай тизет
+    # Баардык топтомдорду баасы боюнча иреттөө
     sets = ProductSet.objects.all().order_by('-likes', 'price')
+    liked_sets = request.session.get('liked_sets', [])
 
     return render(request, 'shop/price.html', {
         'sets': sets,
-        'active_music': active_music
+        'active_music': active_music,
+        'liked_sets': liked_sets
     })
 
 
 def about(request):
     active_music = BackgroundMusic.objects.filter(is_active=True).first()
-    return render(request, 'shop/about.html', {
-        'active_music': active_music
-    })
-
-
-def reviews(request):
-    active_music = BackgroundMusic.objects.filter(is_active=True).first()
-    return render(request, 'shop/reviews.html', {
-        'active_music': active_music
-    })
+    return render(request, 'shop/about.html', {'active_music': active_music})
 
 
 def contact(request):
     active_music = BackgroundMusic.objects.filter(is_active=True).first()
-    return render(request, 'shop/contact.html', {
-        'active_music': active_music
-    })
+    return render(request, 'shop/contact.html', {'active_music': active_music})
+
+
+def page_not_found(request, exception):
+    return render(request, 'shop/404.html', status=404)

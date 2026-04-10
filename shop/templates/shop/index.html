@@ -6,7 +6,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
 
 <style>
-    /* Сиздин бардык стилдериңиз (CSS) бул жерде өзгөрүүсүз калат */
     :root {
         --accent-rose: #ff4d6d;
         --soft-gold: #d4af37;
@@ -92,7 +91,7 @@
         border-radius: 18px;
         display: block;
         transition: 0.5s ease;
-        background: #000; /* Видео жүктөлгөнчө кара фон болуп турат */
+        background: #000;
     }
 
     .glass-card:hover {
@@ -127,10 +126,10 @@
             <div class="premium-badge">
                 <span>●</span> SSMOD Strawberry Art
             </div>
-            <h1>Бельгия шоколады <br>менен <em>өзгөчө белек</em></h1>
-            <p>Биз ар бир кулпунайды сүйүү менен даярдайбыз. Жаңы мөмөлөр жана премиум шоколад — сиздин жакындарыңыз үчүн эң сонун тандоо.</p>
-            
-            <a href="{% url 'price' %}" class="order-btn" style="text-decoration: none; padding: 14px 30px; background: var(--text); color: var(--bg); border-radius: 8px; font-weight: 600; display: inline-block; transition: 0.3s;">
+            <h1 data-lang-key="hero_title">Бельгия шоколады <br>менен <em>өзгөчө белек</em></h1>
+            <p data-lang-key="hero_desc">Биз ар бир кулпунайды сүйүү менен даярдайбыз. Жаңы мөмөлөр жана премиум шоколад — сиздин жакындарыңыз үчүн эң сонун тандоо.</p>
+
+            <a href="{% url 'price' %}" class="order-btn" style="text-decoration: none; padding: 14px 30px; background: var(--text); color: var(--bg); border-radius: 8px; font-weight: 600; display: inline-block; transition: 0.3s;" data-lang-key="hero_btn">
                 Заказ берүү →
             </a>
         </div>
@@ -148,16 +147,60 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        AOS.init({ duration: 1000, once: true });
-        
-        // Видео серверде автоматтык түрдө ойнобосо, мажбурлап иштетүү:
-        var video = document.querySelector('.strawberry-video');
-        if (video) {
-            video.play().catch(function(error) {
-                console.log("Video play failed:", error);
-            });
+// --- 🌍 КОТОРМОЛОР СӨЗДҮГҮ ---
+const homeTranslations = {
+    ky: {
+        hero_title: 'Бельгия шоколады <br>менен <em>өзгөчө белек</em>',
+        hero_desc: 'Биз ар бир кулпунайды сүйүү менен даярдайбыз. Жаңы мөмөлөр жана премиум шоколад — сиздин жакындарыңыз үчүн эң сонун тандоо.',
+        hero_btn: 'Заказ берүү →'
+    },
+    ru: {
+        hero_title: 'Бельгийский шоколад <br>— <em>особенный подарок</em>',
+        hero_desc: 'Мы готовим каждую клубнику с любовью. Свежие ягоды и премиальный шоколад — идеальный выбор для ваших близких.',
+        hero_btn: 'Заказать →'
+    },
+    en: {
+        hero_title: 'Belgian Chocolate <br>— <em>A Special Gift</em>',
+        hero_desc: 'We prepare every strawberry with love. Fresh berries and premium chocolate — the perfect choice for your loved ones.',
+        hero_btn: 'Order Now →'
+    }
+};
+
+// Тилди жаңыртуу функциясы
+function updateHomeLanguage() {
+    const lang = localStorage.getItem('selectedLanguage') || 'ky';
+    const t = homeTranslations[lang];
+
+    document.querySelectorAll('[data-lang-key]').forEach(el => {
+        const key = el.getAttribute('data-lang-key');
+        if (t && t[key]) {
+            el.innerHTML = t[key];
         }
     });
+}
+
+// 🔥 ЖАҢЫ: Тил баскычы басылганда бул бетти дароо которуу үчүн Event Listener
+window.addEventListener('languageChanged', function() {
+    updateHomeLanguage();
+});
+
+// 🔥 ЖАҢЫ: Кошумча камсыздандыруу (Тил баскычы басылганын текшерип турат)
+setInterval(updateHomeLanguage, 500);
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Баштапкы жүктөөдө тилди коюу
+    updateHomeLanguage();
+
+    // AOS анимациясын иштетүү
+    AOS.init({ duration: 1000, once: true });
+
+    // Видео мажбурлап ойнотуу
+    var video = document.querySelector('.strawberry-video');
+    if (video) {
+        video.play().catch(function(error) {
+            console.log("Video play failed:", error);
+        });
+    }
+});
 </script>
 {% endblock %}
