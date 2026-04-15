@@ -17,6 +17,16 @@
         color: var(--text);
         font-family: 'Montserrat', sans-serif;
         line-height: 1.6;
+        /* Кошумча: Мазмун толук көрүнүшү үчүн */
+        display: block !important;
+        opacity: 1 !important;
+    }
+
+    /* AOS анимациясы кээде ноутбуктарда элементти жашырып койсо, аны ачуу */
+    [data-aos] {
+        opacity: 1 !important;
+        transform: none !important;
+        visibility: visible !important;
     }
 
     /* --- Hero Section --- */
@@ -211,139 +221,168 @@
     }
 
     /* --- АВТОРДУК КАРТА --- */
+   .author-card {
+    display: flex !important; /* Мажбурлап көрсөтүү */
+    visibility: visible !important;
+    opacity: 1 !important;
+    align-items: center;
+    gap: 60px;
+    margin: 120px 0;
+    padding: 60px;
+    background: var(--glass);
+    border-radius: 60px;
+    border: 1px solid var(--border);
+    box-shadow: 0 40px 80px rgba(0,0,0,0.05);
+    overflow: visible;
+}
+
+.author-image-wrapper {
+    flex: 0 0 380px;
+    width: 380px; /* FIX */
+    position: relative;
+    z-index: 10;
+    cursor: pointer;
+}
+
+.author-swiper {
+    width: 100%;
+    height: 520px;
+    border-radius: 45px;
+    overflow: hidden;
+    transform: rotate(0deg); /* FIX КЫЙШАЙУУ ӨЧТҮ */
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 2px solid rgba(200, 200, 200, 0.3);
+}
+
+.author-image-wrapper.active .author-swiper {
+    transform: scale(0.96); /* FIX */
+    filter: brightness(0.9);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.4),
+                0 0 15px rgba(255, 20, 147, 0.3);
+}
+
+.glass-social-bottom {
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.6);
+    display: flex;
+    gap: 15px;
+    z-index: 30;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.author-image-wrapper.active .glass-social-bottom {
+    opacity: 1;
+    visibility: visible;
+    bottom: 35px;
+    transform: translateX(-50%) scale(1);
+}
+
+.glass-item {
+    width: 45px;
+    height: 45px;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1a1a1a;
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.glass-item:hover {
+    background: var(--accent);
+    color: white;
+    transform: translateY(-8px);
+}
+
+.swipe-hint {
+    text-align: center;
+    font-size: 0.8rem;
+    color: white; /* FIX */
+    opacity: 0.85; /* FIX */
+    margin-top: 18px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+    white-space: nowrap; /* FIX */
+}
+
+.author-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    line-height: 1.7;
+    font-style: italic;
+    border-left: 5px solid var(--accent);
+    padding-left: 30px;
+    margin-bottom: 35px;
+}
+
+.founder-badge {
+    display: inline-block;
+    padding: 6px 18px;
+    background: var(--accent);
+    color: white;
+    border-radius: 25px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+}
+
+/* --- Философия --- */
+.philosophy-box {
+    background: var(--nav-bg);
+    border: 1px solid var(--border);
+    border-radius: 80px;
+    padding: 80px 40px;
+    text-align: center;
+    margin-bottom: 100px;
+}
+
+/* --- Адаптация --- */
+@media (max-width: 991px) {
+    .story-grid { grid-template-columns: 1fr; gap: 40px; }
+
     .author-card {
-        display: flex;
-        align-items: center;
-        gap: 60px;
-        margin: 120px 0;
-        padding: 60px;
-        background: var(--glass);
-        border-radius: 60px;
-        border: 1px solid var(--border);
-        box-shadow: 0 40px 80px rgba(0,0,0,0.05);
+        flex-direction: column;
+        text-align: center;
+        padding: 40px 20px;
+        gap: 30px;
     }
 
     .author-image-wrapper {
-        flex: 0 0 380px;
-        position: relative;
-        z-index: 10;
-        cursor: pointer;
+        flex: 0 0 auto;
+        width: 100%;
+        max-width: 340px;
     }
 
     .author-swiper {
-        width: 100%;
-        height: 520px;
-        border-radius: 45px;
-        overflow: hidden;
-        transform: rotate(-3deg);
-        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 2px solid rgba(200, 200, 200, 0.3);
-    }
-
-    .author-image-wrapper.active .author-swiper {
-        transform: rotate(0deg) scale(0.96);
-        filter: brightness(0.9);
-        border: 2px solid rgba(255, 255, 255, 0.8);
-        box-shadow: 0 0 25px rgba(255, 255, 255, 0.4), 0 0 15px rgba(255, 20, 147, 0.3);
-    }
-
-    .glass-social-bottom {
-        position: absolute;
-        bottom: 0px;
-        left: 50%;
-        transform: translateX(-50%) scale(0.6);
-        display: flex;
-        gap: 15px;
-        z-index: 30;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .author-image-wrapper.active .glass-social-bottom {
-        opacity: 1;
-        visibility: visible;
-        bottom: 35px;
-        transform: translateX(-50%) scale(1);
-    }
-
-    .glass-item {
-        width: 45px;
-        height: 45px;
-        background: rgba(255, 255, 255, 0.5);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.7);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #1a1a1a;
-        text-decoration: none;
-        font-size: 1.2rem;
-        transition: all 0.3s ease;
-    }
-
-    .glass-item:hover {
-        background: var(--accent);
-        color: white;
-        transform: translateY(-8px);
+        height: 450px;
+        transform: rotate(0);
     }
 
     .swipe-hint {
-        text-align: center;
-        font-size: 0.7rem;
-        color: var(--text);
-        opacity: 0.5;
-        margin-top: 15px;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        font-weight: 600;
+        white-space: normal;
+        font-size: 0.75rem;
     }
 
-    .author-quote {
-        font-family: 'Playfair Display', serif;
-        font-size: 1.3rem;
-        line-height: 1.7;
-        font-style: italic;
-        border-left: 5px solid var(--accent);
-        padding-left: 30px;
-        margin-bottom: 35px;
+    .stats-row {
+        grid-template-columns: repeat(2, 1fr);
     }
-
-    .founder-badge {
-        display: inline-block;
-        padding: 6px 18px;
-        background: var(--accent);
-        color: white;
-        border-radius: 25px;
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        margin-bottom: 20px;
-        letter-spacing: 1px;
-    }
-
-    /* --- Философия --- */
-    .philosophy-box {
-        background: var(--nav-bg);
-        border: 1px solid var(--border);
-        border-radius: 80px;
-        padding: 80px 40px;
-        text-align: center;
-        margin-bottom: 100px;
-    }
-
-    /* --- Адаптация --- */
-    @media (max-width: 991px) {
-        .story-grid { grid-template-columns: 1fr; gap: 40px; }
-        .author-card { flex-direction: column; text-align: center; padding: 40px 20px; gap: 30px; }
-        .author-image-wrapper { flex: 0 0 auto; width: 100%; max-width: 340px; }
-        .author-swiper { height: 450px; transform: rotate(0); }
-        .stats-row { grid-template-columns: repeat(2, 1fr); }
-    }
+}
 </style>
 
 <div class="about-page">
@@ -593,7 +632,13 @@
         updateAboutLanguage();
 
         // AOS жана Swiper инициализациясы
-        AOS.init({ duration: 800, once: true, easing: 'ease-out-quad' });
+        AOS.init({
+            duration: 800,
+            once: true,
+            easing: 'ease-out-quad',
+            disable: false // Мажбурлап иштетүү
+        });
+
         new Swiper('.author-swiper', { loop: true, grabCursor: true, speed: 800 });
 
         const authorWrapper = document.getElementById('authorWrapper');

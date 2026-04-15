@@ -427,23 +427,27 @@
             <input type="text" id="extraInput" data-lang-key="address_placeholder">
         </div>
 
-        <div class="input-group">
-            <label data-lang-key="time_select_label"><i class="fas fa-clock"></i> Качан жеткиребиз?</label>
-            <select id="deliveryTime">
-                <option value="Тезирээк" data-lang-key="time_asap">Тезирээк</option>
-                <option value="10:00 - 12:00">10:00 - 12:00</option>
-                <option value="12:00 - 14:00">12:00 - 14:00</option>
-                <option value="14:00 - 16:00">14:00 - 16:00</option>
-                <option value="16:00 - 18:00">16:00 - 18:00</option>
-                <option value="18:00 - 20:00">18:00 - 20:00</option>
-                <option value="20:00 - 22:00">20:00 - 22:00</option>
-            </select>
-        </div>
+     <div class="input-group">
+    <label>
+        <i class="fas fa-clock"></i>
+        <span data-lang-key="time_select_label">Качан жеткиребиз?</span>
+    </label>
 
-        <label class="gift-option">
-            <input type="checkbox" id="isGift">
-            <span style="color: #fff; font-size: 0.9rem; font-weight: 600;" data-lang-key="gift_label">🎁 Бул белек (Анонимдүү)</span>
-        </label>
+    <select id="deliveryTime">
+        <option value="Тезирээк" data-lang-key="time_asap">Тезирээк</option>
+        <option value="10:00 - 12:00">10:00 - 12:00</option>
+        <option value="12:00 - 14:00">12:00 - 14:00</option>
+        <option value="14:00 - 16:00">14:00 - 16:00</option>
+        <option value="16:00 - 18:00">16:00 - 18:00</option>
+        <option value="18:00 - 20:00">18:00 - 20:00</option>
+        <option value="20:00 - 22:00">20:00 - 22:00</option>
+    </select>
+</div>
+
+<label class="gift-option">
+    <input type="checkbox" id="isGift">
+    <span data-lang-key="gift_label">🎁 Бул белек (Анонимдүү)</span>
+</label>
 
         <div class="input-group">
             <label data-lang-key="note_label"><i class="fas fa-comment-dots"></i> Кошумча маалымат</label>
@@ -494,13 +498,18 @@ const menuTranslations = {
         phone_label: "Телефон номериңиз", delivery_opt: "Доставка", self_opt: "Өзүм келем",
         address_label: "📍 Дарегиңиз", address_placeholder: "Ош шаары, дарек...",
         time_label: "📍 Саат канчада келесиз?", time_placeholder: "Мисалы: 18:00",
+
+        // ЖЕТИШПЕГЕН АЧКЫЧТАР (УШУЛАРДЫ КОШ):
+        time_select_label: "Качан жеткиребиз?",
+        time_asap: "Тезирээк",
+        gift_label: "🎁 Бул белек (Анонимдүү)",
+
         note_label: "Кошумча маалымат", note_placeholder: "Куттуктоо ж.б.",
         cash_opt: "Наличка", mbank_opt: "МБанк", copy_btn: "Көчүрүүнү басыңыз",
         total_label: "Жалпы сумма:", delivery_note: "+150 сом жеткирүү акысы кошулду",
         send_btn: "Заказды жөнөтүү", copy_alert: "Номер көчүрүлдү: ", error_fill: "Сураныч, маалыматты толук толтуруңуз!",
-        sending: "Жөнөтүлүүдө...", wa_header: "*🍓 Strawberry Art - ЖАҢЫ ЗАКАЗ*", wa_name: "Аты", wa_phone: "Номер",
-        wa_product: "Товар", wa_price: "Баасы", wa_pay: "Төлөм", wa_loc: "Дарек", wa_time: "Убакыт", wa_mbank: "⚠️ *МБанк чекти азыр тиркейм!*",
-        time_select_label: "Качан жеткиребиз?", time_asap: "Тезирээк", gift_label: "🎁 Бул белек (Анонимдүү)", gift_yes: "Ооба 🎁", gift_no: "Жок"
+        sending: "Жөнөтүлүүдө...", wa_mbank: "⚠️ *МБанк чекти азыр тиркейм!*",
+        gift_yes: "Ооба 🎁", gift_no: "Жок"
     },
     ru: {
         menu_title: "Наше Меню", pcs: "шт", som: "сом", book_btn: "Заказать",
@@ -508,13 +517,18 @@ const menuTranslations = {
         phone_label: "Номер телефона", delivery_opt: "Доставка", self_opt: "Самовывоз",
         address_label: "📍 Ваш адрес", address_placeholder: "Город Ош, адрес...",
         time_label: "📍 Во сколько придете?", time_placeholder: "Например: 18:00",
+
+        // НОВЫЕ КЛЮЧИ:
+        time_select_label: "Когда доставить?",
+        time_asap: "Как можно быстрее",
+        gift_label: "🎁 Это подарок (Анонимно)",
+
         note_label: "Доп. информация", note_placeholder: "Текст поздравления...",
         cash_opt: "Наличка", mbank_opt: "МБанк", copy_btn: "Нажмите для копирования",
         total_label: "Итоговая сумма:", delivery_note: "+150 сом включено за доставку",
-        send_btn: "ОТПРАВИТЬ ЗАКАЗ", copy_alert: "Номер скопирован: ", error_fill: "Пожалуйста, заполните все данные!",
-        sending: "Отправка...", wa_header: "*🍓 Strawberry Art - НОВЫЙ ЗАКАЗ*", wa_name: "Имя", wa_phone: "Номер",
-        wa_product: "Товар", wa_price: "Цена", wa_pay: "Оплата", wa_loc: "Адрес", wa_time: "Время", wa_mbank: "⚠️ *Чек МБанка прикреплю сейчас!*",
-        time_select_label: "Когда доставить?", time_asap: "Как можно быстрее", gift_label: "🎁 Это подарок (Анонимно)", gift_yes: "Да 🎁", gift_no: "Нет"
+        send_btn: "ОТПРАВИТЬ ЗАКАЗ", copy_alert: "Номер скопирован: ", error_fill: "Пожалуйста, заполни все данные!",
+        sending: "Отправка...", wa_mbank: "⚠️ *Чек МБанка прикреплю сейчас!*",
+        gift_yes: "Да 🎁", gift_no: "Нет"
     },
     en: {
         menu_title: "Our Menu", pcs: "pcs", som: "som", book_btn: "Order Now",
@@ -522,37 +536,55 @@ const menuTranslations = {
         phone_label: "Phone Number", delivery_opt: "Delivery", self_opt: "Pickup",
         address_label: "📍 Your Address", address_placeholder: "Osh city, address...",
         time_label: "📍 What time will you arrive?", time_placeholder: "Example: 6:00 PM",
+
+        // NEW KEYS:
+        time_select_label: "When to deliver?",
+        time_asap: "As soon as possible",
+        gift_label: "🎁 It's a gift (Anonymous)",
+
         note_label: "Additional info", note_placeholder: "Greetings text...",
         cash_opt: "Cash", mbank_opt: "MBANK", copy_btn: "Click to copy",
         total_label: "Total Amount:", delivery_note: "+150 som delivery fee added",
         send_btn: "Send Order", copy_alert: "Number copied: ", error_fill: "Please fill in all information!",
-        sending: "Sending...", wa_header: "*🍓 Strawberry Art - NEW ORDER*", wa_name: "Name", wa_phone: "Phone",
-        wa_product: "Product", wa_price: "Price", wa_pay: "Payment", wa_loc: "Address", wa_time: "Time", wa_mbank: "⚠️ *Will attach MBANK receipt now!*",
-        time_select_label: "Delivery time?", time_asap: "ASAP", gift_label: "🎁 It's a gift (Anonymous)", gift_yes: "Yes 🎁", gift_no: "No"
+        sending: "Sending...", wa_mbank: "⚠️ *Will attach MBANK receipt now!*",
+        gift_yes: "Yes 🎁", gift_no: "No"
     }
 };
-
 let currentSet = {};
 let isDelivery = true;
 let paymentMethod = 'cash';
+let lastLang = localStorage.getItem('selectedLanguage') || 'ky';
+
 const DELIVERY_FEE = 150;
 const WHATSAPP_PHONE = "996553956070";
 
 function updateMenuLanguage() {
     const lang = localStorage.getItem('selectedLanguage') || 'ky';
     const t = menuTranslations[lang];
+
     document.querySelectorAll('[data-lang-key]').forEach(el => {
         const key = el.getAttribute('data-lang-key');
-        if (t[key]) {
-            if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
-                el.placeholder = t[key];
-            } else if (el.tagName === "OPTION") {
-                el.innerHTML = t[key];
-            } else {
-                el.textContent = t[key];
-            }
+        if (!t[key]) return;
+
+        if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+            el.placeholder = t[key];
+        }
+        // Эгер элементтин ичинде иконка болсо, аны сактап, текстти гана алмаштырат
+        else if (el.querySelector('i')) {
+            const icon = el.querySelector('i').outerHTML;
+            el.innerHTML = `${icon} ${t[key]}`;
+        }
+        // Калган учурларда (span, option ж.б.) жөн эле текстти алмаштырат
+        else {
+            el.innerHTML = t[key];
         }
     });
+
+    if (document.getElementById('bookingModal')?.style.display === 'flex') {
+        switchDelivery(isDelivery);
+        switchPayment(paymentMethod);
+    }
+
     updateTotal();
 }
 
@@ -560,60 +592,101 @@ document.addEventListener('DOMContentLoaded', () => {
     updateMenuLanguage();
     switchDelivery(true);
     switchPayment('cash');
+
+    const phoneInput = document.getElementById('userPhone');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function () {
+            if (!this.value.startsWith('+')) {
+                this.value = '+' + this.value.replace(/[^\d]/g, '');
+            }
+            if (this.value.length > 16) {
+                this.value = this.value.slice(0, 16);
+            }
+        });
+    }
 });
+
+window.addEventListener('languageChanged', updateMenuLanguage);
+
+// Тилди көзөмөлдөөчү таймер (бат алмашуу үчүн)
+setInterval(() => {
+    const currentLang = localStorage.getItem('selectedLanguage') || 'ky';
+    if (currentLang !== lastLang) {
+        lastLang = currentLang;
+        updateMenuLanguage();
+    }
+}, 100);
 
 function changeCountry() {
     const code = document.getElementById('countrySelect').value;
     document.getElementById('userPhone').value = code;
 }
 
-document.getElementById('userPhone').addEventListener('input', function (e) {
-    if (!this.value.startsWith('+')) this.value = '+' + this.value.replace(/[^\d]/g, '');
-    if (this.value.length > 16) this.value = this.value.slice(0, 16);
-});
-
 function copyNumber() {
     const num = "0553956070";
     const lang = localStorage.getItem('selectedLanguage') || 'ky';
-    navigator.clipboard.writeText(num).then(() => alert(menuTranslations[lang].copy_alert + num));
+    navigator.clipboard.writeText(num).then(() => {
+        alert(menuTranslations[lang].copy_alert + num);
+    });
 }
 
 function openBooking(btn, event) {
-    if(event) event.stopPropagation();
+    if (event) event.stopPropagation();
     const card = btn.closest('.royal-card');
-    currentSet = { title: card.dataset.title, price: parseInt(card.dataset.price) };
+
+    currentSet = {
+        title: card.dataset.title,
+        price: parseInt(card.dataset.price)
+    };
+
     document.getElementById('modalTitle').textContent = currentSet.title;
     document.getElementById('bookingModal').style.display = 'flex';
+
+    updateMenuLanguage();
     updateTotal();
 }
 
-function closeModal() { document.getElementById('bookingModal').style.display = 'none'; }
+function closeModal() {
+    document.getElementById('bookingModal').style.display = 'none';
+}
 
 function switchDelivery(val) {
     isDelivery = val;
     const lang = localStorage.getItem('selectedLanguage') || 'ky';
     const t = menuTranslations[lang];
+
     document.getElementById('typeSlider').style.left = val ? '4px' : 'calc(50% - 4px)';
     document.getElementById('optDelivery').style.color = val ? '#fff' : '#aaa';
     document.getElementById('optSelf').style.color = !val ? '#fff' : '#aaa';
 
-    document.getElementById('extraLabel').innerHTML = val ? `<i class="fas fa-map-marker-alt"></i> ${t.address_label}` : `<i class="fas fa-clock"></i> ${t.time_label}`;
-    document.getElementById('extraInput').placeholder = val ? t.address_placeholder : t.time_placeholder;
+    document.getElementById('extraLabel').innerHTML = val
+        ? `<i class="fas fa-map-marker-alt"></i> ${t.address_label}`
+        : `<i class="fas fa-clock"></i> ${t.time_label}`;
+
+    document.getElementById('extraInput').placeholder = val
+        ? t.address_placeholder
+        : t.time_placeholder;
+
     document.getElementById('deliveryInfo').style.display = val ? 'block' : 'none';
+
     updateTotal();
 }
 
 function switchPayment(method) {
     paymentMethod = method;
+
     const paySlider = document.getElementById('paySlider');
     const qrArea = document.getElementById('qrArea');
+
     if (method === 'cash') {
-        paySlider.style.left = '4px'; paySlider.style.background = 'var(--accent-green)';
+        paySlider.style.left = '4px';
+        paySlider.style.background = 'var(--accent-green)';
         document.getElementById('payCash').style.color = '#fff';
         document.getElementById('payMbank').style.color = '#aaa';
         qrArea.style.display = 'none';
     } else {
-        paySlider.style.left = 'calc(50% - 4px)'; paySlider.style.background = 'var(--mbank-blue)';
+        paySlider.style.left = 'calc(50% - 4px)';
+        paySlider.style.background = 'var(--mbank-blue)';
         document.getElementById('payCash').style.color = '#aaa';
         document.getElementById('payMbank').style.color = '#fff';
         qrArea.style.display = 'block';
@@ -621,15 +694,19 @@ function switchPayment(method) {
 }
 
 function updateTotal() {
-    if(!currentSet.price) return;
+    if (!currentSet.price) return;
+
     const lang = localStorage.getItem('selectedLanguage') || 'ky';
     let total = currentSet.price + (isDelivery ? DELIVERY_FEE : 0);
-    document.getElementById('finalTotal').textContent = total + ' ' + (menuTranslations[lang].som || 'сом');
+
+    document.getElementById('finalTotal').textContent =
+        total + ' ' + (menuTranslations[lang].som || 'сом');
 }
 
 async function sendOrder() {
     const lang = localStorage.getItem('selectedLanguage') || 'ky';
     const t = menuTranslations[lang];
+
     const name = document.getElementById('userName').value.trim();
     const phone = document.getElementById('userPhone').value.trim();
     const extra = document.getElementById('extraInput').value.trim();
@@ -639,61 +716,108 @@ async function sendOrder() {
     const total = document.getElementById('finalTotal').textContent;
     const btn = document.getElementById('mainSendBtn');
 
-    if(!name || phone.length < 9 || !extra) { alert(t.error_fill); return; }
+    // Текшерүү (Validation)
+    if (!name || phone.length < 9 || !extra) {
+        alert(t.error_fill);
+        return;
+    }
 
-    btn.disabled = true; btn.textContent = t.sending;
-    const payType = (paymentMethod === 'cash') ? t.cash_opt : t.mbank_opt;
+    // Баскычты убактылуу өчүрүү
+    btn.disabled = true;
+    const originalText = btn.textContent;
+    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${t.sending}`;
 
+    const payType = paymentMethod === 'cash' ? t.cash_opt : t.mbank_opt;
+
+    // 1. Django серверине жөнөтүү (Fetch API)
     try {
         await fetch('/submit-order/', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}' },
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
             body: JSON.stringify({
-                name: name, phone: phone, address: extra, product: currentSet.title,
-                total: total, note: `Белек: ${isGift}, Убакыт: ${dTime}. ${note}`,
-                payment_method: (paymentMethod === 'cash') ? 'Наличка' : 'МБанк', is_delivery: isDelivery
+                name: name,
+                phone: phone,
+                address: extra,
+                product: currentSet.title,
+                total: total,
+                delivery_time: dTime,
+                is_gift: isGift,
+                customer_note: note,
+                payment_method: paymentMethod === 'cash' ? 'Наличка' : 'МБанк',
+                is_delivery: isDelivery
             })
         });
-    } catch (e) { console.error(e); }
+    } catch (e) {
+        console.error("Database save failed, continuing to WhatsApp...", e);
+    }
 
- let msg = `\u{1F353} *Жаны заказ*
+    // 2. WhatsApp билдирүүсүн түзүү
+    let msg = `🍓 *ЖАҢЫ ЗАКАЗ (SSMOD)*\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `👤 *Аты:* ${name}\n`;
+    msg += `📞 *Телефон:* ${phone}\n`;
+    msg += `💐 *Топтом:* ${currentSet.title}\n`;
+    msg += `💰 *Сумма:* ${total}\n`;
+    msg += `📍 *Дарек/Убакыт:* ${extra}\n`;
+    msg += `⏰ *Жеткизүү:* ${dTime}\n`;
+    msg += `🎁 *Белек:* ${isGift}\n`;
+    msg += `💳 *Төлөм:* ${payType}\n`;
 
-\u{1F464} *Аты:* ${name}
-\u260E *Телефон:* ${phone}
-\u{1F490} *Букет:* ${currentSet.title}
-\u{1F4B0} *Сумма:* ${total}
-\u{1F4CD} *${isDelivery ? "Дарек" : "Убакыт"}:* ${extra}
-\u23F0 *Жеткируу:* ${dTime}
-\u{1F381} *Белек:* ${isGift}
-\u{1F4DD} *Эскертүү:* ${note || "Жок"}
-\u{1F4B3} *Төлөм:* ${payType}`;
+    if (note) msg += `📝 *Кошумча:* ${note}\n`;
+    if (paymentMethod === 'mbank') msg += `\n⚠️ *МБанк чекти азыр тиркейм!*`;
 
-    if (paymentMethod === 'mbank') msg += `\n${t.wa_mbank}`;
+    // WhatsApp'ка багыттоо
     window.location.href = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(msg)}`;
+
+    // Баскычты кайра калыбына келтирүү
+    setTimeout(() => {
+        btn.disabled = false;
+        btn.textContent = originalText;
+    }, 3000);
 }
 
 async function toggleLike(btn, event, setId) {
     event.stopPropagation();
+
     const countElement = document.getElementById(`like-count-${setId}`);
     let isActive = btn.classList.contains('active');
     let currentCount = parseInt(countElement.textContent) || 0;
 
-    if (!isActive) { countElement.textContent = currentCount + 1; btn.classList.add('active'); }
-    else { countElement.textContent = Math.max(0, currentCount - 1); btn.classList.remove('active'); }
+    // Визуалдык дароо өзгөртүү
+    if (!isActive) {
+        countElement.textContent = currentCount + 1;
+        btn.classList.add('active');
+    } else {
+        countElement.textContent = Math.max(0, currentCount - 1);
+        btn.classList.remove('active');
+    }
 
     try {
         const response = await fetch(`/toggle-like/${setId}/`, {
             method: 'POST',
-            headers: { 'X-CSRFToken': '{{ csrf_token }}', 'Content-Type': 'application/json' }
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json'
+            }
         });
+
         if (response.ok) {
             const data = await response.json();
             countElement.textContent = data.total_likes;
-            if (data.is_liked) btn.classList.add('active'); else btn.classList.remove('active');
+            btn.classList.toggle('active', data.is_liked);
         }
-    } catch (e) { console.error(e); }
+    } catch (e) {
+        console.error(e);
+    }
 }
 
-window.onclick = e => { if(e.target == document.getElementById('bookingModal')) closeModal(); }
+window.onclick = e => {
+    if (e.target === document.getElementById('bookingModal')) {
+        closeModal();
+    }
+};
 </script>
 {% endblock %}
