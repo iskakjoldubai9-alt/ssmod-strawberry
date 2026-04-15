@@ -219,10 +219,9 @@
         margin-bottom: 10px;
         transition: color 0.3s;
     }
-
-    /* --- АВТОРДУК КАРТА --- */
-   .author-card {
-    display: flex !important; /* Мажбурлап көрсөтүү */
+/* --- АВТОРДУК КАРТА (Жалпы структура) --- */
+.author-card {
+    display: flex !important;
     visibility: visible !important;
     opacity: 1 !important;
     align-items: center;
@@ -232,16 +231,18 @@
     background: var(--glass);
     border-radius: 60px;
     border: 1px solid var(--border);
-    box-shadow: 0 40px 80px rgba(0,0,0,0.05);
+    box-shadow: 0 40px 80px rgba(0,0,0,0.1);
     overflow: visible;
+    position: relative;
 }
 
 .author-image-wrapper {
     flex: 0 0 380px;
-    width: 380px; /* FIX */
+    width: 380px;
     position: relative;
     z-index: 10;
     cursor: pointer;
+    transition: transform 0.5s ease;
 }
 
 .author-swiper {
@@ -249,97 +250,166 @@
     height: 520px;
     border-radius: 45px;
     overflow: hidden;
-    transform: rotate(0deg); /* FIX КЫЙШАЙУУ ӨЧТҮ */
+    position: relative;
+    z-index: 1;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 2px solid rgba(200, 200, 200, 0.3);
 }
 
+/* СҮРӨТТҮН ЖЭЭГИ: Бираз даанараак кубулма жануу */
 .author-image-wrapper.active .author-swiper {
-    transform: scale(0.96); /* FIX */
-    filter: brightness(0.9);
-    border: 2px solid rgba(255, 255, 255, 0.8);
-    box-shadow: 0 0 25px rgba(255, 255, 255, 0.4),
-                0 0 15px rgba(255, 20, 147, 0.3);
+    transform: scale(0.98);
+    filter: brightness(1);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    animation: glassMultiColor 8s infinite alternate ease-in-out;
 }
 
+/* --- СОЦИАЛДЫК ИКОНКАЛАР: ЧАГЫЛЫШКАН АЙНЕК --- */
 .glass-social-bottom {
     position: absolute;
-    bottom: 0px;
+    bottom: 40px;
     left: 50%;
-    transform: translateX(-50%) scale(0.6);
+    transform: translateX(-50%) scale(0.5);
     display: flex;
-    gap: 15px;
-    z-index: 30;
+    gap: 12px;
+    z-index: 50;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .author-image-wrapper.active .glass-social-bottom {
     opacity: 1;
     visibility: visible;
-    bottom: 35px;
+    bottom: 60px;
     transform: translateX(-50%) scale(1);
 }
 
 .glass-item {
-    width: 45px;
-    height: 45px;
-    background: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.7);
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.12); /* Бираз жарыгыраак */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #1a1a1a;
-    text-decoration: none;
-    font-size: 1.2rem;
-    transition: all 0.3s ease;
+    color: white;
+    position: relative;
+    overflow: hidden; /* Чагылышуу үчүн маанилүү */
+    transition: all 0.4s ease;
+    animation: glassMultiColor 10s infinite alternate ease-in-out;
 }
 
+/* ЖУМШАК ЧАГЫЛЫШУУ (GLARE EFFECT) */
+.glass-item::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent,
+        rgba(255, 255, 255, 0.15),
+        transparent
+    );
+    transform: rotate(45deg);
+    transition: 0.6s;
+}
+
+.glass-item:hover::before {
+    left: 100%; /* Ховерде чагылышуу өтүп кетет */
+}
+
+/* ХОВЕР: Чагылышууну күчөтүү */
 .glass-item:hover {
-    background: var(--accent);
+    transform: translateY(-10px) scale(1.15);
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* --- ТҮСТӨРДҮН БИЛИНЭЭР-БИЛИНБЕС АЛМАШУУСУ --- */
+@keyframes glassMultiColor {
+    0% {
+        /* Көк (Sky Blue) - бираз даанараак */
+        border-color: rgba(0, 191, 255, 0.5);
+        box-shadow: 0 0 20px rgba(0, 191, 255, 0.3);
+    }
+    50% {
+        /* Кызгылт (Soft Pink) */
+        border-color: rgba(255, 105, 180, 0.5);
+        box-shadow: 0 0 25px rgba(255, 105, 180, 0.3);
+    }
+    100% {
+        /* Жумшак Сары (Champagne Gold) */
+        border-color: rgba(255, 215, 0, 0.4);
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+    }
+}
+
+/* --- ТЕКСТТЕР (Жумшак Кызыл) --- */
+.founder-badge {
+    display: inline-block;
+    padding: 8px 20px;
+    background: #e63946;
     color: white;
-    transform: translateY(-8px);
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+}
+
+.author-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem;
+    line-height: 1.8;
+    font-style: italic;
+    color: var(--text);
+    border-left: 4px solid #e63946;
+    padding-left: 25px;
+    margin: 30px 0;
+    opacity: 0.9;
 }
 
 .swipe-hint {
     text-align: center;
     font-size: 0.8rem;
-    color: white; /* FIX */
-    opacity: 0.85; /* FIX */
-    margin-top: 18px;
-    letter-spacing: 2px;
+    color: #e63946;
+    font-weight: 700;
+    margin-top: 20px;
+    letter-spacing: 3px;
     text-transform: uppercase;
-    font-weight: 600;
-    white-space: nowrap; /* FIX */
+    opacity: 0.7;
+    animation: pulseHint 2s infinite;
 }
 
-.author-quote {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.3rem;
-    line-height: 1.7;
-    font-style: italic;
-    border-left: 5px solid var(--accent);
-    padding-left: 30px;
-    margin-bottom: 35px;
+@keyframes pulseHint {
+    0% { opacity: 0.3; transform: scale(0.96); }
+    50% { opacity: 0.8; transform: scale(1); }
+    100% { opacity: 0.3; transform: scale(0.96); }
 }
 
-.founder-badge {
-    display: inline-block;
-    padding: 6px 18px;
-    background: var(--accent);
-    color: white;
-    border-radius: 25px;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-    letter-spacing: 1px;
+@media (max-width: 991px) {
+    .author-card {
+        flex-direction: column;
+        padding: 40px 25px;
+        gap: 40px;
+    }
+    .author-image-wrapper {
+        width: 100%;
+        max-width: 320px;
+        flex: none;
+    }
+    .author-swiper {
+        height: 420px;
+    }
 }
 
 /* --- Философия --- */

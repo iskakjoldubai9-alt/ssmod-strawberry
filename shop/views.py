@@ -10,24 +10,17 @@ from fuzzywuzzy import fuzz
 
 # ====================== ❤️ ЛАЙК СИСТЕМАСЫ (SESSION МЕНЕН) ======================
 
-# --- ТОПТОМДОР ҮЧҮН ЛАЙК (Home/Price баракчалары үчүн) ---
 def toggle_like(request, set_id):
-    """
-    Бир колдонуучу (сессия) бир топтомго бир эле жолу лайк баса алат.
-    Кайра басса - лайк алынат.
-    """
+    """ Бир колдонуучу бир топтомго бир эле жолу лайк баса алат. """
     if request.method == "POST":
         product = get_object_or_404(ProductSet, id=set_id)
-        # Сессиядан лайк басылган топтомдордун ID тизмесин алабыз
         liked_sets = request.session.get('liked_sets', [])
 
         if set_id not in liked_sets:
-            # Эгер тизмеде жок болсо - кошулат (Лайк)
             liked_sets.append(set_id)
             product.likes += 1
             is_liked = True
         else:
-            # Эгер тизмеде бар болсо - өчүрүлөт (Анлайк)
             liked_sets.remove(set_id)
             if product.likes > 0:
                 product.likes -= 1
@@ -37,7 +30,6 @@ def toggle_like(request, set_id):
         request.session['liked_sets'] = liked_sets
         request.session.modified = True
 
-        # total_likes - бул JavaScript тараптан келген суроого так жооп
         return JsonResponse({
             'status': 'success',
             'total_likes': product.likes,
@@ -46,11 +38,8 @@ def toggle_like(request, set_id):
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
 
-# --- ПИКИРЛЕР ҮЧҮН ЛАЙК (Reviews баракчасы үчүн) ---
 def toggle_review_like(request, review_id):
-    """
-    Пикирлер үчүн өзүнчө сессия тизмеси колдонулат.
-    """
+    """ Пикирлер үчүн өзүнчө сессия тизмеси колдонулат. """
     if request.method == "POST":
         review = get_object_or_404(Review, id=review_id)
         liked_reviews = request.session.get('liked_reviews', [])
@@ -95,13 +84,24 @@ def send_telegram_message(chat_id, name, phone, message, title="🍓 ЖАҢЫ З
     )
 
     payload = {'chat_id': chat_id, 'text': text, 'parse_mode': 'Markdown'}
-
     try:
         response = requests.post(url, data=payload)
         return response.status_code == 200
     except Exception as e:
         print(f"Telegram Message Error: {e}")
         return False
+
+
+def send_telegram_photo(chat_id, photo, caption):
+    """ Сүрөт менен бирге пикирди Telegram'га жөнөтүү """
+    token = settings.TELEGRAM_BOT_TOKEN
+    url = f"https://api.telegram.org/bot{token}/sendPhoto"
+    try:
+        files = {'photo': photo}
+        data = {'chat_id': chat_id, 'caption': caption, 'parse_mode': 'Markdown'}
+        requests.post(url, files=files, data=data)
+    except Exception as e:
+        print(f"Telegram Photo Error: {e}")
 
 
 # ====================== 📥 ЗАКАЗ КАБЫЛ АЛУУ ======================
@@ -128,10 +128,8 @@ def submit_order(request):
                 f"📝 *Кошумча:* {note}"
             )
 
-            # Админге жөнөтүү
             send_telegram_message(settings.TELEGRAM_CHAT_ID, name, phone, admin_details)
 
-            # Эгер доставка болсо, курьерге жөнөтүү
             if is_delivery:
                 courier_id = getattr(settings, 'DELIVERY_USER_CHAT_ID', None)
                 if courier_id:
@@ -150,7 +148,7 @@ def submit_order(request):
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
 
-# ====================== 💬 ПИКИРЛЕРДИ БАШКАРУУ ======================
+# ====================== 💬 ПИКИРЛЕРДИ БАШКАРУУ (ӨЗҮНҮКҮН ГАНА ӨЧҮРҮҮ) ======================
 
 def reviews(request):
     if request.method == "POST":
@@ -158,31 +156,63 @@ def reviews(request):
             name = request.POST.get('userName')
             message = request.POST.get('userMsg')
             stars = request.POST.get('stars', 5)
+            image = request.FILES.get('reviewImage')
 
             if name and message:
-                Review.objects.create(name=name, message=message, stars=int(stars))
+                # 1. Жаңы пикирди базага сактоо
+                new_review = Review.objects.create(
+                    name=name,
+                    message=message,
+                    stars=int(stars),
+                    image=image
+                )
+
+                # 2. Сессияга бул пикирдин IDсин кошуу (өчүрө алуу үчүн)
+                my_reviews = request.session.get('my_reviews', [])
+                my_reviews.append(new_review.id)
+                request.session['my_reviews'] = my_reviews
+                request.session.modified = True
+
+                # 3. Telegram билдирүү
+                tg_msg = f"💬 *ЖАҢЫ ПИКИР*\n👤 *Кардар:* {name}\n⭐ *Рейтинг:* {stars} жылдыз\n📝 *Текст:* {message}"
+                if image:
+                    send_telegram_photo(settings.TELEGRAM_CHAT_ID, image, tg_msg)
+                else:
+                    send_telegram_message(settings.TELEGRAM_CHAT_ID, name, "Пикир калтырды", tg_msg,
+                                          title="💬 ЖАҢЫ ПИКИР")
+
                 return JsonResponse({'status': 'success'})
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
+    # Бетти жүктөөдө маалыматтарды алуу
     all_reviews = Review.objects.all().order_by('-created_at')
     active_music = BackgroundMusic.objects.filter(is_active=True).first()
 
-    # ПИКИРЛЕР үчүн лайк басылган IDлерди сессиядан алабыз
+    # Сессиядан өзүнүн пикирлеринин жана лайктарынын тизмесин алуу
+    my_reviews = request.session.get('my_reviews', [])
     liked_reviews = request.session.get('liked_reviews', [])
 
     return render(request, 'shop/reviews.html', {
         'reviews': all_reviews,
         'active_music': active_music,
+        'my_reviews': my_reviews,
         'liked_reviews': liked_reviews
     })
 
 
 def delete_review(request, review_id):
     if request.method == "POST":
-        review = get_object_or_404(Review, id=review_id)
-        review.delete()
-        return JsonResponse({'status': 'success'})
+        # Сессиядан текшерүү: бул пикир чын эле ушул кишиникиби?
+        my_reviews = request.session.get('my_reviews', [])
+
+        if review_id in my_reviews:
+            review = get_object_or_404(Review, id=review_id)
+            review.delete()
+            return JsonResponse({'status': 'success'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'Permission denied'}, status=403)
+
     return JsonResponse({'status': 'error'}, status=400)
 
 
@@ -205,13 +235,11 @@ def strawberry_chat_api(request):
                   "reply": "Биз Ош шаарындабыз. 📍 Так дарек 'Байланыш' бөлүмүндө."}
     }
 
-    # Түз дал келүү (Direct match)
     for category in knowledge_base.values():
         for keyword in category["keywords"]:
             if keyword in user_query:
                 return JsonResponse({'reply': category["reply"]})
 
-    # Окшоштукту текшерүү (Fuzzy match)
     best_match = None
     highest_score = 0
     for category in knowledge_base.values():
@@ -229,7 +257,6 @@ def strawberry_chat_api(request):
 
 def home(request):
     active_music = BackgroundMusic.objects.filter(is_active=True).first()
-    # Эң көп лайк алган 6 топтомду чыгаруу
     products = ProductSet.objects.all().order_by('-likes', '-id')[:6]
     liked_sets = request.session.get('liked_sets', [])
 
@@ -242,7 +269,6 @@ def home(request):
 
 def price(request):
     active_music = BackgroundMusic.objects.filter(is_active=True).first()
-    # Баардык топтомдорду баасы боюнча иреттөө
     sets = ProductSet.objects.all().order_by('-likes', 'price')
     liked_sets = request.session.get('liked_sets', [])
 
@@ -263,12 +289,13 @@ def contact(request):
     return render(request, 'shop/contact.html', {'active_music': active_music})
 
 
-def page_not_found(request, exception):
-    return render(request, 'shop/404.html', status=404)
+# ====================== ⚠️ КАТА БАРАКЧАЛАРЫ ======================
+
 def custom_page_not_found(request, exception):
     """ 404 катасы (бет табылган жок) """
     active_music = BackgroundMusic.objects.filter(is_active=True).first()
     return render(request, 'shop/404.html', {'active_music': active_music}, status=404)
+
 
 def custom_server_error(request):
     """ 500 катасы (сервердик ката) """

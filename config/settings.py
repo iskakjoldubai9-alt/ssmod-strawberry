@@ -10,19 +10,22 @@ ALLOWED_HOSTS = ['*']
 
 # --- ТИРКЕМЕЛЕР ---
 INSTALLED_APPS = [
+    'cloudinary_storage',
+
+    # 2. Django'нун стандарттык тиркемелери
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.staticfiles',  # Бул жерде турганы оң
     'django.contrib.sitemaps',
     'django.contrib.sites',
-    
-    # Cloudinary staticfiles'тан ЖОГОРУ турушу шарт!
-    'cloudinary_storage',
-    'django.contrib.staticfiles',
+
+    # 3. Cloudinary өзү (staticfiles'тан кийин турса болот)
     'cloudinary',
-    
+
+    # 4. Сиздин тиркемелер
     'shop',
 ]
 SITE_ID = 1

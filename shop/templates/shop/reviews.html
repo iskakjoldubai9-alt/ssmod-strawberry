@@ -17,14 +17,49 @@
         margin-bottom: 30px;
     }
 
-    /* --- ПИКИРЛЕРДИН СЕТКАСЫ --- */
+    /* --- ЖАҢЫ: РЕЙТИНГ СТАТИСТИКАСЫ --- */
+    .rating-stats {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 50px;
+        margin: 0 5% 50px;
+        padding: 30px;
+        background: var(--nav-bg);
+        border-radius: 35px;
+        border: 1px solid var(--border);
+        flex-wrap: wrap;
+    }
+    .avg-box { text-align: center; }
+    .avg-num { font-size: 4.5rem; font-weight: 800; color: var(--accent); line-height: 1; }
+    .stat-bars { flex-grow: 0.3; min-width: 250px; }
+    .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.9rem; }
+    .bar-line { flex-grow: 1; height: 8px; background: var(--border); border-radius: 10px; overflow: hidden; }
+    .bar-fill { height: 100%; background: #ffb800; border-radius: 10px; }
+/* --- ПИКИРЛЕРДИН СЕТКАСЫ (ОҢДОЛГОН) --- */
+.reviews-container {
+    display: grid;
+    /* Ноутбукта 300px-ден кем эмес кылып тизет, бош орун калса автоматтык түрдө толтурат */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px; /* Карточкалардын ортосундагы аралык */
+    padding: 0 5% 80px;
+    max-width: 1400px; /* Өтө чоң экрандарда өтө жайылып кетпеши үчүн */
+    margin: 0 auto; /* Ортого түздөө */
+}
+
+/* Телефондор үчүн кошумча жөндөө (Экран 480px-ден кичине болгондо) */
+@media (max-width: 480px) {
     .reviews-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 30px;
-        padding: 0 5% 80px;
+        grid-template-columns: 1fr; /* Бир катар гана кылат */
+        gap: 15px; /* Телефондо аралыкты бир аз азайтабыз */
+        padding: 0 15px 60px; /* Капталдарындагы боштукту азайтабыз */
     }
 
+    .glass-card {
+        padding: 20px; /* Карточканын ичиндеги боштукту телефонго ылайыктайбыз */
+        border-radius: 25px;
+    }
+}
     /* --- ПИКИР КАРТОЧКАСЫ --- */
     .glass-card {
         background: var(--glass);
@@ -45,12 +80,31 @@
         border-color: var(--accent);
     }
 
+    /* ЖАҢЫ: ПИКИРДЕГИ СҮРӨТ */
+    .review-photo {
+        width: 100%;
+        max-height: 250px;
+        object-fit: cover;
+        border-radius: 20px;
+        margin: 15px 0;
+        cursor: pointer;
+        border: 1px solid var(--border);
+    }
+
+    /* ЖАҢЫ: АДМИНДИН ЖООБУ */
+    .admin-reply-box {
+        margin-top: 20px;
+        padding: 15px;
+        background: rgba(255, 77, 109, 0.08);
+        border-radius: 20px;
+        border-left: 4px solid var(--accent);
+    }
+
     @keyframes fadeInUp {
         from { opacity: 0; transform: translateY(30px); }
         to { opacity: 1; transform: translateY(0); }
     }
 
-    /* --- ӨЧҮРҮҮ БАСКЫЧЫ --- */
     .delete-btn {
         position: absolute;
         top: 20px;
@@ -85,7 +139,6 @@
         padding-right: 35px;
     }
 
-    /* --- ❤️ ЛАЙК ДИЗАЙНЫ (ОҢДОЛДУ) --- */
     .like-container {
         position: absolute;
         bottom: 25px;
@@ -98,34 +151,18 @@
         background: rgba(255, 255, 255, 0.05);
         padding: 8px 16px;
         border-radius: 25px;
-        transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transition: 0.3s;
         border: 1px solid var(--border);
     }
 
     .like-container:hover {
         background: rgba(255, 71, 87, 0.1);
         border-color: #ff4757;
-        transform: scale(1.05);
     }
 
-    .like-btn {
-        font-size: 1.3rem;
-        transition: 0.4s;
-        display: inline-block;
-        filter: grayscale(1) opacity(0.5);
-    }
-
-    /* Лайк басылгандагы стиль */
-    .like-container.active .like-btn {
-        filter: grayscale(0) opacity(1);
-        animation: heartBeat 0.4s ease;
-    }
-
-    .like-count {
-        font-size: 1rem;
-        font-weight: 800;
-        color: var(--text);
-    }
+    .like-btn { font-size: 1.3rem; transition: 0.4s; display: inline-block; filter: grayscale(1) opacity(0.5); }
+    .like-container.active .like-btn { filter: grayscale(0) opacity(1); animation: heartBeat 0.4s ease; }
+    .like-count { font-size: 1rem; font-weight: 800; color: var(--text); }
 
     @keyframes heartBeat {
         0% { transform: scale(1); }
@@ -133,65 +170,51 @@
         100% { transform: scale(1); }
     }
 
-    .user-info {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        margin-top: 20px;
-    }
+    .user-info { display: flex; align-items: center; gap: 15px; margin-top: 20px; }
     .user-avatar {
-        width: 50px;
-        height: 50px;
+        width: 50px; height: 50px;
         background: linear-gradient(135deg, var(--accent), #ff85a1);
-        border-radius: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: 700;
-        font-size: 1.3rem;
-        box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
+        border-radius: 18px; display: flex; align-items: center; justify-content: center;
+        color: white; font-weight: 700; font-size: 1.3rem;
     }
 
+    /* ФОРМА СТИЛИ */
     .leave-review-section {
-        max-width: 650px;
-        margin: 60px auto 100px;
-        padding: 50px;
-        background: var(--nav-bg);
-        border-radius: 40px;
-        border: 1px solid var(--border);
-        box-shadow: var(--shadow);
+        max-width: 650px; margin: 60px auto 100px; padding: 50px;
+        background: var(--nav-bg); border-radius: 40px; border: 1px solid var(--border); box-shadow: var(--shadow);
     }
 
-    .star-select {
-        font-size: 2.5rem;
-        color: #e0e0e0;
-        cursor: pointer;
-        margin-bottom: 30px;
-        display: flex;
-        justify-content: center;
-        gap: 12px;
+    /* ЖАҢЫ: СҮРӨТ ЖҮКТӨӨ БАСКЫЧЫ */
+    .file-upload-label {
+        display: block; padding: 15px; border: 2px dashed var(--border);
+        border-radius: 18px; text-align: center; cursor: pointer; margin-bottom: 20px; transition: 0.3s;
     }
+    .file-upload-label:hover { border-color: var(--accent); background: rgba(255, 77, 109, 0.05); }
+
+    .star-select { font-size: 2.5rem; color: #e0e0e0; cursor: pointer; margin-bottom: 30px; display: flex; justify-content: center; gap: 12px; }
     .star-select span.active { color: #ffb800; text-shadow: 0 0 15px rgba(255, 184, 0, 0.4); }
 
-    input, textarea {
-        width: 100%; padding: 18px; margin-bottom: 20px;
-        border-radius: 18px; border: 1px solid var(--border);
-        background: var(--input-bg); color: var(--text);
-    }
-
-    #submitBtn {
-        width: 100%; padding: 20px; border: none; border-radius: 20px;
-        background: var(--accent); color: white; font-weight: 700;
-        cursor: pointer; transition: 0.4s; text-transform: uppercase;
-    }
-    #submitBtn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(255, 77, 109, 0.4); }
+    input, textarea { width: 100%; padding: 18px; margin-bottom: 20px; border-radius: 18px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); }
+    #submitBtn { width: 100%; padding: 20px; border: none; border-radius: 20px; background: var(--accent); color: white; font-weight: 700; cursor: pointer; transition: 0.4s; text-transform: uppercase; }
 </style>
 
 <div class="reviews-page">
     <div class="rev-header">
         <h1 style="font-family: 'Playfair Display'; font-size: 3.5rem; margin-bottom: 10px;" data-lang-key="reviews_title">Пикирлер</h1>
         <p style="color: var(--accent); font-weight: 600; font-size: 1.1rem;" data-lang-key="reviews_subtitle">Кардарларыбыздын чыныгы сезимдери 🍓</p>
+    </div>
+
+    <div class="rating-stats">
+        <div class="avg-box">
+            <div class="avg-num">4.9</div>
+            <div style="color: #ffb800; font-size: 1.2rem;">★★★★★</div>
+            <small style="opacity: 0.6;">{{ reviews|length }} пикирдин негизинде</small>
+        </div>
+        <div class="stat-bars">
+            <div class="bar-row"><span>5★</span> <div class="bar-line"><div class="bar-fill" style="width: 92%;"></div></div> <span>92%</span></div>
+            <div class="bar-row"><span>4★</span> <div class="bar-line"><div class="bar-fill" style="width: 6%;"></div></div> <span>6%</span></div>
+            <div class="bar-row"><span>3★</span> <div class="bar-line"><div class="bar-fill" style="width: 2%;"></div></div> <span>2%</span></div>
+        </div>
     </div>
 
     <div class="reviews-container" id="reviewsContainer">
@@ -206,6 +229,11 @@
                     </div>
                     <div class="date-text">{{ r.created_at|date:"d.m.Y" }}</div>
                 </div>
+
+                {% if r.image %}
+                <img src="{{ r.image.url }}" class="review-photo" onclick="window.open(this.src)">
+                {% endif %}
+
                 <p style="font-style: italic; margin-bottom: 40px; line-height: 1.7; font-size: 1rem; opacity: 0.9;">"{{ r.message }}"</p>
             </div>
 
@@ -217,6 +245,13 @@
                 </div>
             </div>
 
+            {% if r.admin_reply %}
+            <div class="admin-reply-box">
+                <small style="color: var(--accent); font-weight: bold; text-transform: uppercase;">Дүкөн ээсинин жообу:</small>
+                <p style="margin: 5px 0 0 0; font-size: 0.95rem;">{{ r.admin_reply }}</p>
+            </div>
+            {% endif %}
+
             <div class="like-container {% if r.id in liked_reviews %}active{% endif %}" onclick="toggleReviewLike(this, {{ r.id }})">
                 <span class="like-btn">❤️</span>
                 <span class="like-count" id="like-count-{{ r.id }}">{{ r.likes }}</span>
@@ -227,7 +262,7 @@
 
     <div class="leave-review-section">
         <h2 style="text-align: center; margin-bottom: 35px; font-family: 'Playfair Display';" data-lang-key="leave_review_title">Пикир калтыруу</h2>
-        <form id="reviewForm">
+        <form id="reviewForm" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="star-select" id="starSelector">
                 <span class="active">★</span><span class="active">★</span><span class="active">★</span><span class="active">★</span><span class="active">★</span>
@@ -235,6 +270,12 @@
             <input type="hidden" name="stars" id="starsInput" value="5">
             <input type="text" name="userName" data-lang-key="placeholder_name" required>
             <textarea name="userMsg" rows="4" data-lang-key="placeholder_message" required></textarea>
+
+            <label class="file-upload-label">
+                <span id="fileNameDisplay">📷 Сүрөт жүктөө (Милдеттүү эмес)</span>
+                <input type="file" name="reviewImage" accept="image/*" style="display: none;" onchange="updateFileName(this)">
+            </label>
+
             <button type="submit" id="submitBtn" data-lang-key="submit_review_btn">ПИКИРДИ ЖӨНӨТҮҮ</button>
         </form>
     </div>
@@ -295,11 +336,9 @@
         };
     });
 
-    // 3. ❤️ ПИКИРЛЕР ҮЧҮН ЛАЙК БАСУУ (ОҢДОЛДУ)
+    // 3. ❤️ ЛАЙК БАСУУ
     async function toggleReviewLike(container, reviewId) {
         const countEl = document.getElementById(`like-count-${reviewId}`);
-
-        // Optimistic Update (экранда дароо өзгөртүү)
         let isCurrentlyActive = container.classList.contains('active');
         let currentCount = parseInt(countEl.textContent) || 0;
 
@@ -314,76 +353,75 @@
         try {
             const res = await fetch(`/toggle-review-like/${reviewId}/`, {
                 method: 'POST',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',
-                    'Content-Type': 'application/json'
-                }
+                headers: { 'X-CSRFToken': '{{ csrf_token }}', 'Content-Type': 'application/json' }
             });
-
             if (res.ok) {
                 const data = await res.json();
-                // Серверден келген так маани менен жаңыртуу
                 countEl.textContent = data.total_likes;
                 if (data.is_liked) container.classList.add('active');
                 else container.classList.remove('active');
-            } else {
-                throw new Error();
             }
         } catch (err) {
-            // Ката болсо кайра калыбына келтирүү
             container.classList.toggle('active');
             countEl.textContent = currentCount;
-            console.error("Лайк катасы:", err);
         }
     }
 
-    // 4. ПИКИР ӨЧҮРҮҮ
+    // 4. ӨЧҮРҮҮ
     async function deleteReview(reviewId) {
         const lang = localStorage.getItem('selectedLanguage') || 'ky';
         if (!confirm(reviewsTranslations[lang].confirm_delete)) return;
-
         try {
-            const res = await fetch(`/delete-review/${reviewId}/`, {
-                method: 'POST',
-                headers: { 'X-CSRFToken': '{{ csrf_token }}' }
-            });
+            const res = await fetch(`/delete-review/${reviewId}/`, { method: 'POST', headers: { 'X-CSRFToken': '{{ csrf_token }}' } });
             if (res.ok) {
                 const card = document.getElementById(`review-${reviewId}`);
-                card.style.transform = 'scale(0.8) translateY(20px)';
                 card.style.opacity = '0';
                 setTimeout(() => card.remove(), 400);
             }
-        } catch (err) {
-            alert(reviewsTranslations[lang].error_occurred);
+        } catch (err) { alert(reviewsTranslations[lang].error_occurred); }
+    }
+// 5. ФОРМАНЫ ЖӨНӨТҮҮ
+document.getElementById('reviewForm').onsubmit = async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    const lang = localStorage.getItem('selectedLanguage') || 'ky';
+    const originalText = btn.textContent;
+
+    // FormData объектисин түзөбүз (ал сүрөттү кошо камтыйт)
+    const formData = new FormData(e.target);
+
+    btn.disabled = true;
+    btn.innerText = reviewsTranslations[lang].sending;
+
+    try {
+        const res = await fetch(window.location.href, {
+            method: 'POST',
+            body: formData, // FormData колдонобуз
+            headers: {
+                // КӨҢҮЛ БУРУҢУЗ: Бул жерде 'Content-Type' жазылбашы керек!
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        });
+
+        if (res.ok) {
+            location.reload();
+        } else {
+            throw new Error();
+        }
+    } catch (err) {
+        alert(reviewsTranslations[lang].error_occurred);
+        btn.disabled = false;
+        btn.innerText = originalText;
+    }
+};
+
+    // Сүрөттүн атын көрсөтүү
+    function updateFileName(input) {
+        const display = document.getElementById('fileNameDisplay');
+        if (input.files.length > 0) {
+            display.innerText = "Тандалды: " + input.files[0].name;
+            display.style.color = "var(--accent)";
         }
     }
-
-    // 5. ФОРМАНЫ ЖӨНӨТҮҮ
-    document.getElementById('reviewForm').onsubmit = async (e) => {
-        e.preventDefault();
-        const btn = document.getElementById('submitBtn');
-        const lang = localStorage.getItem('selectedLanguage') || 'ky';
-        const originalText = btn.textContent;
-
-        btn.disabled = true;
-        btn.innerText = reviewsTranslations[lang].sending;
-
-        try {
-            const res = await fetch(window.location.href, {
-                method: 'POST',
-                body: new FormData(e.target),
-                headers: { 'X-CSRFToken': '{{ csrf_token }}' }
-            });
-            if (res.ok) {
-                location.reload();
-            } else {
-                throw new Error();
-            }
-        } catch (err) {
-            alert(reviewsTranslations[lang].error_occurred);
-            btn.disabled = false;
-            btn.innerText = originalText;
-        }
-    };
 </script>
 {% endblock %}

@@ -73,31 +73,41 @@
         padding-left: 15px;
     }
 
+    /* ВИДЕО ЖАНА ГЛАСС КАРТА */
     .video-wrapper { flex: 0.7; display: flex; justify-content: center; align-items: center; }
 
     .glass-card {
         background: var(--glass-bg);
-        backdrop-filter: blur(10px);
-        border-radius: 25px;
-        padding: 10px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: 0 15px 35px rgba(0,0,0,0.08);
-        transition: 0.5s ease-in-out;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border-radius: 30px;
+        padding: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.08);
+        transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
     }
 
     .strawberry-video {
         width: 280px;
         height: auto;
-        border-radius: 18px;
+        border-radius: 22px;
         display: block;
-        transition: 0.5s ease;
-        background: #000;
+        background: #fff5f7; /* Видео ачылганча назик фон */
+        opacity: 0; /* Башында көрүнбөйт */
+        transition: opacity 1s ease-in-out;
+        object-fit: cover;
+    }
+
+    /* Видео даяр болгондо иштеген класс */
+    .video-loaded {
+        opacity: 1;
     }
 
     .glass-card:hover {
-        transform: translateY(-5px) rotate(1deg);
+        transform: translateY(-10px) scale(1.02);
         border-color: var(--accent-rose);
-        box-shadow: 0 20px 40px rgba(255, 77, 109, 0.15);
+        box-shadow: 0 30px 60px rgba(255, 77, 109, 0.2);
     }
 
     .blob {
@@ -122,21 +132,27 @@
     <div class="blob" style="width: 180px; height: 180px; background: var(--soft-gold); left: 10%; bottom: 20%;"></div>
 
     <div class="main-container">
-        <div class="hero-text" data-aos="fade-up" data-aos-duration="1200">
+        <div class="hero-text" data-aos="fade-right" data-aos-duration="1200">
             <div class="premium-badge">
                 <span>●</span> SSMOD Strawberry Art
             </div>
             <h1 data-lang-key="hero_title">Бельгия шоколады <br>менен <em>өзгөчө белек</em></h1>
             <p data-lang-key="hero_desc">Биз ар бир кулпунайды сүйүү менен даярдайбыз. Жаңы мөмөлөр жана премиум шоколад — сиздин жакындарыңыз үчүн эң сонун тандоо.</p>
 
-            <a href="{% url 'price' %}" class="order-btn" style="text-decoration: none; padding: 14px 30px; background: var(--text); color: var(--bg); border-radius: 8px; font-weight: 600; display: inline-block; transition: 0.3s;" data-lang-key="hero_btn">
+            <a href="{% url 'price' %}" class="order-btn" style="text-decoration: none; padding: 16px 35px; background: var(--text); color: var(--bg); border-radius: 12px; font-weight: 600; display: inline-block; transition: 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.1);" data-lang-key="hero_btn">
                 Заказ берүү →
             </a>
         </div>
 
-        <div class="video-wrapper" data-aos="zoom-in" data-aos-delay="300">
+        <div class="video-wrapper" data-aos="fade-left" data-aos-delay="300">
             <div class="glass-card">
-                <video class="strawberry-video" autoplay muted loop playsinline preload="auto">
+                <video class="strawberry-video"
+                       id="heroVideo"
+                       autoplay
+                       muted
+                       loop
+                       playsinline
+                       preload="auto">
                     <source src="{% static 'videos/strawberry_360.mp4' %}" type="video/mp4">
                     Видеону браузер колдобойт.
                 </video>
@@ -166,39 +182,65 @@ const homeTranslations = {
     }
 };
 
-// Тилди жаңыртуу функциясы
 function updateHomeLanguage() {
-    const lang = localStorage.getItem('selectedLanguage') || 'ky';
+    // localStorage'дан тилди алуу (эгер жок болсо 'ky' дефолт болот)
+    let lang = localStorage.getItem('selectedLanguage');
+
+    // Эгер сенин набарыңда 'en' эмес 'eng' деп сакталса, аны оңдоп коёбуз
+    if (lang === 'eng') lang = 'en';
+    if (!lang) lang = 'ky';
+
     const t = homeTranslations[lang];
 
-    document.querySelectorAll('[data-lang-key]').forEach(el => {
-        const key = el.getAttribute('data-lang-key');
-        if (t && t[key]) {
-            el.innerHTML = t[key];
-        }
-    });
+    if (t) {
+        document.querySelectorAll('[data-lang-key]').forEach(el => {
+            const key = el.getAttribute('data-lang-key');
+            if (t[key]) {
+                el.innerHTML = t[key];
+            }
+        });
+    }
 }
 
-// 🔥 ЖАҢЫ: Тил баскычы басылганда бул бетти дароо которуу үчүн Event Listener
-window.addEventListener('languageChanged', function() {
-    updateHomeLanguage();
+// Тил алмашса дароо иштетүү
+window.addEventListener('storage', (e) => {
+    if (e.key === 'selectedLanguage') {
+        updateHomeLanguage();
+    }
 });
 
-// 🔥 ЖАҢЫ: Кошумча камсыздандыруу (Тил баскычы басылганын текшерип турат)
-setInterval(updateHomeLanguage, 500);
+// Башка барактардан тил алмашканда да иштеши үчүн
+window.addEventListener('languageChanged', updateHomeLanguage);
+
+// Барак жаңыланганда же ачылганда иштетүү
+document.addEventListener('DOMContentLoaded', updateHomeLanguage);
+
+// Текшерүү үчүн (ар бир секунд сайын)
+setInterval(updateHomeLanguage, 1000);
+
+window.addEventListener('languageChanged', updateHomeLanguage);
+setInterval(updateHomeLanguage, 1000);
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Баштапкы жүктөөдө тилди коюу
     updateHomeLanguage();
-
-    // AOS анимациясын иштетүү
     AOS.init({ duration: 1000, once: true });
 
-    // Видео мажбурлап ойнотуу
-    var video = document.querySelector('.strawberry-video');
+    const video = document.getElementById('heroVideo');
+
     if (video) {
-        video.play().catch(function(error) {
-            console.log("Video play failed:", error);
+        // 1. Видео толук жүктөлгөндө же ойноого даяр болгондо ишке кирет
+        video.addEventListener('loadeddata', function() {
+            video.classList.add('video-loaded');
+        });
+
+        // 2. Эгер видео кеште (cache) бар болсо дароо көрсөтүү
+        if (video.readyState >= 3) {
+            video.classList.add('video-loaded');
+        }
+
+        // 3. Мажбурлап ойнотуу (Кээ бир браузерлер үчүн)
+        video.play().catch(error => {
+            console.log("Авто-ойнотуу токтотулду, колдонуучунун аракети күтүлүүдө.");
         });
     }
 });

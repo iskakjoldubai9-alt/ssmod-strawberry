@@ -41,11 +41,23 @@ class ProductSet(models.Model):
         verbose_name_plural = "Топтомдор"
 
 
-# ====================== 💬 ПИКИРЛЕР МОДЕЛИ (ЖАҢЫ) ======================
+## ====================== 💬 ПИКИРЛЕР МОДЕЛИ (ОҢДОЛДУ) ======================
 class Review(models.Model):
     name = models.CharField(max_length=100, verbose_name="Кардардын аты")
     message = models.TextField(verbose_name="Пикирдин тексти")
     stars = models.IntegerField(default=5, verbose_name="Жылдыз саны")
+
+    # БУЛ ТАЛААНЫ КОШУҢУЗ:
+    image = CloudinaryField(
+        folder='reviews/images/',
+        blank=True,
+        null=True,
+        verbose_name="Кардардын сүрөтү"
+    )
+
+    # Админдин жообу (Эгер мурунку коддо бар болсо)
+    admin_reply = models.TextField(blank=True, null=True, verbose_name="Админдин жообу")
+
     likes = models.PositiveIntegerField(default=0, verbose_name="Лайктар")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Кошулган убактысы")
 
