@@ -357,6 +357,61 @@
     }
 
     .gift-option input { width: 18px; height: 18px; cursor: pointer; accent-color: #ff69b4; }
+
+    /* Корзина баскычынын стили */
+.add-to-cart-btn {
+    background: #2ecc71 !important;
+    color: white !important;
+    border: 2px solid rgba(255,255,255,0.3) !important;
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+    transition: all 0.3s;
+}
+
+.add-to-cart-btn:hover {
+    background: #27ae60 !important;
+    transform: scale(1.08);
+    box-shadow: 0 6px 20px rgba(46, 204, 113, 0.5);
+}
+
+.add-to-cart-btn:active {
+    transform: scale(0.95);
+}
+  .cart-btn {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+/* Иконка */
+.cart-icon {
+    font-size: 1.5rem;
+}
+
+/* Hover эффект */
+.cart-btn:hover {
+    transform: scale(1.15);
+    background: rgba(255,255,255,0.2);
+}
+
+/* Баскандагы эффект */
+.cart-btn:active {
+    transform: scale(0.95);
+}
 </style>
 
 <div class="showcase-wrapper">
@@ -380,11 +435,29 @@
                 {% endif %}
             </div>
             <div class="card-overlay">
-                <span style="color:var(--royal-gold); font-weight:700;">{{ set.pieces }} <span data-lang-key="pcs">шт</span></span>
-                <h3>{{ set.title }}</h3>
-                <div class="royal-price">{{ set.price }} <span data-lang-key="som">сом</span></div>
-                <button onclick="openBooking(this, event)" class="royal-btn" data-lang-key="book_btn">Брондоо</button>
-            </div>
+    <span style="color:var(--royal-gold); font-weight:700;">{{ set.pieces }} <span data-lang-key="pcs">шт</span></span>
+    <h3>{{ set.title }}</h3>
+    <div class="royal-price">{{ set.price }} <span data-lang-key="som">сом</span></div>
+
+<div style="display: flex; justify-content: space-between; align-items: center; width: 45%; margin-top: 10px;">
+        <!-- Брондоо баскычы -->
+        <button onclick="openBooking(this, event)"
+                class="royal-btn"
+                data-lang-key="book_btn"
+                style="flex: 1; padding: 12px 20px;">
+            Брондоо
+        </button>
+
+        <!-- Корзина баскычы (сүрөттөгүдөй жашыл айлана) -->
+        <button onclick="addToCart(event, this)"
+        class="cart-btn"
+        data-id="{{ set.id }}"
+        data-title="{{ set.title }}"
+        data-price="{{ set.price }}">
+    <span class="cart-icon">🛒</span>
+</button>
+    </div>
+</div>
         </div>
         {% endfor %}
     </div>
@@ -819,5 +892,51 @@ window.onclick = e => {
         closeModal();
     }
 };
+    function addToCart(btn) {
+    const card = btn.closest('.royal-card');
+    const item = {
+        id: card.dataset.id,
+        title: card.dataset.title,
+        price: parseInt(card.dataset.price)
+    };
+
+    // Корзина массивине кошуу (мурунку код бар болсо)
+    if (!window.cart) window.cart = [];
+    if (window.cart.find(i => i.id === item.id)) {
+        alert("Бул товар мурунтан корзинада!");
+        return;
+    }
+    window.cart.push(item);
+
+    // Санды жаңыртуу (эгер икона бар болсо)
+    const countEl = document.getElementById('cartCount');
+    if (countEl) countEl.textContent = window.cart.length;
+
+    // Кыска анимация
+    btn.style.transform = "scale(1.4)";
+    setTimeout(() => btn.style.transform = "scale(1)", 200);
+}
+function addToCart(event, btn) {
+    event.stopPropagation(); // Картаны басканда модалдык терезе ачылып кетпеши үчүн
+
+    const productId = btn.dataset.id;
+
+    // Сиздин urls.py'деги 'cart_add' жолуна так дал келиши керек
+    fetch(`/cart/add/${productId}/`, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            // Товар кошулгандан кийин дароо корзина барагына багыттоо
+            window.location.href = "/cart/";
+        } else {
+            console.error("Серверден ката келди");
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
 </script>
 {% endblock %}

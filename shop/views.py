@@ -300,3 +300,84 @@ def custom_page_not_found(request, exception):
 def custom_server_error(request):
     """ 500 катасы (сервердик ката) """
     return render(request, 'shop/500.html', status=500)
+
+
+# ====================== 🛒 КОРЗИНА ЛОГИКАСЫ ======================
+
+# ====================== 🛒 КОРЗИНА ЛОГИКАСЫ ======================
+
+# Башка импорттордун жанына кошуңуз
+from django.contrib.auth.decorators import login_required
+
+def cart_add(request, product_id):
+    # 1. Сөзсүз түрдө эң башында текшеребиз:
+    if not request.user.is_authenticated:
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({
+                'status': 'must_login',
+                'message': 'Товар кошуу үчүн алгач катталыңыз! 🍓'
+            })
+        return redirect('login')
+
+    # 2. Эгер колдонуучу кирген болсо, төмөнкү код иштейт:
+    cart = request.session.get('cart', {})
+    product_id_str = str(product_id)
+
+    if product_id_str in cart:
+        cart[product_id_str] += 1
+    else:
+        cart[product_id_str] = 1
+
+    request.session['cart'] = cart
+    request.session.modified = True
+
+    # AJAX суроосу үчүн жооп
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'status': 'ok', 'cart_count': sum(cart.values())})
+
+    # Жөнөкөй баскыч болсо
+    return redirect(request.META.get('HTTP_REFERER', 'price'))
+
+def cart_detail(request):
+    """ Корзинадагы товарлардын тизмесин көрсөтүү """
+    active_music = BackgroundMusic.objects.filter(is_active=True).first()
+    cart = request.session.get('cart', {})
+
+    cart_items = []
+    total_price = 0
+
+    # Сессиядагы IDлер боюнча базадан товарларды алуу
+    for product_id, quantity in cart.items():
+        try:
+            product = get_object_or_404(ProductSet, id=int(product_id))
+            item_total = product.price * quantity
+            total_price += item_total
+            cart_items.append({
+                'product': product,
+                'quantity': quantity,
+                'item_total': item_total,
+            })
+        except:
+            # Эгер товар базадан өчүп кетсе, сессиядан да тазалап коюу үчүн
+            continue
+
+    return render(request, 'shop/cart_detail.html', {
+        'cart_items': cart_items,
+        'total_price': total_price,
+        'active_music': active_music,
+    })
+
+
+def cart_remove(request, product_id):
+    """ Товарды корзинадан өчүрүү """
+    cart = request.session.get('cart', {})
+    product_id_str = str(product_id)
+
+    if product_id_str in cart:
+        del cart[product_id_str]
+        request.session['cart'] = cart
+        request.session.modified = True
+
+    # Өчүргөндөн кийин кайра корзина барагына кайтат
+    return redirect('cart_detail')
+

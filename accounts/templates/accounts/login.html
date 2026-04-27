@@ -1,0 +1,253 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ky">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кирүү | SSMOD Strawberry</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-pink: #ff4d6d;
+            --soft-pink: #ffb3c1;
+            --dark-pink: #c9184a;
+            --glass: rgba(255, 255, 255, 0.9);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fff0f3 0%, #ffb3c1 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Арткы пландагы кооз тегеректер */
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: white;
+            opacity: 0.5;
+            filter: blur(50px);
+            z-index: 0;
+        }
+
+        .login-container {
+            position: relative;
+            z-index: 1;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.2);
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: var(--dark-pink);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px solid #eee;
+            outline: none;
+            font-size: 16px;
+            transition: 0.3s;
+            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        input:focus {
+            border-color: var(--primary-pink);
+            box-shadow: 0 0 10px rgba(255, 77, 109, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            background: var(--primary-pink);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
+        }
+
+        button:hover {
+            background: var(--dark-pink);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 77, 109, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* Код киргизүү талаасынын стили */
+        #verify-code {
+            letter-spacing: 10px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--dark-pink);
+        }
+
+        .logo-img {
+            width: 80px;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .footer-text {
+            margin-top: 25px;
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="circle" style="width: 300px; height: 300px; top: -100px; left: -100px; background: #ff4d6d;"></div>
+    <div class="circle" style="width: 200px; height: 200px; bottom: -50px; right: -50px; background: #ffb3c1;"></div>
+
+    <div class="login-container">
+        <div style="font-size: 50px; margin-bottom: 10px;">🍓</div>
+
+        <div id="auth-section">
+            <h2>Кош келиңиз</h2>
+            <p>SSMOD таттуулар дүйнөсүнө кирүү үчүн маалыматыңызды жазыңыз</p>
+
+            <div class="input-group">
+                <input type="text" id="user-name" placeholder="Атыңызды жазыңыз" required>
+            </div>
+            <div class="input-group">
+                <input type="text" id="user-phone" placeholder="0XXX XX XX XX" required>
+            </div>
+
+            <button id="send-btn" onclick="sendAuthData()">КОДДУ АЛУУ</button>
+        </div>
+
+        <div id="verify-section" style="display: none;">
+            <h2>Кодду текшерүү</h2>
+            <p>Биз сизге 6 орундуу код жөнөттүк</p>
+
+            <div class="input-group">
+                <input type="text" id="verify-code" placeholder="000000" maxlength="6">
+            </div>
+
+            <button id="verify-btn" onclick="verifyAuthCode()">КИРҮҮ</button>
+            <p style="margin-top: 15px; cursor: pointer; color: var(--primary-pink);" onclick="location.reload()">Кайра аракет кылуу</p>
+        </div>
+
+        <div class="footer-text">
+            © 2026 SSMOD Strawberry. Бардык укуктар корголгон.
+        </div>
+    </div>
+
+    <script>
+    function sendAuthData() {
+        const name = document.getElementById('user-name').value;
+        const phone = document.getElementById('user-phone').value;
+        const btn = document.getElementById('send-btn');
+
+        if(!name || !phone) {
+            alert("Сураныч, атыңызды жана номериңизди жазыңыз! 🍓");
+            return;
+        }
+
+        btn.innerText = "Жөнөтүлүүдө...";
+        btn.disabled = true;
+
+        fetch('/accounts/login/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}`
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.status === 'code_sent') {
+                document.getElementById('auth-section').style.display = 'none';
+                document.getElementById('verify-section').style.display = 'block';
+            } else {
+                alert("Ката кетти, кайра аракет кылыңыз.");
+                btn.innerText = "КОДДУ АЛУУ";
+                btn.disabled = false;
+            }
+        })
+        .catch(err => {
+            alert("Сервер менен байланыш үзүлдү.");
+            btn.disabled = false;
+        });
+    }
+
+    function verifyAuthCode() {
+        const code = document.getElementById('verify-code').value;
+        const btn = document.getElementById('verify-btn');
+
+        if(code.length < 6) {
+            alert("Код 6 сандан турушу керек!");
+            return;
+        }
+
+        btn.innerText = "Текшерилүүдө...";
+
+        fetch('/accounts/login/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `code=${encodeURIComponent(code)}`
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.status === 'success') {
+                window.location.href = '/';
+            } else {
+                alert("Код туура эмес! ❌");
+                btn.innerText = "КИРҮҮ";
+            }
+        });
+    }
+    </script>
+</body>
+</html>

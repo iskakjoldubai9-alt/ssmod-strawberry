@@ -12,6 +12,46 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <style>
+        /* Корзинанын менюдагы стили */
+.cart-nav-link {
+    position: relative;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    transition: 0.3s;
+    margin-right: 5px;
+}
+
+.cart-icon {
+    font-size: 1.1rem;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--accent); /* Сиздин кызгылт түсүңүз */
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--bg);
+}
+
+.cart-nav-link:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
         :root {
             --accent: #ff4d6d;
             --bg: #fdfdfd;
@@ -149,31 +189,216 @@
 
         .chat-footer { padding:10px 15px; display:flex; gap:10px; border-top:1px solid var(--border); background: var(--bg); }
         .chat-footer input { flex:1; background:none; border:none; outline:none; color:var(--text); font-size: 0.85rem; }
+        /* Жаңы меню стилдери */
+.nav-links-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Шилтемелердин ортосундагы аралык */
+}
+
+nav a {
+    text-decoration: none;
+    color: var(--text);
+    font-size: 1.1rem !important; /* Тексттин өлчөмү */
+    font-weight: 500;
+    padding: 12px 15px;
+    border-radius: 12px;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px !important;
+}
+
+nav a:hover {
+    background: var(--input-bg);
+    transform: translateX(5px);
+}
+
+.nav-icon {
+    margin-right: 15px;
+    font-size: 1.3rem;
+    width: 30px;
+    text-align: center;
+}
+
+/* Корзинаны өзгөчө белгилөө */
+.nav-cart-highlight {
+    background: rgba(255, 77, 109, 0.08); /* Кызгылт тус фон */
+    color: var(--accent) !important;
+    font-weight: 700 !important;
+}
+
+.nav-cart-count {
+    margin-left: auto;
+    background: var(--accent);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+}
+        /* Менюнун ичиндеги Тил жана Тема бөлүмү */
+.nav-settings {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 10px 15px;
+    background: var(--input-bg);
+    border-radius: 15px;
+    justify-content: space-around;
+}
+
+.nav-settings .lang-btn,
+.nav-settings .theme-switch {
+    border: none;
+    background: transparent;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--text);
+}
+
+/* Header баскычтарын жеңилдетүү */
+.menu-btn {
+    border: none !important; /* Рамканы өчүрдүк */
+    background: var(--input-bg);
+    padding: 10px 20px;
+    border-radius: 10px;
+    letter-spacing: 1px;
+    font-size: 0.75rem;
+}
+
+.cart-nav-link {
+    border: none !important; /* Тегерек рамканы өчүрдүк */
+}
+
+.cart-badge {
+    top: -8px;
+    right: -8px;
+    background: var(--accent);
+    box-shadow: 0 2px 10px rgba(255, 77, 109, 0.4);
+}
+        .lang-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.lang-btn-main {
+    background: var(--input-bg);
+    border: none;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--text);
+    min-width: 45px;
+}
+
+.lang-list {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--nav-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-top: 5px;
+    z-index: 1001;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.lang-list div {
+    padding: 8px 15px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.8rem;
+    transition: 0.3s;
+    color: var(--text);
+}
+
+.lang-list div:hover {
+    background: var(--accent);
+    color: white;
+}
+
+.lang-list.show {
+    display: block;
+}
     </style>
 </head>
 <body id="body" data-lang="ky">
 
-    <header>
-        <div class="logo-box">
-            <a href="{% url 'home' %}" class="logo">SS</a>
-            <a href="/admin/" class="logo"><span>mod.</span></a>
+  <header>
+    <div class="logo-box">
+        <a href="{% url 'home' %}" class="logo">SS<span>mod.</span></a>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:12px;">
+        <div class="lang-dropdown" style="position: relative; display: inline-block;">
+            <button class="lang-btn" id="headerLangBtn" style="border:none; background:var(--input-bg); font-weight:700; padding:8px 12px; border-radius:10px; cursor:pointer; min-width: 48px; color: var(--text);">
+                KG
+            </button>
+            <div id="headerLangList" style="display: none; position: absolute; top: 100%; right: 0; background: var(--nav-bg); backdrop-filter: blur(15px); border: 1px solid var(--border); border-radius: 12px; margin-top: 8px; z-index: 1001; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden;">
+                <div onclick="selectLang('ky')" style="padding: 10px 20px; cursor: pointer; font-weight: 600; font-size: 0.8rem; color: var(--text); transition: 0.3s; border-bottom: 1px solid var(--border);">KG</div>
+                <div onclick="selectLang('ru')" style="padding: 10px 20px; cursor: pointer; font-weight: 600; font-size: 0.8rem; color: var(--text); transition: 0.3s; border-bottom: 1px solid var(--border);">RU</div>
+                <div onclick="selectLang('en')" style="padding: 10px 20px; cursor: pointer; font-weight: 600; font-size: 0.8rem; color: var(--text); transition: 0.3s;">EN</div>
+            </div>
         </div>
 
-        <div style="display:flex; align-items:center; gap:12px;">
-            <button class="lang-btn" id="langCycleBtn">KG</button>
-            <button class="theme-switch" id="themeToggle">☀️</button>
-            <div class="menu-btn" id="menuOpen" data-lang-key="menu_btn">MENU</div>
-        </div>
-    </header>
+        <button class="theme-switch" id="headerThemeToggle" style="border:none; background:var(--input-bg); width:38px; height:38px; border-radius:10px; cursor:pointer; display:flex; align-items:center; justify-content:center; color: var(--text);">
+            ☀️
+        </button>
 
-    <nav id="sideNav">
-        <div id="menuClose" data-lang-key="menu_close">✕ ЖАБУУ</div>
-        <a href="{% url 'home' %}" data-lang-key="nav_home">Башкы бет</a>
-        <a href="{% url 'about' %}" data-lang-key="nav_about">Биз жөнүндө</a>
-        <a href="{% url 'price' %}" data-lang-key="nav_price">Топтомдор</a>
-        <a href="{% url 'contact' %}" data-lang-key="nav_contact">Байланыш</a>
-        <a href="{% url 'reviews' %}" data-lang-key="nav_reviews">Отзывтар</a>
-    </nav>
+        <div class="menu-btn" id="menuOpen" data-lang-key="menu_btn" style="background:var(--accent); color:white; border:none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.75rem;">MENU</div>
+    </div>
+</header>
+
+<nav id="sideNav">
+    <div id="menuClose" data-lang-key="menu_close">✕ ЖАБУУ</div>
+
+    <div class="nav-links-container">
+        <a href="{% url 'home' %}" data-lang-key="nav_home">
+            <span class="nav-icon">🏠</span> Башкы бет
+        </a>
+
+        <a href="{% url 'about' %}" data-lang-key="nav_about">
+            <span class="nav-icon">✨</span> Биз жөнүндө
+        </a>
+
+        <a href="{% url 'price' %}" data-lang-key="nav_price">
+            <span class="nav-icon">🎁</span> Топтомдор
+        </a>
+
+        <a href="{% url 'reviews' %}" data-lang-key="nav_reviews">
+            <span class="nav-icon">💬</span> Отзывтар
+        </a>
+
+        <a href="{% url 'contact' %}" data-lang-key="nav_contact">
+            <span class="nav-icon">📞</span> Байланыш
+        </a>
+
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 15px 0;">
+
+       {% if user.is_authenticated %}
+    <a href="{% url 'profile' %}" style="background: rgba(255, 77, 109, 0.05); color: var(--accent); border-radius: 12px;">
+        <span class="nav-icon">👤</span> Профиль
+    </a>
+{% else %}
+    <a href="{% url 'login' %}">
+        <span class="nav-icon">🔐</span> Кирүү / Катталуу
+    </a>
+{% endif %}
+<hr style="border: 0; border-top: 1px solid var(--border); margin: 15px 0;">
+
+        <a href="{% url 'cart_detail' %}" class="nav-cart-highlight">
+            <span class="nav-icon">🛒</span> Корзина
+            <span class="nav-cart-count">({{ cart_count }})</span>
+
+        </a>
+
+</nav>
 
     <div class="fab-wrap" id="fabWrap">
         <div class="fab-actions">
@@ -227,139 +452,190 @@
 
     <main>{% block content %}{% endblock %}</main>
 
-    <script>
-        // ==================== ТИЛ КОТОРУУ ====================
-        const translations = {
-            ky: {
-                nav_home: "Башкы бет", nav_about: "Биз жөнүндө", nav_price: "Топтомдор", nav_contact: "Байланыш", nav_reviews: "Отзывтар",
-                menu_btn: "MENU", menu_close: "✕ ЖАБУУ", music_title: "Музыка", order_fab: "🛍️", chat_fab: "🍓",
-                order_title: "Заказ берүү", placeholder_name: "Атыңыз", placeholder_phone: "Телефон", placeholder_wishes: "Каалооңуздар...",
-                submit_btn: "ЖӨНӨТҮҮ", order_success: "Заказ кабыл алынды! ✨", chat_header: "SSMOD CONCIERGE",
-                chat_welcome: "Саламатсызбы! Кантип жардам бере алам? 🍓", chat_placeholder: "Жазыңыз...", close: "✕"
-            },
-            ru: {
-                nav_home: "Главная", nav_about: "О нас", nav_price: "Пакеты", nav_contact: "Контакты", nav_reviews: "Отзывы",
-                menu_btn: "MENU", menu_close: "✕ ЗАКРЫТЬ", music_title: "Музыка", order_fab: "🛍️", chat_fab: "🍓",
-                order_title: "Оформить заказ", placeholder_name: "Ваше имя", placeholder_phone: "Телефон", placeholder_wishes: "Ваши пожелания...",
-                submit_btn: "ОТПРАВИТЬ", order_success: "Заказ принят! ✨", chat_header: "SSMOD CONCIERGE",
-                chat_welcome: "Здравствуйте! Чем могу помочь? 🍓", chat_placeholder: "Напишите...", close: "✕"
-            },
-            en: {
-                nav_home: "Home", nav_about: "About Us", nav_price: "Packages", nav_contact: "Contact", nav_reviews: "Reviews",
-                menu_btn: "MENU", menu_close: "✕ CLOSE", music_title: "Music", order_fab: "🛍️", chat_fab: "🍓",
-                order_title: "Place Order", placeholder_name: "Your Name", placeholder_phone: "Phone", placeholder_wishes: "Your wishes...",
-                submit_btn: "SEND", order_success: "Order received! ✨", chat_header: "SSMOD CONCIERGE",
-                chat_welcome: "Hello! How can I help you? 🍓", chat_placeholder: "Type here...", close: "✕"
-            }
-        };
-
-        let currentLang = localStorage.getItem('selectedLanguage') || 'ky';
-        function changeLanguage(lang) {
-            currentLang = lang;
-            localStorage.setItem('selectedLanguage', lang);
-            document.getElementById('body').setAttribute('data-lang', lang);
-            document.documentElement.setAttribute('lang', lang);
-            document.querySelectorAll('[data-lang-key]').forEach(el => {
-                const key = el.getAttribute('data-lang-key');
-                if (translations[lang] && translations[lang][key]) {
-                    if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") el.placeholder = translations[lang][key];
-                    else el.textContent = translations[lang][key];
-                }
-            });
-            document.getElementById('langCycleBtn').innerText = lang.toUpperCase();
+  <script>
+    /**
+     * 1. ТИЛ КОТОРУУ ЖАНА ТЕМА БАЗАСЫ
+     */
+    const translations = {
+        ky: {
+            nav_home: "Башкы бет", nav_about: "Биз жөнүндө", nav_price: "Топтомдор", nav_contact: "Байланыш", nav_reviews: "Отзывтар",
+            menu_btn: "MENU", menu_close: "✕ ЖАБУУ", music_title: "Музыка", order_fab: "🛍️", chat_fab: "🍓",
+            order_title: "Заказ берүү", placeholder_name: "Атыңыз", placeholder_phone: "Телефон", placeholder_wishes: "Каалооңуздар...",
+            submit_btn: "ЖӨНӨТҮҮ", order_success: "Заказ кабыл алынды! ✨", chat_header: "SSMOD CONCIERGE",
+            chat_welcome: "Саламатсызбы! Кантип жардам бере алам? 🍓", chat_placeholder: "Жазыңыз...", close: "✕"
+        },
+        ru: {
+            nav_home: "Главная", nav_about: "О нас", nav_price: "Пакеты", nav_contact: "Контакты", nav_reviews: "Отзывы",
+            menu_btn: "MENU", menu_close: "✕ ЗАКРЫТЬ", music_title: "Музыка", order_fab: "🛍️", chat_fab: "🍓",
+            order_title: "Оформить заказ", placeholder_name: "Ваше имя", placeholder_phone: "Телефон", placeholder_wishes: "Ваши пожелания...",
+            submit_btn: "ОТПРАВИТЬ", order_success: "Заказ принят! ✨", chat_header: "SSMOD CONCIERGE",
+            chat_welcome: "Здравствуйте! Чем могу помочь? 🍓", chat_placeholder: "Напишите...", close: "✕"
+        },
+        en: {
+            nav_home: "Home", nav_about: "About Us", nav_price: "Packages", nav_contact: "Contact", nav_reviews: "Reviews",
+            menu_btn: "MENU", menu_close: "✕ CLOSE", music_title: "Music", order_fab: "🛍️", chat_fab: "🍓",
+            order_title: "Place Order", placeholder_name: "Your Name", placeholder_phone: "Phone", placeholder_wishes: "Your wishes...",
+            submit_btn: "SEND", order_success: "Order received! ✨", chat_header: "SSMOD CONCIERGE",
+            chat_welcome: "Hello! How can I help you? 🍓", chat_placeholder: "Type here...", close: "✕"
         }
-        document.getElementById('langCycleBtn').onclick = () => {
-            const order = ['ky', 'ru', 'en'];
-            changeLanguage(order[(order.indexOf(currentLang) + 1) % order.length]);
-        };
-        window.addEventListener('load', () => changeLanguage(currentLang));
+    };
 
-        // --- Тема ---
-        const themeBtn = document.getElementById('themeToggle');
-        if (localStorage.getItem('theme') === 'dark') {
-            document.getElementById('body').setAttribute('data-theme', 'dark');
-            themeBtn.innerText = '🌙';
-        }
-        themeBtn.onclick = () => {
-            const b = document.getElementById('body');
-            if (b.getAttribute('data-theme') === 'dark') {
-                b.removeAttribute('data-theme'); themeBtn.innerText = '☀️'; localStorage.setItem('theme', 'light');
-            } else {
-                b.setAttribute('data-theme', 'dark'); themeBtn.innerText = '🌙'; localStorage.setItem('theme', 'dark');
-            }
-        };
+    const bodyElement = document.getElementById('body');
+    const headerLangBtn = document.getElementById('headerLangBtn');
+    const headerLangList = document.getElementById('headerLangList');
+    const themeToggle = document.getElementById('headerThemeToggle');
 
-        // --- Меню ---
-        const sideNav = document.getElementById('sideNav');
-        document.getElementById('menuOpen').onclick = () => sideNav.classList.add('active');
-        document.getElementById('menuClose').onclick = () => sideNav.classList.remove('active');
+    // Тилди алмаштыруу функциясы
+    function changeLanguage(lang) {
+        localStorage.setItem('selectedLanguage', lang);
+        localStorage.setItem('language', lang); // Кошумча сактоо
+        document.getElementById('body').setAttribute('data-lang', lang);
+        document.documentElement.setAttribute('lang', lang);
 
-        // ==================== МУЗЫКА САКТОО ЖАНА ПАУЗА ====================
-        const audio = document.getElementById('bg-audio');
-        const musicBtn = document.getElementById('musicFabBtn');
-        const bars = document.querySelectorAll('.bar-fab');
-        const fabWrap = document.getElementById('fabWrap');
-        document.getElementById('fabMain').onclick = () => fabWrap.classList.toggle('active');
-
-        function updateMusicUI(playing) {
-            if (playing) {
-                bars.forEach(b => b.style.animationPlayState = 'running');
-                musicBtn.classList.add('music-playing');
-            } else {
-                bars.forEach(b => b.style.animationPlayState = 'paused');
-                musicBtn.classList.remove('music-playing');
-            }
-        }
-
-        window.addEventListener('load', () => {
-            const musicTime = localStorage.getItem('music_time');
-            const isMusicOn = localStorage.getItem('music_on') === 'true';
-
-            if (musicTime) audio.currentTime = parseFloat(musicTime);
-
-            // Эгер мурда күйгүзүлгөн болсо, ойнотобуз
-            if (isMusicOn) {
-                audio.play().then(() => updateMusicUI(true)).catch(() => {
-                    // Браузер бөгөттөсө, 'music_on' маанисин сактайбыз, бирок UI өчүк турат
-                    updateMusicUI(false);
-                });
+        document.querySelectorAll('[data-lang-key]').forEach(el => {
+            const key = el.getAttribute('data-lang-key');
+            if (translations[lang] && translations[lang][key]) {
+                if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") el.placeholder = translations[lang][key];
+                else el.textContent = translations[lang][key];
             }
         });
 
-        // Убакытты сактоо
-        audio.ontimeupdate = () => {
-            localStorage.setItem('music_time', audio.currentTime);
-        };
+        if(headerLangBtn) headerLangBtn.innerText = lang.toUpperCase();
+    }
 
+    function selectLang(lang) {
+        changeLanguage(lang);
+        if(headerLangList) headerLangList.style.display = 'none';
+    }
+
+    if(headerLangBtn) {
+        headerLangBtn.onclick = (e) => {
+            e.stopPropagation();
+            headerLangList.style.display = headerLangList.style.display === 'block' ? 'none' : 'block';
+        };
+    }
+
+    // Тема алмаштыруу
+    function toggleTheme() {
+        const isDark = bodyElement.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+            bodyElement.removeAttribute('data-theme');
+            if(themeToggle) themeToggle.innerText = '☀️';
+            localStorage.setItem('theme', 'light');
+        } else {
+            bodyElement.setAttribute('data-theme', 'dark');
+            if(themeToggle) themeToggle.innerText = '🌙';
+            localStorage.setItem('theme', 'dark');
+        }
+    }
+    if(themeToggle) themeToggle.onclick = toggleTheme;
+
+    /**
+     * 2. МЕНЮ ЖАНА ФУНКЦИОНАЛДЫК БАШКАРУУ
+     */
+    const sideNav = document.getElementById('sideNav');
+    const fabWrap = document.getElementById('fabWrap');
+    const audio = document.getElementById('bg-audio');
+
+    if(document.getElementById('menuOpen')) document.getElementById('menuOpen').onclick = () => sideNav.classList.add('active');
+    if(document.getElementById('menuClose')) document.getElementById('menuClose').onclick = () => sideNav.classList.remove('active');
+    if(document.getElementById('fabMain')) document.getElementById('fabMain').onclick = () => fabWrap.classList.toggle('active');
+
+    function updateMusicUI(playing) {
+        const bars = document.querySelectorAll('.bar-fab');
+        const musicBtn = document.getElementById('musicFabBtn');
+        bars.forEach(b => b.style.animationPlayState = playing ? 'running' : 'paused');
+        if(musicBtn) musicBtn.classList.toggle('music-playing', playing);
+    }
+
+    const musicBtn = document.getElementById('musicFabBtn');
+    if(musicBtn && audio) {
         musicBtn.onclick = (e) => {
             e.stopPropagation();
             if (audio.paused) {
-                audio.play().then(() => {
-                    updateMusicUI(true);
-                    localStorage.setItem('music_on', 'true');
-                });
+                audio.play().then(() => { updateMusicUI(true); localStorage.setItem('music_on', 'true'); });
             } else {
-                audio.pause();
-                updateMusicUI(false);
-                localStorage.setItem('music_on', 'false');
+                audio.pause(); updateMusicUI(false); localStorage.setItem('music_on', 'false');
             }
         };
+    }
 
-        // --- Модалдар жана Чат ---
-        document.getElementById('openModal').onclick = () => { document.getElementById('modalOverlay').classList.add('active'); fabWrap.classList.remove('active'); };
-        document.getElementById('closeModal').onclick = () => document.getElementById('modalOverlay').classList.remove('active');
-        document.getElementById('chatBtn').onclick = () => { document.getElementById('chatWin').classList.add('active'); fabWrap.classList.remove('active'); };
-        document.getElementById('closeChat').onclick = () => document.getElementById('chatWin').classList.remove('active');
+    if(audio) audio.ontimeupdate = () => localStorage.setItem('music_time', audio.currentTime);
 
-        // --- Заказ формасы ---
-        document.getElementById('orderForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            btn.disabled = true;
-            const res = await fetch("{% url 'home' %}", { method: 'POST', body: new FormData(e.target), headers: { 'X-CSRFToken': '{{ csrf_token }}' } });
-            if (res.ok) { document.getElementById('responseMsg').style.display = 'block'; e.target.reset(); setTimeout(() => { document.getElementById('modalOverlay').classList.remove('active'); }, 2000); }
-            btn.disabled = false;
-        };
-    </script>
+    // Модалдар жана Чат
+    if(document.getElementById('openModal')) document.getElementById('openModal').onclick = () => { document.getElementById('modalOverlay').classList.add('active'); fabWrap.classList.remove('active'); };
+    if(document.getElementById('closeModal')) document.getElementById('closeModal').onclick = () => document.getElementById('modalOverlay').classList.remove('active');
+    if(document.getElementById('chatBtn')) document.getElementById('chatBtn').onclick = () => { document.getElementById('chatWin').classList.add('active'); fabWrap.classList.remove('active'); };
+    if(document.getElementById('closeChat')) document.getElementById('closeChat').onclick = () => document.getElementById('chatWin').classList.remove('active');
+
+    /**
+     * 3. КОРЗИНАГА AJAX МЕНЕН КОШУУ
+     */
+    function addToCart(event, button) {
+        event.preventDefault();
+        const productId = button.getAttribute('data-id');
+        const url = `/cart/add/${productId}/`;
+        const originalContent = button.innerHTML;
+
+        fetch(url, {
+            method: 'GET',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'must_login') {
+                button.innerHTML = '<span style="font-size: 10px; color: #ff4d6d; font-weight: bold;">🛒</span>';
+                setTimeout(() => { window.location.href = '/accounts/login/'; }, 1000);
+                return;
+            }
+            if (data.status === 'ok') {
+                button.innerHTML = '<span style="color: #2ecc71; font-size: 1.2rem; font-weight: bold;">✅</span>';
+                button.style.pointerEvents = 'none';
+                const cartBadges = document.querySelectorAll('.cart-badge, .nav-cart-count');
+                cartBadges.forEach(badge => {
+                    badge.innerText = badge.classList.contains('nav-cart-count') ? `(${data.cart_count})` : data.cart_count;
+                });
+                setTimeout(() => {
+                    button.innerHTML = originalContent;
+                    button.style.pointerEvents = 'auto';
+                }, 1500);
+            }
+        })
+        .catch(err => {
+            console.error('Error:', err);
+            button.innerHTML = '<span style="color: #ff4d6d;">❌</span>';
+            setTimeout(() => button.innerHTML = originalContent, 1000);
+        });
+    }
+
+    /**
+     * 4. ЖҮКТӨЛГӨНДӨ КАЛЫБЫНА КЕЛТИРҮҮ
+     */
+    window.addEventListener('DOMContentLoaded', () => {
+        // Тил
+        const savedLang = localStorage.getItem('selectedLanguage') || localStorage.getItem('language') || 'ky';
+        changeLanguage(savedLang);
+
+        // Тема
+        const savedTheme = localStorage.getItem('theme');
+        if(savedTheme === 'dark' && bodyElement) {
+            bodyElement.setAttribute('data-theme', 'dark');
+            if(themeToggle) themeToggle.innerText = '🌙';
+        }
+
+        // Музыка
+        const musicTime = localStorage.getItem('music_time');
+        const isMusicOn = localStorage.getItem('music_on') === 'true';
+        if (musicTime && audio) audio.currentTime = parseFloat(musicTime);
+        if (isMusicOn && audio) {
+            audio.play().then(() => updateMusicUI(true)).catch(() => updateMusicUI(false));
+        }
+    });
+
+    // Тизмени жабуу
+    window.addEventListener('click', () => {
+        if(headerLangList) headerLangList.style.display = 'none';
+    });
+</script>
 </body>
 </html>

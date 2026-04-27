@@ -27,6 +27,7 @@ INSTALLED_APPS = [
 
     # 4. Сиздин тиркемелер
     'shop',
+    'accounts',
 ]
 SITE_ID = 1
 # --- MIDDLEWARE ---
@@ -106,5 +107,13 @@ WHITENOISE_MIME_TYPES = {
 TELEGRAM_BOT_TOKEN = '8450866956:AAFYekwt1Sgcz606O46tB37mKAmI3Tsptd4'
 TELEGRAM_CHAT_ID = '7678418524'
 DELIVERY_USER_CHAT_ID = '6365816184'
+# ЖАҢЫ БОТТУН ТОКЕНИ (Ушул иштеп жатат)
+TELEGRAM_BOT_TOKEN = '8792681892:AAH1uuzIeyVmcyS6VXPCCSlDI4gY9u2fngU'
+
+# Сиздин Chat ID (код келе турган жер)
+TELEGRAM_CHAT_ID = '6365816184'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# settings.py файлынын эң аягына:
+LOGIN_REDIRECT_URL = 'profile'  # Логинден кийин профилге барат
+LOGOUT_REDIRECT_URL = 'home'    # Чыккандан кийин башкы бетке барат
