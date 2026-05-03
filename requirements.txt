@@ -31,3 +31,7 @@ sqlparse
 asgiref
 typing-extensions
 pydantic
+fuzzywuzzy
+python-Levenshtein
+
+
