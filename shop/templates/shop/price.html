@@ -538,12 +538,12 @@
                 <i class="fas fa-university"></i> MBANK Төлөм
             </div>
             <div style="position: relative; display: inline-block; background: #fff; padding: 12px; border-radius: 15px;">
-                <img src="{% static 'images/QR1.jpg' %}" alt="MBANK QR">
-                <div style="color: #000; font-size: 0.8rem; margin-top: 8px; font-weight: 700;">Искак Ж.</div>
+                <img src="{% static 'images/qr.jpeg' %}" alt="MBANK QR">
+                <div style="color: #000; font-size: 0.8rem; margin-top: 8px; font-weight: 700;">Актилек,Ч</div>
             </div>
             <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
                 <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; border: 1px dashed var(--mbank-blue);">
-                    <span id="copyNum" style="font-size: 1.3rem; font-weight: 800; color: #fff;">0553956070</span><br>
+                    <span id="copyNum" style="font-size: 1.3rem; font-weight: 800; color: #fff;">0995519951</span><br>
                     <button class="copy-btn" type="button" onclick="copyNumber()" data-lang-key="copy_btn">
                         <i class="fas fa-copy"></i> Көчүрүү
                     </button>
@@ -569,7 +569,7 @@ const menuTranslations = {
         menu_title: "Биздин Меню", pcs: "шт", som: "сом", book_btn: "Брондоо",
         name_label: "Атыңыз", name_placeholder: "Атыңызды жазыңыз",
         phone_label: "Телефон номериңиз", delivery_opt: "Доставка", self_opt: "Өзүм келем",
-        address_label: "📍 Дарегиңиз", address_placeholder: "Ош шаары, дарек...",
+        address_label: "📍 Дарегиңиз", address_placeholder: "бишкек шаары, дарек...",
         time_label: "📍 Саат канчада келесиз?", time_placeholder: "Мисалы: 18:00",
 
         // ЖЕТИШПЕГЕН АЧКЫЧТАР (УШУЛАРДЫ КОШ):
@@ -588,7 +588,7 @@ const menuTranslations = {
         menu_title: "Наше Меню", pcs: "шт", som: "сом", book_btn: "Заказать",
         name_label: "Ваше имя", name_placeholder: "Введите ваше имя",
         phone_label: "Номер телефона", delivery_opt: "Доставка", self_opt: "Самовывоз",
-        address_label: "📍 Ваш адрес", address_placeholder: "Город Ош, адрес...",
+        address_label: "📍 Ваш адрес", address_placeholder: "Город бишкек, адрес...",
         time_label: "📍 Во сколько придете?", time_placeholder: "Например: 18:00",
 
         // НОВЫЕ КЛЮЧИ:
@@ -607,7 +607,7 @@ const menuTranslations = {
         menu_title: "Our Menu", pcs: "pcs", som: "som", book_btn: "Order Now",
         name_label: "Your Name", name_placeholder: "Enter your name",
         phone_label: "Phone Number", delivery_opt: "Delivery", self_opt: "Pickup",
-        address_label: "📍 Your Address", address_placeholder: "Osh city, address...",
+        address_label: "📍 Your Address", address_placeholder: "Bishkek city, address...",
         time_label: "📍 What time will you arrive?", time_placeholder: "Example: 6:00 PM",
 
         // NEW KEYS:
@@ -629,7 +629,7 @@ let paymentMethod = 'cash';
 let lastLang = localStorage.getItem('selectedLanguage') || 'ky';
 
 const DELIVERY_FEE = 150;
-const WHATSAPP_PHONE = "996553956070";
+const WHATSAPP_PHONE = "996995519951";
 
 function updateMenuLanguage() {
     const lang = localStorage.getItem('selectedLanguage') || 'ky';
@@ -780,29 +780,38 @@ async function sendOrder() {
     const lang = localStorage.getItem('selectedLanguage') || 'ky';
     const t = menuTranslations[lang];
 
-    const name = document.getElementById('userName').value.trim();
+    // 1. Маалыматтарды модалдан чогултуу
+    const name = document.getElementById('userName').value.trim() || 'Көрсөтүлгөн эмес';
     const phone = document.getElementById('userPhone').value.trim();
-    const extra = document.getElementById('extraInput').value.trim();
-    const note = document.getElementById('userNote').value.trim();
+    const address = document.getElementById('extraInput').value.trim() || 'Көрсөтүлгөн эмес';
+    const note = document.getElementById('userNote').value.trim() || 'Жок';
     const dTime = document.getElementById('deliveryTime').value;
-    const isGift = document.getElementById('isGift').checked ? t.gift_yes : t.gift_no;
-    const total = document.getElementById('finalTotal').textContent;
-    const btn = document.getElementById('mainSendBtn');
+    const isGiftStatus = document.getElementById('isGift').checked;
 
-    // Текшерүү (Validation)
-    if (!name || phone.length < 9 || !extra) {
-        alert(t.error_fill);
+    // Төлөм жана Жеткизүү тексттери
+    const paymentText = paymentMethod === 'cash' ? 'Наличка' : 'МБанк';
+    const deliveryTypeText = isDelivery ? 'Доставка' : 'Самовывоз';
+    const giftText = isGiftStatus ? 'Да 🎁' : 'Жок';
+
+    // Төлөм ыкмасына жараша эскертүү текстин даярдоо
+    // Эгер наличка болсо - текст бош болот, эгер МБанк болсо - эскертүү кошулат
+    const paymentWarning = paymentMethod === 'cash'
+        ? ""
+        : "\n⚠️ *МБанк чекти азыр тиркейм!*";
+
+    // Сумманы алуу
+    const total = document.getElementById('finalTotal').textContent;
+
+    // 2. Валидация
+    if (!name || phone.length < 9) {
+        alert(t.error_fill || "Сураныч, атыңызды жана номериңизди жазыңыз!");
         return;
     }
 
-    // Баскычты убактылуу өчүрүү
+    const btn = document.getElementById('mainSendBtn');
     btn.disabled = true;
-    const originalText = btn.textContent;
-    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${t.sending}`;
 
-    const payType = paymentMethod === 'cash' ? t.cash_opt : t.mbank_opt;
-
-    // 1. Django серверине жөнөтүү (Fetch API)
+    // 3. Базага сактоо (Django Fetch)
     try {
         await fetch('/submit-order/', {
             method: 'POST',
@@ -813,43 +822,42 @@ async function sendOrder() {
             body: JSON.stringify({
                 name: name,
                 phone: phone,
-                address: extra,
+                address: address,
                 product: currentSet.title,
                 total: total,
                 delivery_time: dTime,
-                is_gift: isGift,
-                customer_note: note,
+                is_gift: isGiftStatus ? 'Да' : 'Нет',
+                note: note,
                 payment_method: paymentMethod === 'cash' ? 'Наличка' : 'МБанк',
                 is_delivery: isDelivery
             })
         });
     } catch (e) {
-        console.error("Database save failed, continuing to WhatsApp...", e);
+        console.error("Database save failed");
     }
 
-    // 2. WhatsApp билдирүүсүн түзүү
-    let msg = `🍓 *ЖАҢЫ ЗАКАЗ (SSMOD)*\n`;
-    msg += `━━━━━━━━━━━━━━━\n`;
-    msg += `👤 *Аты:* ${name}\n`;
-    msg += `📞 *Телефон:* ${phone}\n`;
-    msg += `💐 *Топтом:* ${currentSet.title}\n`;
-    msg += `💰 *Сумма:* ${total}\n`;
-    msg += `📍 *Дарек/Убакыт:* ${extra}\n`;
-    msg += `⏰ *Жеткизүү:* ${dTime}\n`;
-    msg += `🎁 *Белек:* ${isGift}\n`;
-    msg += `💳 *Төлөм:* ${payType}\n`;
+    // 4. 💎 WHATSAPP БИЛДИРҮҮСҮ
+    const message = `🍓 *ЖАҢЫ ЗАКАЗ (SSMOD)*
+━━━━━━━━━━━━━━━
+👤 *Аты:* ${name}
+📞 *Телефон:* ${phone}
+💐 *Топтом:* ${currentSet.title}
+💰 *Сумма:* ${total}
+📍 *Дарек/Түрү:* ${address} (${deliveryTypeText})
+⏰ *Убакыт:* ${dTime}
+🎁 *Белек:* ${giftText}
+💳 *Төлөм:* ${paymentText}
+📝 *Кошумча:* ${note}${paymentWarning}`;
 
-    if (note) msg += `📝 *Кошумча:* ${note}\n`;
-    if (paymentMethod === 'mbank') msg += `\n⚠️ *МБанк чекти азыр тиркейм!*`;
+    // 5. WhatsApp-ка багыттоо
+    const myNumber = "996995519951";
+    const whatsappUrl = `https://wa.me/${myNumber}?text=${encodeURIComponent(message)}`;
 
-    // WhatsApp'ка багыттоо
-    window.location.href = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(msg)}`;
-
-    // Баскычты кайра калыбына келтирүү
     setTimeout(() => {
         btn.disabled = false;
-        btn.textContent = originalText;
-    }, 3000);
+        window.open(whatsappUrl, '_blank');
+        closeModal();
+    }, 500);
 }
 
 async function toggleLike(btn, event, setId) {
@@ -938,5 +946,13 @@ function addToCart(event, btn) {
     })
     .catch(error => console.error('Error:', error));
 }
+    // Саатты тандалган мааниден алабыз
+const dTime = document.getElementById('deliveryTime').value;
+
+// fetch'тин body бөлүгүндө ушундай болушу керек:
+body: JSON.stringify({
+    // ... башка маалыматтарыңыз ...
+    delivery_time: dTime, // МЫНА УШУЛ ЖЕРГЕ КОШУЛДУ
+})
 </script>
 {% endblock %}

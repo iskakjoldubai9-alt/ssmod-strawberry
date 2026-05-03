@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.conf import settings
 from .models import ProductSet, BackgroundMusic, Review
 from fuzzywuzzy import fuzz
+from django.contrib.auth.decorators import login_required
 
 
 # ====================== ❤️ ЛАЙК СИСТЕМАСЫ (SESSION МЕНЕН) ======================
@@ -68,8 +69,11 @@ def toggle_review_like(request, review_id):
 
 # ====================== 📩 TELEGRAM БИЛДИРҮҮ ЖӨНӨТҮҮ ======================
 
-def send_telegram_message(chat_id, name, phone, message, title="🍓 ЖАҢЫ ЗАКАЗ (SSMOD)"):
-    token = settings.TELEGRAM_BOT_TOKEN
+def send_telegram_message(token, chat_id, name, phone, message, title="🍓 ЖАҢЫ БИЛДИРҮҮ"):
+    """ Универсалдуу билдирүү жөнөтүү функциясы (Токен эми параметр катары келет) """
+    if not token or not chat_id:
+        return False
+
     url = f"https://api.telegram.org/bot{token}/sendMessage"
 
     text = (
@@ -92,9 +96,11 @@ def send_telegram_message(chat_id, name, phone, message, title="🍓 ЖАҢЫ З
         return False
 
 
-def send_telegram_photo(chat_id, photo, caption):
+def send_telegram_photo(token, chat_id, photo, caption):
     """ Сүрөт менен бирге пикирди Telegram'га жөнөтүү """
-    token = settings.TELEGRAM_BOT_TOKEN
+    if not token or not chat_id:
+        return False
+
     url = f"https://api.telegram.org/bot{token}/sendPhoto"
     try:
         files = {'photo': photo}
@@ -104,7 +110,7 @@ def send_telegram_photo(chat_id, photo, caption):
         print(f"Telegram Photo Error: {e}")
 
 
-# ====================== 📥 ЗАКАЗ КАБЫЛ АЛУУ ======================
+## ====================== 📥 ЗАКАЗ КАБЫЛ АЛУУ (3 БОТКО БАРУУ) ======================
 
 def submit_order(request):
     if request.method == "POST":
@@ -117,33 +123,116 @@ def submit_order(request):
             address = data.get('address', 'Маалымат жок')
             payment_method = data.get('payment_method', 'Накталай')
             is_delivery = data.get('is_delivery', True)
-            note = data.get('note', '')
+            note = data.get('note') or data.get('customer_note') or 'Жок'
 
-            admin_details = (
+            # --- ЖАҢЫ: КАРДАР ТАНДАГАН СААТТЫ АЛУУ ---
+            delivery_time = data.get('delivery_time', 'Тезирээк')
+
+            # --- АДМИН ҮЧҮН ТОЛУК МААЛЫМАТ ---
+            full_details = (
                 f"🎁 *Топтом:* {product_title}\n"
                 f"💰 *Жалпы сумма:* {total}\n"
+                f"⏰ *Убактысы:* {delivery_time}\n" # Саат бул жерге кошулду
                 f"💳 *Төлөм ыкмасы:* {payment_method}\n"
                 f"🚚 *Жеткирүү:* {'Доставка' if is_delivery else 'Өзүм келем'}\n"
                 f"📍 *Дарек/Убакыт:* {address}\n"
                 f"📝 *Кошумча:* {note}"
             )
 
-            send_telegram_message(settings.TELEGRAM_CHAT_ID, name, phone, admin_details)
+            # Админге жөнөтүү
+            send_telegram_message(
+                settings.ADMIN_BOT_TOKEN,
+                settings.ADMIN_CHAT_ID,
+                name, phone, full_details,
+                title="🍓 ЖАҢЫ ЗАКАЗ (АДМИН)"
+            )
 
+            # --- КУРЬЕР ҮЧҮН ГАНА (Саат жана Төлөм ыкмасы менен) ---
             if is_delivery:
-                courier_id = getattr(settings, 'DELIVERY_USER_CHAT_ID', None)
-                if courier_id:
-                    courier_details = (
-                        f"📦 *Заказ:* {product_title}\n"
-                        f"📍 *Дареги:* {address}\n"
-                        f"📱 *Кардар телефону:* {phone}\n"
-                        f"💰 *Алынуучу сумма:* {total}"
-                    )
-                    send_telegram_message(courier_id, name, phone, courier_details, title="🚚 КУРЬЕРГЕ ТАПШЫРМА")
+                pay_type = "💵 Наличка" if payment_method == 'Наличка' else "💳 МБанк (чек сураңыз)"
 
-            return JsonResponse({'status': 'success', 'message': 'Заказыңыз кабыл алынды! 🍓'})
+                courier_message = (
+                    f"🎁 *Эмне:* {product_title}\n"
+                    f"⏰ *Качан:* {delivery_time}\n" # Саат курьерге да барат
+                    f"📍 *Дарек:* {address}\n"
+                    f"💰 *Сумма:* {total}\n"
+                    f"💳 *Төлөм:* {pay_type}"
+                )
+
+                send_telegram_message(
+                    settings.DELIVERY_BOT_TOKEN,
+                    settings.DELIVERY_CHAT_ID,
+                    name,
+                    phone,
+                    courier_message,
+                    title="🚚 КУРЬЕРГЕ ТАПШЫРМА"
+                )
+
+            return JsonResponse({"status": "success"})
         except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+            return JsonResponse({"status": "error", "message": str(e)}, status=400)
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)# ====================== 📥 ЗАКАЗ КАБЫЛ АЛУУ (3 БОТКО БАРУУ) ======================
+
+def submit_order(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            name = data.get('name', 'Жазылган эмес')
+            phone = data.get('phone', 'Жазылган эмес')
+            product_title = data.get('product', 'Белгисиз топтом')
+            total = data.get('total', '0 сом')
+            address = data.get('address', 'Маалымат жок')
+            payment_method = data.get('payment_method', 'Накталай')
+            is_delivery = data.get('is_delivery', True)
+            note = data.get('note') or data.get('customer_note') or 'Жок'
+
+            # --- ЖАҢЫ: КАРДАР ТАНДАГАН СААТТЫ АЛУУ ---
+            delivery_time = data.get('delivery_time', 'Тезирээк')
+
+            # --- АДМИН ҮЧҮН ТОЛУК МААЛЫМАТ ---
+            full_details = (
+                f"🎁 *Топтом:* {product_title}\n"
+                f"💰 *Жалпы сумма:* {total}\n"
+                f"⏰ *Убактысы:* {delivery_time}\n" # Саат бул жерге кошулду
+                f"💳 *Төлөм ыкмасы:* {payment_method}\n"
+                f"🚚 *Жеткирүү:* {'Доставка' if is_delivery else 'Өзүм келем'}\n"
+                f"📍 *Дарек/Убакыт:* {address}\n"
+                f"📝 *Кошумча:* {note}"
+            )
+
+            # Админге жөнөтүү
+            send_telegram_message(
+                settings.ADMIN_BOT_TOKEN,
+                settings.ADMIN_CHAT_ID,
+                name, phone, full_details,
+                title="🍓 ЖАҢЫ ЗАКАЗ (АДМИН)"
+            )
+
+            # --- КУРЬЕР ҮЧҮН ГАНА (Саат жана Төлөм ыкмасы менен) ---
+            if is_delivery:
+                pay_type = "💵 Наличка" if payment_method == 'Наличка' else "💳 МБанк (чек сураңыз)"
+
+                courier_message = (
+                    f"🎁 *Эмне:* {product_title}\n"
+                    f"⏰ *Качан:* {delivery_time}\n" # Саат курьерге да барат
+                    f"📍 *Дарек:* {address}\n"
+                    f"💰 *Сумма:* {total}\n"
+                    f"💳 *Төлөм:* {pay_type}"
+                )
+
+                send_telegram_message(
+                    settings.DELIVERY_BOT_TOKEN,
+                    settings.DELIVERY_CHAT_ID,
+                    name,
+                    phone,
+                    courier_message,
+                    title="🚚 КУРЬЕРГЕ ТАПШЫРМА"
+                )
+
+            return JsonResponse({"status": "success"})
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=400)
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
@@ -173,13 +262,24 @@ def reviews(request):
                 request.session['my_reviews'] = my_reviews
                 request.session.modified = True
 
-                # 3. Telegram билдирүү
+                # 3. Telegram билдирүү (3 ботко тең пикир жөнөтүлөт)
                 tg_msg = f"💬 *ЖАҢЫ ПИКИР*\n👤 *Кардар:* {name}\n⭐ *Рейтинг:* {stars} жылдыз\n📝 *Текст:* {message}"
-                if image:
-                    send_telegram_photo(settings.TELEGRAM_CHAT_ID, image, tg_msg)
-                else:
-                    send_telegram_message(settings.TELEGRAM_CHAT_ID, name, "Пикир калтырды", tg_msg,
-                                          title="💬 ЖАҢЫ ПИКИР")
+
+                # Боттордун тизмеси (токен жана чат айди)
+                bot_list = [
+                    (settings.ADMIN_BOT_TOKEN, settings.ADMIN_CHAT_ID),
+                    (settings.SUPPORT_BOT_TOKEN, settings.SUPPORT_CHAT_ID),
+                    (settings.DELIVERY_BOT_TOKEN, settings.DELIVERY_CHAT_ID),  # Кааласаңыз курьерге да барат
+                ]
+
+                for token, chat_id in bot_list:
+                    if image:
+                        # Сүрөт болсо сүрөт менен
+                        image.seek(0)  # Файлды кайра башынан окуу үчүн
+                        send_telegram_photo(token, chat_id, image, tg_msg)
+                    else:
+                        # Сүрөт жок болсо текст
+                        send_telegram_message(token, chat_id, name, "Пикир калтырды", tg_msg, title="💬 ЖАҢЫ ПИКИР")
 
                 return JsonResponse({'status': 'success'})
         except Exception as e:
@@ -304,13 +404,7 @@ def custom_server_error(request):
 
 # ====================== 🛒 КОРЗИНА ЛОГИКАСЫ ======================
 
-# ====================== 🛒 КОРЗИНА ЛОГИКАСЫ ======================
-
-# Башка импорттордун жанына кошуңуз
-from django.contrib.auth.decorators import login_required
-
 def cart_add(request, product_id):
-    # 1. Сөзсүз түрдө эң башында текшеребиз:
     if not request.user.is_authenticated:
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             return JsonResponse({
@@ -319,7 +413,6 @@ def cart_add(request, product_id):
             })
         return redirect('login')
 
-    # 2. Эгер колдонуучу кирген болсо, төмөнкү код иштейт:
     cart = request.session.get('cart', {})
     product_id_str = str(product_id)
 
@@ -331,12 +424,11 @@ def cart_add(request, product_id):
     request.session['cart'] = cart
     request.session.modified = True
 
-    # AJAX суроосу үчүн жооп
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         return JsonResponse({'status': 'ok', 'cart_count': sum(cart.values())})
 
-    # Жөнөкөй баскыч болсо
     return redirect(request.META.get('HTTP_REFERER', 'price'))
+
 
 def cart_detail(request):
     """ Корзинадагы товарлардын тизмесин көрсөтүү """
@@ -346,7 +438,6 @@ def cart_detail(request):
     cart_items = []
     total_price = 0
 
-    # Сессиядагы IDлер боюнча базадан товарларды алуу
     for product_id, quantity in cart.items():
         try:
             product = get_object_or_404(ProductSet, id=int(product_id))
@@ -358,7 +449,6 @@ def cart_detail(request):
                 'item_total': item_total,
             })
         except:
-            # Эгер товар базадан өчүп кетсе, сессиядан да тазалап коюу үчүн
             continue
 
     return render(request, 'shop/cart_detail.html', {
@@ -378,6 +468,4 @@ def cart_remove(request, product_id):
         request.session['cart'] = cart
         request.session.modified = True
 
-    # Өчүргөндөн кийин кайра корзина барагына кайтат
     return redirect('cart_detail')
-

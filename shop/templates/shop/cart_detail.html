@@ -20,22 +20,22 @@
         --header-bg: radial-gradient(circle at 50% -20%, #1a1a1a 0%, #0a0a0a 80%);
     }
 
-    /* ☀️ КҮНДҮЗГҮ РЕЖИМ (LIGHT MODE) */
-    @media (prefers-color-scheme: light) {
-        :root {
-            --bg-dark: #f8f9fa;
-            --text-main: #1a1a1a;
-            --text-sub: #555555;
-            --glass: rgba(0, 0, 0, 0.05);
-            --glass-border: rgba(0, 0, 0, 0.1);
-            --card-bg: #ffffff;
-            --header-bg: radial-gradient(circle at 50% -20%, #ffffff 0%, #e9ecef 80%);
-        }
-        .ultra-wrapper { background: var(--header-bg) !important; }
-        .lux-card { box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        .lux-avatar-inner { background: #fff !important; }
-        .card-info h3 { color: #1a1a1a !important; }
-        h1, h2 { color: #1a1a1a !important; }
+    /* ☀️ КҮНДҮЗГҮ РЕЖИМ (LIGHT MODE) - BODY'ге 'light-mode' классы кошулганда иштейт */
+    body.light-mode {
+        --bg-dark: #f8f9fa;
+        --text-main: #1a1a1a;
+        --text-sub: #555555;
+        --glass: rgba(0, 0, 0, 0.05);
+        --glass-border: rgba(0, 0, 0, 0.1);
+        --card-bg: #ffffff;
+        --header-bg: radial-gradient(circle at 50% -20%, #ffffff 0%, #e9ecef 80%);
+    }
+
+    /* Жалпы фонду жөнгө салуу */
+    body {
+        background: var(--bg-dark);
+        transition: background 0.5s ease, color 0.5s ease;
+        margin: 0;
     }
 
     .ultra-wrapper {
@@ -44,7 +44,7 @@
         padding: 120px 5% 100px;
         min-height: 100vh;
         overflow: hidden;
-        background: var(--header-bg);
+        background: var(--header-bg); /* Өзгөрмөгө байланды */
         transition: background 0.5s ease;
     }
 
@@ -130,7 +130,7 @@
 
     .card-info { padding: 20px; }
     .card-info h3 { font-family: 'Cinzel', serif; font-size: 1.4rem; color: var(--text-main); margin-bottom: 5px; }
-    .card-info p { color: var(--text-sub); }
+    .card-info p { color: var(--text-sub) !important; opacity: 0.9; }
 
     .btn-lux {
         padding: 15px 30px;
@@ -182,6 +182,150 @@
         .lux-header { flex-direction: column; gap: 30px; text-align: center; }
         .lux-total-card { flex-direction: column; text-align: center; gap: 30px; }
     }
+
+    /* --- 💎 PREMIUM MODAL STYLES --- */
+    .lux-modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        z-index: 100000;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .lux-modal-content {
+        background: #0d0d0d;
+        width: 100%;
+        max-width: 450px;
+        border-radius: 35px;
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        padding: 35px;
+        position: relative;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 25px 80px rgba(0,0,0,0.5);
+    }
+
+    .close-x {
+        position: absolute;
+        top: 20px;
+        right: 25px;
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 1.8rem;
+        cursor: pointer;
+        opacity: 0.5;
+        transition: 0.3s;
+    }
+    .close-x:hover { opacity: 1; transform: rotate(90deg); }
+
+    .input-group { margin-bottom: 20px; }
+    .input-group label {
+        display: block;
+        color: var(--gold);
+        font-size: 0.85rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .input-group input, .input-group select, .input-group textarea {
+        width: 100%;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 15px;
+        padding: 12px 15px;
+        color: #fff;
+        font-family: 'Montserrat', sans-serif;
+        transition: 0.3s;
+    }
+
+    .input-group input:focus { border-color: var(--gold); outline: none; background: rgba(212, 175, 55, 0.05); }
+
+    /* --- 🔘 TOGGLE SLIDER --- */
+    .sliding-toggle {
+        display: flex;
+        background: #1a1a1a;
+        padding: 5px;
+        border-radius: 18px;
+        position: relative;
+        margin-bottom: 20px;
+        border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .toggle-slider {
+        position: absolute;
+        height: calc(100% - 10px);
+        width: calc(50% - 5px);
+        background: var(--gold);
+        border-radius: 14px;
+        transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        z-index: 1;
+    }
+
+    .toggle-opt {
+        flex: 1;
+        text-align: center;
+        padding: 12px;
+        position: relative;
+        z-index: 2;
+        cursor: pointer;
+        font-weight: 800;
+        font-size: 0.85rem;
+        color: #fff;
+        transition: 0.3s;
+    }
+
+    /* --- 💳 QR & PAYMENT --- */
+    .qr-container img {
+        filter: drop-shadow(0 0 10px rgba(0,103,244,0.3));
+        transition: 0.5s;
+    }
+
+    .copy-btn {
+        transition: 0.3s;
+        font-weight: 700;
+    }
+    .copy-btn:active { transform: scale(0.95); }
+
+    .gift-option {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+        background: rgba(212, 175, 55, 0.05);
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(212, 175, 55, 0.1);
+    }
+
+    .country-selector {
+        background-color: #1a1a1a !important;
+        color: white !important;
+    }
+
+    .country-selector option {
+        background-color: #1a1a1a;
+        color: white;
+        padding: 10px;
+    }
+
+    select option {
+        background: #1a1a1a !important;
+        color: white !important;
+    }
+
+    /* Заголовоктордун түсү режимге жараша өзгөрүшү үчүн */
+    h1, h2, h3 {
+        color: var(--text-main) !important;
+        transition: color 0.5s ease;
+    }
 </style>
 
 <div class="ultra-wrapper">
@@ -196,16 +340,17 @@
                     <div class="lux-avatar-inner">🍓</div>
                 </div>
                 <div>
-                    <h2 id="userName" style="font-family:'Cinzel'; font-weight:900; letter-spacing:2px; margin:0; color: var(--text-main);" data-name="{{ user.first_name|default:'Guest' }}"></h2>
+                    <!-- IDuserNameDisplay калтырылды, JS аркылуу толтурулат -->
+                    <h2 id="userNameDisplay" style="font-family:'Cinzel'; font-weight:900; letter-spacing:2px; margin:0;" data-name="{{ user.first_name|default:'Guest' }}"></h2>
                     <p style="color: var(--text-sub); margin-top:5px; font-weight:400;"><i class="fas fa-crown" style="color:var(--gold)"></i> Premium Member</p>
                 </div>
             </div>
-            <a href="{% url 'logout' %}" class="btn-lux btn-del">
-                <span data-key="logout">Чыгуу</span> <i class="fas fa-power-off"></i>
-            </a>
+            <a href="{% url 'accounts:logout' %}" class="btn-lux btn-del">
+    <span data-key="logout">Чыгуу</span> <i class="fas fa-power-off"></i>
+</a>
         </header>
 
-        <h1 style="font-family:'Cinzel'; font-size:3rem; margin-bottom:50px; text-align:center; color: var(--text-main);" data-key="title">SEBET</h1>
+        <h1 style="font-family:'Cinzel'; font-size:3rem; margin-bottom:50px; text-align:center;" data-key="title">SEBET</h1>
 
         <div class="lux-grid">
             {% if cart_items %}
@@ -238,8 +383,8 @@
                 {% endfor %}
             {% else %}
                 <div style="grid-column: 1 / -1; text-align:center; padding:100px 0;">
-                    <div style="font-size:6rem; color: var(--text-main); opacity:0.1; margin-bottom:30px;"><i class="fas fa-shopping-bag"></i></div>
-                    <h2 data-key="empty" style="font-family:'Cinzel'; color: var(--text-main); opacity:0.5;">Сиздин себет бош</h2>
+                    <div style="font-size:6rem; opacity:0.1; margin-bottom:30px;"><i class="fas fa-shopping-bag"></i></div>
+                    <h2 data-key="empty" style="font-family:'Cinzel'; opacity:0.5;">Сиздин себет бош</h2>
                     <br>
                     <a href="{% url 'price' %}" class="btn-lux btn-gold" data-key="go_back">МЕНЮГА КАЙТУУ</a>
                 </div>
@@ -261,45 +406,160 @@
     </div>
 </div>
 
+<div id="bookingModal" class="lux-modal">
+    <div class="lux-modal-content">
+        <button class="close-x" onclick="closeModal()">✕</button>
+        <h3 id="modalTitle" style="text-align:center; font-family:'Cinzel'; margin-bottom:25px; color: var(--gold);">Заказ</h3>
+
+        <div class="input-group">
+            <label data-lang-key="name_label"><i class="fas fa-user"></i> Атыңыз</label>
+            <input type="text" id="orderUserName" data-lang-key="name_placeholder">
+        </div>
+
+        <div class="input-group">
+            <label data-lang-key="phone_label"><i class="fas fa-phone"></i> Телефон номериңиз</label>
+            <div class="phone-input-container" style="display: flex; gap: 5px;">
+                <select id="countrySelect" class="country-selector" onchange="changeCountry()" style="width: 110px;">
+                    <option value="+996">🇰🇬 +996</option>
+                    <option value="+7">🇷🇺 +7 (RU)</option>
+                    <option value="+7">🇰🇿 +7 (KZ)</option>
+                    <option value="+998">🇺🇿 +998</option>
+                    <option value="+992">🇹🇯 +992</option>
+                    <option value="+90">🇹🇷 +90</option>
+                    <option value="+971">🇦🇪 +971</option>
+                </select>
+                <input type="tel" id="userPhone" value="+996" maxlength="16" style="flex: 1;">
+            </div>
+        </div>
+
+        <div class="sliding-toggle">
+            <div id="typeSlider" class="toggle-slider" style="left: 4px;"></div>
+            <div class="toggle-opt" id="optDelivery" onclick="switchDelivery(true)" data-lang-key="delivery_opt">Доставка</div>
+            <div class="toggle-opt" id="optSelf" onclick="switchDelivery(false)" data-lang-key="self_opt">Самовывоз</div>
+        </div>
+
+        <div class="input-group" id="addressGroup">
+            <label id="extraLabel" data-lang-key="address_label">📍 Дарегиңиз</label>
+            <input type="text" id="extraInput" data-lang-key="address_placeholder">
+        </div>
+
+        <div class="input-group">
+            <label>
+                <i class="fas fa-clock"></i>
+                <span data-lang-key="time_select_label">Качан жеткиребиз?</span>
+            </label>
+            <select id="deliveryTime">
+                <option value="Тезирээк" data-lang-key="time_asap">Тезирээк</option>
+                <option value="10:00 - 12:00">10:00 - 12:00</option>
+                <option value="12:00 - 14:00">12:00 - 14:00</option>
+                <option value="14:00 - 16:00">14:00 - 16:00</option>
+                <option value="16:00 - 18:00">16:00 - 18:00</option>
+                <option value="18:00 - 20:00">18:00 - 20:00</option>
+                <option value="20:00 - 22:00">20:00 - 22:00</option>
+            </select>
+        </div>
+
+        <label class="gift-option" style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; cursor: pointer;">
+            <input type="checkbox" id="isGift">
+            <span data-lang-key="gift_label">🎁 Бул белек (Анонимдүү)</span>
+        </label>
+
+        <div class="input-group">
+            <label data-lang-key="note_label"><i class="fas fa-comment-dots"></i> Кошумча маалымат</label>
+            <textarea id="userNote" rows="2" data-lang-key="note_placeholder" style="width: 100%; border-radius: 10px; background: #1a1a1a; color: #fff; padding: 10px; border: 1px solid #333;"></textarea>
+        </div>
+
+        <div class="sliding-toggle">
+            <div id="paySlider" class="toggle-slider" style="left: 4px;"></div>
+            <div class="toggle-opt" id="payCash" onclick="switchPayment('cash')" data-lang-key="cash_opt">Наличка</div>
+            <div class="toggle-opt" id="payMbank" onclick="switchPayment('mbank')" data-lang-key="mbank_opt">МБанк</div>
+        </div>
+
+        <div id="qrArea" class="qr-container" style="display:none; text-align:center; padding: 20px; background: #000; border-radius: 20px; border: 1px solid var(--glass-border); margin-bottom: 20px;">
+            <div style="color:#0067f4; font-weight:800; font-size:1rem; margin-bottom:15px; text-transform: uppercase;">
+                <i class="fas fa-university"></i> MBANK Төлөм
+            </div>
+            <div style="position: relative; display: inline-block; background: #fff; padding: 12px; border-radius: 15px;">
+                <img src="{% static 'images/QR1.jpg' %}" alt="MBANK QR" style="width: 150px;">
+                <div style="color: #000; font-size: 0.8rem; margin-top: 8px; font-weight: 700;">Актилек.Ч</div>
+            </div>
+            <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; border: 1px dashed #0067f4;">
+                    <span id="copyNum" style="font-size: 1.3rem; font-weight: 800; color: #fff;">0995519951</span><br>
+                    <button class="copy-btn" type="button" onclick="copyNumber()" style="background: #0067f4; color: white; border: none; padding: 8px 15px; border-radius: 8px; margin-top: 10px; cursor: pointer;">
+                        <i class="fas fa-copy"></i> Көчүрүү
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="summary-box" style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 20px; margin-bottom: 20px;">
+            <div class="sum-row" style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="opacity:0.8; font-weight: 600;" data-lang-key="total_label">Жалпы сумма:</span>
+                <div id="finalTotal" class="final-total" style="color: var(--gold); font-size: 1.8rem; font-weight: 900;">0 сом</div>
+            </div>
+            <span id="deliveryInfo" class="delivery-note" style="color: #ff4757; font-size: 0.8rem; display: block; margin-top: 5px;">+150 сом жеткирүү акысы кошулду</span>
+        </div>
+
+        <button onclick="sendOrder()" id="mainSendBtn" class="send-btn" style="width: 100%; padding: 20px; background: var(--gold); border: none; border-radius: 15px; font-weight: 900; cursor: pointer; text-transform: uppercase;">ОТПРАВИТЬ ЗАКАЗ</button>
+    </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 <script>
+// --- ⚙️ КОНФИГУРАЦИЯ ---
+const TG_TOKEN = "7547631168:AAEj-Ysh9m_R0r_O_uR8x1m9v6S07lS_rIs";
+const TG_CHAT_ID = "5334863345";
+let currentTotal = 0;
+let isDelivery = true;
+let paymentMethod = 'cash';
+
+// --- 🌓 ТЕМА ЖАНА ТИЛ ---
+function applyTheme() {
+    const theme = localStorage.getItem('theme') || 'dark';
+    document.body.classList.toggle('light-mode', theme === 'light');
+}
+
 const langData = {
     ky: {
-        welcome: "КОШ КЕЛИҢИЗ, ",
-        logout: "ЧЫГУУ",
-        title: "СЕБЕТ",
-        empty: "СЕБЕТ АЗЫРЫНЧА БОШ",
-        go_back: "МЕНЮГА КАЙТУУ",
-        total_text: "ЖАЛПЫ ТӨЛӨМ:",
-        order_all: "БААРЫН ЗАКАЗ КЫЛУУ",
-        del_confirm: "Өчүрүүнү каалайсызбы?"
+        welcome: "КОШ КЕЛИҢИЗ, ", logout: "ЧЫГУУ", title: "СЕБЕТ", empty: "СЕБЕТ АЗЫРЫНЧА БОШ",
+        go_back: "МЕНЮГА КАЙТУУ", total_text: "ЖАЛПЫ ТӨЛӨМ:", order_all: "БААРЫН ЗАКАЗ КЫЛУУ",
+        del_confirm: "Өчүрүүнү каалайсызбы?", name_label: "Атыңыз", name_placeholder: "Атыңызды жазыңыз",
+        phone_label: "Телефон номериңиз", delivery_opt: "Доставка", self_opt: "Самовывоз",
+        address_label_del: "📍 Дарегиңиз", address_label_self: "🕒 Качан келесиз?",
+        address_placeholder_del: "Мисалы: Ак-Тилек 45, кв 12", address_placeholder_self: "Мисалы: Саат 18:00до барам",
+        time_select_label: "Качан жеткиребиз?", time_asap: "Тезирээк", gift_label: "🎁 Бул белек (Анонимдүү)",
+        note_label: "Кошумча маалымат", note_placeholder: "Каалоо тилектер...", cash_opt: "Наличка",
+        mbank_opt: "МБанк", total_label: "Жалпы сумма:", send_btn: "ЗАКАЗДЫ ЖӨНӨТҮҮ"
     },
     ru: {
-        welcome: "ДОБРО ПОЖАЛОВАТЬ, ",
-        logout: "ВЫХОД",
-        title: "КОРЗИНА",
-        empty: "КОРЗИНА ПОКА ПУСТА",
-        go_back: "ВЕРНУТЬСЯ В МЕНЮ",
-        total_text: "ИТОГО К ОПЛАТЕ:",
-        order_all: "ЗАКАЗАТЬ ВСЁ",
-        del_confirm: "Вы уверены, что хотите удалить?"
+        welcome: "ДОБРО ПОЖАЛОВАТЬ, ", logout: "ВЫХОД", title: "КОРЗИНА", empty: "КОРЗИНА ПОКА ПУСТА",
+        go_back: "ВЕРНУТЬСЯ В МЕНЮ", total_text: "ИТОГО К ОПЛАТЕ:", order_all: "ЗАКАЗАТЬ ВСЁ",
+        del_confirm: "Удалить?", name_label: "Ваше имя", name_placeholder: "Введите имя",
+        phone_label: "Номер телефона", delivery_opt: "Доставка", self_opt: "Самовывоз",
+        address_label_del: "📍 Ваш адрес", address_label_self: "🕒 Когда приедете?",
+        address_placeholder_del: "Напр: Ак-Тилек 45", address_placeholder_self: "Напр: К 18:00",
+        time_select_label: "Когда доставить?", time_asap: "Как можно быстрее", gift_label: "🎁 Подарок (Анонимно)",
+        note_label: "Инфо", note_placeholder: "Пожелания...", cash_opt: "Наличка",
+        mbank_opt: "МБанк", total_label: "Итого:", send_btn: "ОТПРАВИТЬ ЗАКАЗ"
     },
     en: {
-        welcome: "WELCOME, ",
-        logout: "LOGOUT",
-        title: "MY CART",
-        empty: "YOUR CART IS EMPTY",
-        go_back: "GO TO MENU",
-        total_text: "TOTAL AMOUNT:",
-        order_all: "CHECKOUT ALL",
-        del_confirm: "Are you sure you want to delete?"
+        welcome: "WELCOME, ", logout: "LOGOUT", title: "CART", empty: "YOUR CART IS EMPTY",
+        go_back: "BACK TO MENU", total_text: "TOTAL PAYMENT:", order_all: "CHECKOUT ALL",
+        del_confirm: "Are you sure you want to delete?", name_label: "Your Name", name_placeholder: "Enter your name",
+        phone_label: "Phone Number", delivery_opt: "Delivery", self_opt: "Pick up",
+        address_label_del: "📍 Delivery Address", address_label_self: "🕒 Pick-up Time",
+        address_placeholder_del: "E.g.: 45 Ak-Tilek St, apt 12", address_placeholder_self: "E.g.: At 6:00 PM",
+        time_select_label: "Delivery Time", time_asap: "As soon as possible", gift_label: "🎁 Gift (Anonymous)",
+        note_label: "Additional Info", note_placeholder: "Your wishes...", cash_opt: "Cash",
+        mbank_opt: "MBank", total_label: "Total Amount:", send_btn: "SEND ORDER"
     }
 };
 
 function updateUI() {
+    applyTheme();
     let lang = localStorage.getItem('selectedLanguage') || 'ky';
     if (lang === 'eng') lang = 'en';
-
     const t = langData[lang] || langData.ky;
 
     document.querySelectorAll('[data-key]').forEach(el => {
@@ -307,35 +567,150 @@ function updateUI() {
         if (t[key]) el.innerHTML = t[key];
     });
 
-    const userEl = document.getElementById('userName');
-    if (userEl) {
-        const firstName = userEl.getAttribute('data-name');
-        userEl.innerHTML = t.welcome + `<span style="color:var(--gold)">${firstName}</span>`;
+    document.querySelectorAll('[data-lang-key]').forEach(el => {
+        const key = el.getAttribute('data-lang-key');
+        if (t[key]) {
+            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = t[key];
+            else el.innerText = t[key];
+        }
+    });
+
+    const userDisplayEl = document.getElementById('userNameDisplay');
+    if (userDisplayEl) {
+        const firstName = userDisplayEl.getAttribute('data-name');
+        userDisplayEl.innerHTML = t.welcome + `<span style="color:var(--gold)">${firstName}</span>`;
     }
 }
 
-function ensureNavWorks() {
-    const nav = document.querySelector('nav') || document.querySelector('header.navbar');
-    if (nav) {
-        nav.style.zIndex = "999999";
-        nav.style.position = "fixed";
-    }
+// --- 🛍️ МОДАЛДЫК ТЕРЕЗЕ ---
+function openBookingModal(title, price) {
+    document.getElementById('modalTitle').innerText = title === 'ALL_CART' ? 'Жалпы заказ' : title;
+    currentTotal = price;
+    document.getElementById('bookingModal').style.display = 'flex';
+    updatePriceDisplay();
 }
 
-setInterval(updateUI, 1000);
+function closeModal() {
+    document.getElementById('bookingModal').style.display = 'none';
+}
 
-document.addEventListener('DOMContentLoaded', () => {
-    updateUI();
-    ensureNavWorks();
-    AOS.init({ duration: 1000, once: true });
-});
+function switchDelivery(status) {
+    isDelivery = status;
+    document.getElementById('typeSlider').style.left = status ? '4px' : '50%';
+    document.getElementById('addressGroup').style.display = 'block';
+
+    let lang = localStorage.getItem('selectedLanguage') || 'ky';
+    const t = langData[lang] || langData.ky;
+
+    document.getElementById('extraLabel').innerText = status ? t.address_label_del : t.address_label_self;
+    document.getElementById('extraInput').placeholder = status ? t.address_placeholder_del : t.address_placeholder_self;
+
+    updatePriceDisplay();
+}
+
+function switchPayment(method) {
+    paymentMethod = method;
+    document.getElementById('paySlider').style.left = method === 'cash' ? '4px' : '50%';
+    document.getElementById('qrArea').style.display = method === 'mbank' ? 'block' : 'none';
+}
+
+function updatePriceDisplay() {
+    let deliveryFee = isDelivery ? 150 : 0;
+    let final = currentTotal + deliveryFee;
+    document.getElementById('finalTotal').innerText = `${final} сом`;
+    document.getElementById('deliveryInfo').style.opacity = isDelivery ? '1' : '0';
+}
+
+function copyNumber() {
+    const num = document.getElementById('copyNum').innerText;
+    navigator.clipboard.writeText(num).then(() => alert("Көчүрүлдү: " + num));
+}
+
+function changeCountry() {
+    document.getElementById('userPhone').value = document.getElementById('countrySelect').value;
+}
+function sendOrder() {
+    const name = document.getElementById('orderUserName').value.trim();
+    const phone = document.getElementById('userPhone').value.trim();
+    const address = document.getElementById('extraInput').value.trim();
+    const time = document.getElementById('deliveryTime').value;
+    const note = document.getElementById('userNote').value.trim();
+    const isGift = document.getElementById('isGift').checked;
+    const product = document.getElementById('modalTitle').innerText;
+
+    if (!name || !phone || !address) {
+        alert("Сураныч, бардык талааларды толтуруңуз!");
+        return;
+    }
+
+    let finalSum = isDelivery ? currentTotal + 150 : currentTotal;
+    const deliveryType = isDelivery ? "Доставка" : "Самовывоз";
+
+    // Билдирүүнүн башы жана негизги маалыматтар
+    let message = `🚀 *ЖАҢЫ ЗАКАЗ (🍓 SSMOD)*\n`;
+    message += `━━━━━━━━━━━━━━━\n`;
+    message += `👤 *Аты:* ${name}\n`;
+    message += `📞 *Телефон:* ${phone}\n`;
+    message += `📦 *Топтом:* ${product}\n`;
+    message += `💰 *Сумма:* ${finalSum} сом\n`;
+    message += `📍 *Дарек/Түрү:* ${address} (${deliveryType})\n`;
+    message += `🕒 *Убакыт:* ${time}\n`;
+
+    // Эгер белек катары белгиленсе гана чыгат
+    if (isGift) {
+        message += `🎁 *Белек:* Ооба (Анонимдүү)\n`;
+    }
+
+    // Төлөм ыкмасы
+    const payText = (paymentMethod === 'cash') ? "Наличка" : "МБанк";
+    message += `💳 *Төлөм:* ${payText}\n`;
+
+    // Заметка жазылса гана чыгат
+    if (note) {
+        message += `📝 *Кошумча:* ${note}\n`;
+    }
+
+    // ЭҢ АСТЫНА: МБанк тандалса гана кошулат
+    if (paymentMethod === 'mbank') {
+        message += `\n✅ *МБанк чекти азыр тиркейм!*`;
+    }
+
+    const btn = document.getElementById('mainSendBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ЖӨНӨТҮЛҮҮДӨ...';
+
+    const waUrl = `https://wa.me/996995519951?text=${encodeURIComponent(message)}`;
+
+    fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            chat_id: TG_CHAT_ID,
+            text: message,
+            parse_mode: "Markdown"
+        })
+    })
+    .then(() => {
+        window.open(waUrl, '_blank');
+        btn.innerHTML = '<i class="fas fa-check"></i> ЖӨНӨТҮЛДҮ!';
+        setTimeout(() => { location.reload(); }, 1500);
+    })
+    .catch(() => {
+        window.open(waUrl, '_blank');
+        location.reload();
+    });
+}
 
 function removeFromCart(id) {
-    const lang = localStorage.getItem('selectedLanguage') || 'ky';
-    const msg = langData[lang === 'eng' ? 'en' : lang].del_confirm;
-    if(confirm(msg)) {
+    if(confirm("Өчүрүлсүнбү?")) {
         fetch(`/cart/remove/${id}/`).then(() => window.location.reload());
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    updateUI();
+    setInterval(updateUI, 2000);
+    AOS.init({ duration: 1000, once: true });
+});
 </script>
 {% endblock %}
