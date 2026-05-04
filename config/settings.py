@@ -71,6 +71,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # --- МААЛЫМАТ БАЗАСЫ (DATABASE) ---
 # Бул жерде Render'деги PostgreSQL автоматтык түрдө туташат.
 # Эгер DATABASE_URL жок болсо (локалдык компьютерде), SQLite колдонулат.
+# --- МААЛЫМАТ БАЗАСЫ ---
 DATABASES = {
     'default': dj_database_url.config(
         default='sqlite:///db.sqlite3',
@@ -78,6 +79,10 @@ DATABASES = {
         ssl_require=not DEBUG  # Продакшнда SSL талап кылынат
     )
 }
+
+# Бул жерде өзүнчө, DATABASES блогунан сыртта болушу шарт:
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 
 # --- ТИЛ ЖАНА УБАКЫТ ---
 LANGUAGE_CODE = 'ru-ru'
@@ -94,11 +99,14 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # --- CLOUDINARY ЖӨНДӨӨЛӨРҮ (Медиа файлдар өчпөшү үчүн) ---
+# --- CLOUDINARY ЖӨНДӨӨЛӨРҮ (Медиа файлдар коопсуз HTTPS аркылуу берилиши үчүн) ---
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME', 'dtuyalp6m'),
     'API_KEY': os.environ.get('CLOUDINARY_API_KEY', '636667862685854'),
-    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', 'PgRp9Z7dBhdkoVTk0K1sa1I1390')
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', 'PgRp9Z7dBhdkoVTk0K1sa1I1390'),
+    'SECURE': True,  # Бул сап Телеграмда сүрөттөрдүн көрүнүшүн камсыз кылат
 }
+
 
 # Сүрөттөрдү жана файлдарды сактоочу негизги кызмат
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
