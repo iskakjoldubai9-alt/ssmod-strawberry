@@ -6,11 +6,14 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
 
 <style>
+    /* Стильдер өзгөрүүсүз калат */
     :root {
         --accent-rose: #ff4d6d;
         --soft-gold: #d4af37;
         --glass-bg: rgba(255, 255, 255, 0.05);
     }
+
+    .seo-hidden { display: none; }
 
     .hero-section {
         min-height: 85vh;
@@ -72,8 +75,94 @@
         border-left: 2px solid var(--accent-rose);
         padding-left: 15px;
     }
+.order-btn-glass {
+    text-decoration: none;
+    padding: 16px 45px;
+    /* Назик тунук фон - караңгыда да, жарыкта да сонун көрүнөт */
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
 
-    /* ВИДЕО ЖАНА ГЛАСС КАРТА */
+    color: var(--text);
+    border-radius: 24px; /* Заманбап тегеректелген бурчтар */
+    font-weight: 600;
+    display: inline-block;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+
+    /* Көрүнөр-көрүнбөс назик чекеси */
+    border: 1px solid rgba(255, 255, 255, 0.25);
+
+    /* Көп катмарлуу жумшак көлөкө */
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.03),
+        inset 0 0 15px rgba(255, 255, 255, 0.08);
+
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 1px;
+
+    /* "Дем алган" назик анимация */
+    animation: luxuryGlow 4s infinite ease-in-out;
+}
+
+/* Баскычтын үстүнөн аккан жибектей жылтырак нур */
+.order-btn-glass::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.4),
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
+    transition: 0.8s;
+}
+
+.order-btn-glass:hover::before {
+    left: 150%;
+}
+
+.order-btn-glass:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-6px) scale(1.04); /* Назик көтөрүлүү */
+    border-color: rgba(255, 77, 109, 0.6);
+    color: #ff4d6d; /* SSMOD негизги түсү */
+
+    /* Тийгенде пайда болгон жумшак нур */
+    box-shadow:
+        0 20px 40px rgba(255, 77, 109, 0.15),
+        0 0 15px rgba(255, 77, 109, 0.1);
+}
+
+/* Түн режими үчүн автоматтык назик жөндөө */
+[data-theme='dark'] .order-btn-glass {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.3);
+}
+
+/* Өтө назик жана жай пульсация (Luxury Glow) */
+@keyframes luxuryGlow {
+    0% {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03), inset 0 0 5px rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.25);
+    }
+    50% {
+        /* Ортосунда назик кызгылт нур чачат */
+        box-shadow: 0 10px 40px rgba(255, 77, 109, 0.1), inset 0 0 20px rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 77, 109, 0.4);
+    }
+    100% {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03), inset 0 0 5px rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.25);
+    }
+}
     .video-wrapper { flex: 0.7; display: flex; justify-content: center; align-items: center; }
 
     .glass-card {
@@ -93,22 +182,12 @@
         height: auto;
         border-radius: 22px;
         display: block;
-        background: #fff5f7; /* Видео ачылганча назик фон */
-        opacity: 0; /* Башында көрүнбөйт */
+        opacity: 0;
         transition: opacity 1s ease-in-out;
         object-fit: cover;
     }
 
-    /* Видео даяр болгондо иштеген класс */
-    .video-loaded {
-        opacity: 1;
-    }
-
-    .glass-card:hover {
-        transform: translateY(-10px) scale(1.02);
-        border-color: var(--accent-rose);
-        box-shadow: 0 30px 60px rgba(255, 77, 109, 0.2);
-    }
+    .video-loaded { opacity: 1; }
 
     .blob {
         position: absolute;
@@ -127,6 +206,12 @@
     }
 </style>
 
+<!-- SEO үчүн жашыруун текст -->
+<div class="seo-hidden">
+    <h2>Клубника в шоколаде Ош жана Бишкек - Lux.kg</h2>
+    <p>Биз Ош жана Бишкек шаарларында эң даамдуу клубникаларды жеткиребиз.</p>
+</div>
+
 <section class="hero-section">
     <div class="blob" style="width: 250px; height: 250px; background: var(--accent-rose); right: 10%; top: 15%;"></div>
     <div class="blob" style="width: 180px; height: 180px; background: var(--soft-gold); left: 10%; bottom: 20%;"></div>
@@ -137,24 +222,18 @@
                 <span>●</span> SSMOD Strawberry Art
             </div>
             <h1 data-lang-key="hero_title">Бельгия шоколады <br>менен <em>өзгөчө белек</em></h1>
-            <p data-lang-key="hero_desc">Биз ар бир кулпунайды сүйүү менен даярдайбыз. Жаңы мөмөлөр жана премиум шоколад — сиздин жакындарыңыз үчүн эң сонун тандоо.</p>
+            <!-- Бул жерге шаарлар кошулду -->
+            <p data-lang-key="hero_desc">Биз ар бир кулпунайды сүйүү менен даярдайбыз. Жаңы мөмөлөр жана премиум шоколад — Ош жана Бишкек шаарларында сиздин жакындарыңыз үчүн эң сонун тандоо.</p>
 
-            <a href="{% url 'price' %}" class="order-btn" style="text-decoration: none; padding: 16px 35px; background: var(--text); color: var(--bg); border-radius: 12px; font-weight: 600; display: inline-block; transition: 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.1);" data-lang-key="hero_btn">
-                Заказ берүү →
-            </a>
+            <a href="{% url 'price' %}" class="order-btn-glass" data-lang-key="hero_btn">
+    Заказ берүү →
+</a>
         </div>
 
         <div class="video-wrapper" data-aos="fade-left" data-aos-delay="300">
             <div class="glass-card">
-                <video class="strawberry-video"
-                       id="heroVideo"
-                       autoplay
-                       muted
-                       loop
-                       playsinline
-                       preload="auto">
+                <video class="strawberry-video" id="heroVideo" autoplay muted loop playsinline preload="auto">
                     <source src="{% static 'videos/strawberry_360.mp4' %}" type="video/mp4">
-                    Видеону браузер колдобойт.
                 </video>
             </div>
         </div>
@@ -163,86 +242,50 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 <script>
-// --- 🌍 КОТОРМОЛОР СӨЗДҮГҮ ---
 const homeTranslations = {
     ky: {
         hero_title: 'Бельгия шоколады <br>менен <em>өзгөчө белек</em>',
-        hero_desc: 'Биз ар бир кулпунайды сүйүү менен даярдайбыз. Жаңы мөмөлөр жана премиум шоколад — сиздин жакындарыңыз үчүн эң сонун тандоо.',
+        hero_desc: 'Биз ар бир кулпунайды сүйүү менен даярдайбыз. Жаңы мөмөлөр жана премиум шоколад — Ош жана Бишкек шаарларында сиздин жакындарыңыз үчүн эң сонун тандоо.',
         hero_btn: 'Заказ берүү →'
     },
     ru: {
         hero_title: 'Бельгийский шоколад <br>— <em>особенный подарок</em>',
-        hero_desc: 'Мы готовим каждую клубнику с любовью. Свежие ягоды и премиальный шоколад — идеальный выбор для ваших близких.',
+        hero_desc: 'Мы готовим каждую клубнику с любовью. Свежие ягоды и премиальный шоколад — идеальный выбор в Оше и Бишкеке для ваших близких.',
         hero_btn: 'Заказать →'
     },
     en: {
         hero_title: 'Belgian Chocolate <br>— <em>A Special Gift</em>',
-        hero_desc: 'We prepare every strawberry with love. Fresh berries and premium chocolate — the perfect choice for your loved ones.',
+        hero_desc: 'We prepare every strawberry with love. Fresh berries and premium chocolate — the perfect choice in Osh and Bishkek for your loved ones.',
         hero_btn: 'Order Now →'
     }
 };
 
 function updateHomeLanguage() {
-    // localStorage'дан тилди алуу (эгер жок болсо 'ky' дефолт болот)
     let lang = localStorage.getItem('selectedLanguage');
-
-    // Эгер сенин набарыңда 'en' эмес 'eng' деп сакталса, аны оңдоп коёбуз
     if (lang === 'eng') lang = 'en';
     if (!lang) lang = 'ky';
-
     const t = homeTranslations[lang];
-
     if (t) {
         document.querySelectorAll('[data-lang-key]').forEach(el => {
             const key = el.getAttribute('data-lang-key');
-            if (t[key]) {
-                el.innerHTML = t[key];
-            }
+            if (t[key]) { el.innerHTML = t[key]; }
         });
     }
 }
 
-// Тил алмашса дароо иштетүү
-window.addEventListener('storage', (e) => {
-    if (e.key === 'selectedLanguage') {
-        updateHomeLanguage();
-    }
-});
-
-// Башка барактардан тил алмашканда да иштеши үчүн
-window.addEventListener('languageChanged', updateHomeLanguage);
-
-// Барак жаңыланганда же ачылганда иштетүү
-document.addEventListener('DOMContentLoaded', updateHomeLanguage);
-
-// Текшерүү үчүн (ар бир секунд сайын)
-setInterval(updateHomeLanguage, 1000);
-
-window.addEventListener('languageChanged', updateHomeLanguage);
-setInterval(updateHomeLanguage, 1000);
-
 document.addEventListener('DOMContentLoaded', function() {
     updateHomeLanguage();
     AOS.init({ duration: 1000, once: true });
-
     const video = document.getElementById('heroVideo');
-
     if (video) {
-        // 1. Видео толук жүктөлгөндө же ойноого даяр болгондо ишке кирет
-        video.addEventListener('loadeddata', function() {
-            video.classList.add('video-loaded');
-        });
-
-        // 2. Эгер видео кеште (cache) бар болсо дароо көрсөтүү
-        if (video.readyState >= 3) {
-            video.classList.add('video-loaded');
-        }
-
-        // 3. Мажбурлап ойнотуу (Кээ бир браузерлер үчүн)
-        video.play().catch(error => {
-            console.log("Авто-ойнотуу токтотулду, колдонуучунун аракети күтүлүүдө.");
-        });
+        video.addEventListener('loadeddata', function() { video.classList.add('video-loaded'); });
+        if (video.readyState >= 3) { video.classList.add('video-loaded'); }
+        video.play().catch(e => console.log("Video auto-play blocked"));
     }
 });
+
+window.addEventListener('storage', updateHomeLanguage);
+window.addEventListener('languageChanged', updateHomeLanguage);
+setInterval(updateHomeLanguage, 1000);
 </script>
 {% endblock %}

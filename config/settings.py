@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-a$k7$&_rpi(heh+=a=#!e9@q7*^!j+fj-q&!jiolbzgc-)4k+y')
 
 # Render'де DEBUG режими демейде False болушу керек
-DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+DEBUG=False
 
 ALLOWED_HOSTS = ['*']  # Render'дин дарегин же '*' калтырыңыз
 
