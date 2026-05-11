@@ -7,51 +7,65 @@
     <title>{% block title %}SSMOD | Luxury Strawberry{% endblock %}</title>
     <meta name="google-site-verification" content="google46a46ad5f8267878" />
 
-<link rel="icon" href="{% static 'images/favicon.png' %}" type="image/png">
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1299230302324650');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1299230302324650&ev=PageView&noscript=1"/></noscript>
 
+    <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <style>
-        /* Корзинанын менюдагы стили */
-.cart-nav-link {
-    position: relative;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border: 1px solid var(--border);
-    border-radius: 50%;
-    transition: 0.3s;
-    margin-right: 5px;
-}
+        /* Корзинанын менюдагы фстили */
+        .cart-nav-link {
+            position: relative;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            transition: 0.3s;
+            margin-right: 5px;
+        }
 
-.cart-icon {
-    font-size: 1.1rem;
-}
+        .cart-icon {
+            font-size: 1.1rem;
+        }
 
-.cart-badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: var(--accent); /* Сиздин кызгылт түсүңүз */
-    color: white;
-    font-size: 0.65rem;
-    font-weight: 700;
-    min-width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid var(--bg);
-}
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--accent); /* Сиздин кызгылт түсүңүз */
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 700;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg);
+        }
 
-.cart-nav-link:hover {
-    border-color: var(--accent);
-    transform: translateY(-2px);
-}
+        .cart-nav-link:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
         :root {
             --accent: #ff4d6d;
             --bg: #fdfdfd;
@@ -189,143 +203,145 @@
 
         .chat-footer { padding:10px 15px; display:flex; gap:10px; border-top:1px solid var(--border); background: var(--bg); }
         .chat-footer input { flex:1; background:none; border:none; outline:none; color:var(--text); font-size: 0.85rem; }
+
         /* Жаңы меню стилдери */
-.nav-links-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* Шилтемелердин ортосундагы аралык */
-}
+        .nav-links-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Шилтемелердин ортосундагы аралык */
+        }
 
-nav a {
-    text-decoration: none;
-    color: var(--text);
-    font-size: 1.1rem !important; /* Тексттин өлчөмү */
-    font-weight: 500;
-    padding: 12px 15px;
-    border-radius: 12px;
-    transition: 0.3s;
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px !important;
-}
+        nav a {
+            text-decoration: none;
+            color: var(--text);
+            font-size: 1.1rem !important; /* Тексттин өлчөмү */
+            font-weight: 500;
+            padding: 12px 15px;
+            border-radius: 12px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px !important;
+        }
 
-nav a:hover {
-    background: var(--input-bg);
-    transform: translateX(5px);
-}
+        nav a:hover {
+            background: var(--input-bg);
+            transform: translateX(5px);
+        }
 
-.nav-icon {
-    margin-right: 15px;
-    font-size: 1.3rem;
-    width: 30px;
-    text-align: center;
-}
+        .nav-icon {
+            margin-right: 15px;
+            font-size: 1.3rem;
+            width: 30px;
+            text-align: center;
+        }
 
-/* Корзинаны өзгөчө белгилөө */
-.nav-cart-highlight {
-    background: rgba(255, 77, 109, 0.08); /* Кызгылт тус фон */
-    color: var(--accent) !important;
-    font-weight: 700 !important;
-}
+        /* Корзинаны өзгөчө белгилөө */
+        .nav-cart-highlight {
+            background: rgba(255, 77, 109, 0.08); /* Кызгылт тус фон */
+            color: var(--accent) !important;
+            font-weight: 700 !important;
+        }
 
-.nav-cart-count {
-    margin-left: auto;
-    background: var(--accent);
-    color: white;
-    padding: 2px 8px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-}
+        .nav-cart-count {
+            margin-left: auto;
+            background: var(--accent);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
         /* Менюнун ичиндеги Тил жана Тема бөлүмү */
-.nav-settings {
-    margin-top: 30px;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 10px 15px;
-    background: var(--input-bg);
-    border-radius: 15px;
-    justify-content: space-around;
-}
+        .nav-settings {
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 10px 15px;
+            background: var(--input-bg);
+            border-radius: 15px;
+            justify-content: space-around;
+        }
 
-.nav-settings .lang-btn,
-.nav-settings .theme-switch {
-    border: none;
-    background: transparent;
-    font-size: 0.9rem;
-    font-weight: 700;
-    cursor: pointer;
-    color: var(--text);
-}
+        .nav-settings .lang-btn,
+        .nav-settings .theme-switch {
+            border: none;
+            background: transparent;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            color: var(--text);
+        }
 
-/* Header баскычтарын жеңилдетүү */
-.menu-btn {
-    border: none !important; /* Рамканы өчүрдүк */
-    background: var(--input-bg);
-    padding: 10px 20px;
-    border-radius: 10px;
-    letter-spacing: 1px;
-    font-size: 0.75rem;
-}
+        /* Header баскычтарын жеңилдетүү */
+        .menu-btn {
+            border: none !important; /* Рамканы өчүрдүк */
+            background: var(--input-bg);
+            padding: 10px 20px;
+            border-radius: 10px;
+            letter-spacing: 1px;
+            font-size: 0.75rem;
+        }
 
-.cart-nav-link {
-    border: none !important; /* Тегерек рамканы өчүрдүк */
-}
+        .cart-nav-link {
+            border: none !important; /* Тегерек рамканы өчүрдүк */
+        }
 
-.cart-badge {
-    top: -8px;
-    right: -8px;
-    background: var(--accent);
-    box-shadow: 0 2px 10px rgba(255, 77, 109, 0.4);
-}
+        .cart-badge {
+            top: -8px;
+            right: -8px;
+            background: var(--accent);
+            box-shadow: 0 2px 10px rgba(255, 77, 109, 0.4);
+        }
         .lang-dropdown {
-    position: relative;
-    display: inline-block;
-}
+            position: relative;
+            display: inline-block;
+        }
 
-.lang-btn-main {
-    background: var(--input-bg);
-    border: none;
-    padding: 8px 12px;
-    border-radius: 10px;
-    font-weight: 700;
-    cursor: pointer;
-    color: var(--text);
-    min-width: 45px;
-}
+        .lang-btn-main {
+            background: var(--input-bg);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            color: var(--text);
+            min-width: 45px;
+        }
 
-.lang-list {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: var(--nav-bg);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    margin-top: 5px;
-    z-index: 1001;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    overflow: hidden;
-}
+        .lang-list {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: var(--nav-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-top: 5px;
+            z-index: 1001;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
 
-.lang-list div {
-    padding: 8px 15px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.8rem;
-    transition: 0.3s;
-    color: var(--text);
-}
+        .lang-list div {
+            padding: 8px 15px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: 0.3s;
+            color: var(--text);
+        }
 
-.lang-list div:hover {
-    background: var(--accent);
-    color: white;
-}
+        .lang-list div:hover {
+            background: var(--accent);
+            color: white;
+        }
 
-.lang-list.show {
-    display: block;
-}
+        .lang-list.show {
+            display: block;
+        }
     </style>
 </head>
 <body id="body" data-lang="ky">
@@ -382,12 +398,10 @@ nav a:hover {
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 15px 0;">
 
        {% if user.is_authenticated %}
-    <!-- Колдонуучу кирген болсо, Профиль баракчасын көрсөтөбүз -->
     <a href="{% url 'accounts:profile' %}" style="background: rgba(255, 77, 109, 0.05); color: var(--accent); border-radius: 12px;">
         <span class="nav-icon">👤</span> Профиль
     </a>
 {% else %}
-    <!-- Колдонуучу кире элек болсо, Кирүү баракчасын көрсөтөбүз -->
     <a href="{% url 'accounts:login' %}">
         <span class="nav-icon">🔐</span> Кирүү / Катталуу
     </a>
@@ -397,7 +411,6 @@ nav a:hover {
         <a href="{% url 'cart_detail' %}" class="nav-cart-highlight">
             <span class="nav-icon">🛒</span> Корзина
             <span class="nav-cart-count">({{ cart_count }})</span>
-
         </a>
 
 </nav>
@@ -591,6 +604,15 @@ nav a:hover {
                 return;
             }
             if (data.status === 'ok') {
+                // 2. META PIXEL ADD TO CART EVENT (КОШУЛДУ)
+                if(typeof fbq !== 'undefined') {
+                    fbq('track', 'AddToCart', {
+                        content_ids: [productId],
+                        content_type: 'product',
+                        currency: 'KGS'
+                    });
+                }
+
                 button.innerHTML = '<span style="color: #2ecc71; font-size: 1.2rem; font-weight: bold;">✅</span>';
                 button.style.pointerEvents = 'none';
                 const cartBadges = document.querySelectorAll('.cart-badge, .nav-cart-count');
