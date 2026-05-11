@@ -12,7 +12,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-default-key-for-local
 # Render'де дайыма False болушу керек. Локалдык режим үчүн Environment Variable колдонсоңуз болот.
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['*'] # Продакшнда ['ssmod-strawberry-1.onrender.com', 'lux.kg'] кылуу сунушталат
+ALLOWED_HOSTS = ['ssmod-strawberry-1.onrender.com', 'lux.kg', 'www.lux.kg', '127.0.0.1', 'localhost']
 
 # --- ТИРКЕМЕЛЕР ---
 INSTALLED_APPS = [
@@ -49,7 +49,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [BASE_DIR / 'templates', BASE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -135,3 +135,7 @@ CSRF_TRUSTED_ORIGINS = [
     'https://www.lux.kg',
     'https://ssmod-strawberry-1.onrender.com'
 ]
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
