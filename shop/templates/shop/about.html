@@ -512,7 +512,7 @@
         <div class="swiper author-swiper" id="swiper-iskak">
             <div class="swiper-wrapper">
                 <div class="swiper-slide">
-    <img src="https://res.cloudinary.com/dffggv57z/image/upload/v1778873479/isi1_nlybzq.jpg" alt="Товардын сүрөтү" style="width: 100%; max-width: 300px; border-radius: 8px;">
+    <img src="https://res.cloudinary.com/dffggv57z/image/upload/v1778873479/isi1_nlybzq.jpg" alt="Искак" style="width: 100%; max-width: 300px; border-radius: 8px;">
 </div>
 
             </div>
@@ -523,7 +523,8 @@
             <div class="swiper-wrapper">
                 <div class="swiper-slide"><img src="https://res.cloudinary.com/dffggv57z/image/upload/v1778873879/shumkar_o7bufn.jpg"
          alt="Шумкар"
-         style="width: 200px; height: auto; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);"></div>
+         style="width: 100%; max-width: 300px; border-radius: 8px;">
+                </div>
             </div>
         </div>
 
@@ -818,11 +819,11 @@
         this.classList.toggle('active'); // Сүрөттү басса социалдык тармактарды ачат/жабат
     });
 
-    // Манжанын ылдамдыгына жараша убакытты эсептөө коэффициенттери
+    // Манжанын ылдамдыгына жараша убакытты эсептөө коэффициенттери (Жеңил жана жумшак кылынды)
     function getCustomDuration(diff, timeSpan) {
         let speed = Math.abs(diff / timeSpan); // пиксель/миллисекунд
-        // Жай сүрсө 1.4 секундга чейин жайлайт, бат сүрсө 0.4 секундга чейин тездейт
-        return Math.max(400, Math.min(1400, 900 / speed));
+        // Минималдуу убакыт 350мс (бат), максималдуу 850мс (жай) — бул убакыт көзгө абдан жагымдуу көрүнөт
+        return Math.max(350, Math.min(850, 600 / (speed + 0.2)));
     }
 
     // КОЛ МЕНЕН СҮРГӨНДӨ ТОКТОТУУ ЖАНА ДИНАМИКАЛЫК ӨТҮҮ
@@ -836,7 +837,8 @@
         let timeSpan = Date.now() - swiperIskak.touchEventsData.touchStartTime;
         let diff = touch.diff;
 
-        if (swiperIskak.isEnd && diff < -40) {
+        // Сезимталдык -40тан -20го түшүрүлдү (кичине эле сүрсө дароо сезет)
+        if (swiperIskak.isEnd && diff < -20) {
             let duration = getCustomDuration(diff, timeSpan);
             updateAuthor(1, duration);
         }
@@ -851,7 +853,8 @@
         let timeSpan = Date.now() - swiperShumkar.touchEventsData.touchStartTime;
         let diff = touch.diff;
 
-        if (swiperShumkar.isBeginning && diff > 40) {
+        // Сезимталдык 40тан 20га түшүрүлдү (жеңил өтөт)
+        if (swiperShumkar.isBeginning && diff > 20) {
             let duration = getCustomDuration(diff, timeSpan);
             updateAuthor(0, duration);
         }
