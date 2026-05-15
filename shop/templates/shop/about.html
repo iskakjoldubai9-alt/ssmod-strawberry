@@ -505,38 +505,51 @@
             </div>
         </div>
 
-        <div class="author-card" data-aos="fade-up" data-aos-duration="1200">
-            <div class="author-image-wrapper" id="authorWrapper">
-                <div class="swiper author-swiper">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide"><img src="{% static 'images/isi1.jpg' %}" style="width:100%; height:100%; object-fit:cover;" alt="Founder 1"></div>
-                        <div class="swiper-slide"><img src="{% static 'images/isi2.jpg' %}" style="width:100%; height:100%; object-fit:cover;" alt="Founder 2"></div>
-                        <div class="swiper-slide"><img src="{% static 'images/isi3.jpg' %}" style="width:100%; height:100%; object-fit:cover;" alt="Founder 3"></div>
-                    </div>
-                </div>
+       <div class="author-card" data-aos="fade-up" data-aos-duration="1200" id="mainAuthorCard">
+    <div class="author-image-wrapper" id="authorWrapper">
 
-                <div class="glass-social-bottom">
-                    <a href="https://www.instagram.com/_i_99_k_?igsh=MXFkN3BjMHRoMGR2eA==" class="glass-item" target="_blank"><i class="fab fa-instagram"></i></a>
-                    <a href="https://wa.me/996553956070" class="glass-item" target="_blank"><i class="fab fa-whatsapp"></i></a>
-                    <a href="https://www.facebook.com/share/18Yy1hB642/" class="glass-item" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                </div>
-                <div class="swipe-hint" data-lang-key="about_swipe_hint">← СҮЙРӨҢҮЗ ЖЕ БАСЫҢЫЗ →</div>
-            </div>
+        <!-- 1-Автордун сүрөттөрү (Искак) -->
+        <div class="swiper author-swiper" id="swiper-iskak">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+    <img src="https://res.cloudinary.com/dffggv57z/image/upload/v1778873479/isi1_nlybzq.jpg" alt="Товардын сүрөтү" style="width: 100%; max-width: 300px; border-radius: 8px;">
+</div>
 
-            <div class="author-info">
-                <div class="founder-badge" data-aos="fade-left" data-aos-delay="200" data-lang-key="about_founder_badge">Негиздөөчү</div>
-                <h2 data-aos="fade-left" data-aos-delay="400" style="font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: 2px; line-height: 1.2; margin-bottom: 25px;">
-                    <span style="font-size: 0.75em; text-transform: uppercase; color: var(--text); opacity: 0.85;" data-lang-key="about_f_lastname">Жолдубай уулу</span> <br>
-                    <span style="font-family: 'Playfair Display', serif; font-style: italic; color: var(--accent); font-size: 1.3em;" data-lang-key="about_f_firstname">Искак</span>
-                </h2>
-                <div class="author-quote" data-aos="fade-left" data-aos-delay="600" data-lang-key="about_quote">
-                    "Менин максатым — ар бир кардардын эң баалуу көз ирмемдеринде гармонияны тартуулоо."
-                </div>
-                <p style="opacity: 0.85; line-height: 1.9; font-size: 1.05rem;" data-aos="fade-left" data-aos-delay="800" data-lang-key="about_author_p">
-                    SSMOD Studio 2024-жылы негизделгенден бери, биз ар бир заказга автордук мамиле жасап келебиз. Сезимдерди шоколад менен жеткирүү — биздин эң негизги миссиябыз.
-                </p>
             </div>
         </div>
+
+        <!-- 2-Автордун сүрөттөрү (Шумкарбек) -->
+        <div class="swiper author-swiper" id="swiper-shumkar" style="display: none;">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide"><img src="https://res.cloudinary.com/dffggv57z/image/upload/v1778873879/shumkar_o7bufn.jpg"
+         alt="Шумкар"
+         style="width: 200px; height: auto; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);"></div>
+            </div>
+        </div>
+
+        <!-- Социалдык тармактардын шилтемелери (ID'лер кошулду) -->
+        <div class="glass-social-bottom" id="dynamicSocials">
+            <a href="#" class="glass-item" target="_blank" id="link-insta"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="glass-item" target="_blank" id="link-wa"><i class="fab fa-whatsapp"></i></a>
+            <a href="#" class="glass-item" target="_blank" id="link-fb"><i class="fab fa-facebook-f"></i></a>
+        </div>
+        <div class="swipe-hint" data-lang-key="about_swipe_hint">← СҮЙРӨҢҮЗ ЖЕ БАСЫҢЫЗ →</div>
+    </div>
+
+    <div class="author-info">
+        <div class="founder-badge" data-lang-key="about_founder_badge">Негиздөөчү</div>
+        <h2 style="font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: 2px; line-height: 1.2; margin-bottom: 25px;">
+            <span id="authorLastName" style="font-size: 0.75em; text-transform: uppercase; color: var(--text); opacity: 0.85;">Жолдубай уулу</span> <br>
+            <span id="authorFirstName" style="font-family: 'Playfair Display', serif; font-style: italic; color: var(--accent); font-size: 1.3em;">Искак</span>
+        </h2>
+        <div class="author-quote" id="authorQuote">
+            "Менин максатым — ар бир кардардын эң баалуу көз ирмемдеринде гармонияны тартуулоо."
+        </div>
+        <p id="authorDesc" style="opacity: 0.85; line-height: 1.9; font-size: 1.05rem;">
+            SSMOD Studio 2024-жылы негизделгенден бери, биз ар бир заказга автордук мамиле жасап келебиз.
+        </p>
+    </div>
+</div>
 
         <div class="philosophy-box" data-aos="zoom-in-up">
             <blockquote style="font-family: 'Playfair Display', serif; font-size: clamp(1.6rem, 5vw, 2.5rem); font-style: italic; margin: 0;" data-lang-key="about_final_quote">
@@ -694,27 +707,155 @@
     window.addEventListener('languageChanged', updateAboutLanguage);
     setInterval(updateAboutLanguage, 500); // Кошумча текшерүү
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // Баштапкы жүктөө
-        updateAboutLanguage();
+ document.addEventListener('DOMContentLoaded', function() {
+    const authors = [
+        {
+            firstName: "Искак",
+            lastName: "Жолдубай уулу",
+            quote: '"Менин максатым — ар бир кардардын эң баалуу көз ирмемдеринде гармонияны тартуулоо."',
+            desc: "SSMOD Studio 2024-жылы негизделгенден бери, биз ар бир заказга автордук мамиле жасап келебиз.",
+            swiperId: "swiper-iskak",
+            socials: {
+                insta: "https://www.instagram.com/i_235_k?igsh=MXFkN3BjMHRoMGR2eA==",
+                wa: "https://wa.me/996553956070",
+                fb: "https://www.facebook.com/share/18Yy1hB642/"
+            }
+        },
+        {
+            firstName: "Шумкарбек",
+            lastName: "Салиев",
+            quote: '"Биз үчүн сапат жана эстетика — бул жөн гана сөз эмес, бул жашоо образы."',
+            desc: "Биз ар бир деталга өзгөчө маани берип, кардарларыбызга премиум деңгээлдеги кызмат көрсөтүүнү улантабыз.",
+            swiperId: "swiper-shumkar",
+            socials: {
+                insta: "https://www.instagram.com/ssalievv.11?igsh=dDhyYXpkcnRmeWxn&utm_source=qr",
+                wa: "https://wa.me/996554146437",
+                fb: "https://www.facebook.com/shumkar_fb"
+            }
+        }
+    ];
 
-        // AOS жана Swiper инициализациясы
-        AOS.init({
-            duration: 800,
-            once: true,
-            easing: 'ease-out-quad',
-            disable: false // Мажбурлап иштетүү
-        });
+    let currentIndex = 0;
+    let isPaused = false;
+    let autoSwitchTimer;
 
-        new Swiper('.author-swiper', { loop: true, grabCursor: true, speed: 800 });
+    // Слайдерлерди так өтүү үчүн конфигурациялоо (loop өчүрүлдү, свайп иштеши үчүн)
+    const swiperIskak = new Swiper('#swiper-iskak', { loop: false, grabCursor: true, speed: 600 });
+    const swiperShumkar = new Swiper('#swiper-shumkar', { loop: false, grabCursor: true, speed: 600 });
 
-        const authorWrapper = document.getElementById('authorWrapper');
-        if (authorWrapper) {
-            authorWrapper.addEventListener('click', function(e) {
-                if (e.target.closest('.glass-item')) return;
-                this.classList.toggle('active');
-            });
+    const wrapper = document.getElementById('authorWrapper');
+    const mainCard = document.getElementById('mainAuthorCard'); // Башкы карточкаңыздын ID дареги
+
+    function updateAuthor(index, duration = 600) {
+        if (currentIndex === index) return;
+
+        currentIndex = index;
+        const data = authors[index];
+
+        // Картага динамикалык өтүү убактысын берүү жана CSS классты кошуу
+        if (mainCard) {
+            mainCard.style.transition = `all ${duration / 1000}s cubic-bezier(0.25, 1, 0.5, 1)`;
+            mainCard.classList.add('switching');
+        }
+
+        setTimeout(() => {
+            // Тексттерди жаңылоо
+            document.getElementById('authorFirstName').innerText = data.firstName;
+            document.getElementById('authorLastName').innerText = data.lastName;
+            document.getElementById('authorQuote').innerText = data.quote;
+            document.getElementById('authorDesc').innerText = data.desc;
+
+            // Шилтемелерди жаңылоо
+            document.getElementById('link-insta').href = data.socials.insta;
+            document.getElementById('link-wa').href = data.socials.wa;
+            document.getElementById('link-fb').href = data.socials.fb;
+
+            // Слайдерлерди алмаштыруу
+            if (data.swiperId === "swiper-iskak") {
+                document.getElementById('swiper-iskak').style.display = 'block';
+                document.getElementById('swiper-shumkar').style.display = 'none';
+                swiperIskak.update();
+                swiperIskak.slideTo(0, 0);
+            } else {
+                document.getElementById('swiper-iskak').style.display = 'none';
+                document.getElementById('swiper-shumkar').style.display = 'block';
+                swiperShumkar.update();
+                swiperShumkar.slideTo(0, 0);
+            }
+
+            // Анимацияны бүтүрүү (Кайра жумшак пайда кылуу)
+            if (mainCard) {
+                mainCard.classList.remove('switching');
+            }
+        }, duration / 2);
+    }
+
+    // 5 секунддук автоматтык таймер функциясы
+    function startTimer() {
+        autoSwitchTimer = setInterval(() => {
+            if (!isPaused) {
+                let nextIndex = (currentIndex + 1) % authors.length;
+                updateAuthor(nextIndex, 800); // Автоматтык түрдө абдан жумшак өтөт
+            }
+        }, 5000);
+    }
+
+    // Баштапкы жүктөө
+    updateAuthor(0);
+    startTimer();
+
+    // Автоматтык алмашууну токтотуучу башкы функция
+    function stopAutoplay() {
+        isPaused = true;
+        clearInterval(autoSwitchTimer);
+    }
+
+    // КОЛ ТИЙГЕНДЕ (БАСКАНДА) ТОКТОТУУ ЛОГИКАСЫ
+    wrapper.addEventListener('click', function(e) {
+        stopAutoplay(); // Каалаган элементти басканда таймер биротоло токтойт
+
+        if (e.target.closest('.glass-item')) return; // Шилтеме болсо, өтүп кетсин
+        this.classList.toggle('active'); // Сүрөттү басса социалдык тармактарды ачат/жабат
+    });
+
+    // Манжанын ылдамдыгына жараша убакытты эсептөө коэффициенттери
+    function getCustomDuration(diff, timeSpan) {
+        let speed = Math.abs(diff / timeSpan); // пиксель/миллисекунд
+        // Жай сүрсө 1.4 секундга чейин жайлайт, бат сүрсө 0.4 секундга чейин тездейт
+        return Math.max(400, Math.min(1400, 900 / speed));
+    }
+
+    // КОЛ МЕНЕН СҮРГӨНДӨ ТОКТОТУУ ЖАНА ДИНАМИКАЛЫК ӨТҮҮ
+
+    // 1. Искактан Шумкарбекке өтүү (Солго сүргөндө)
+    swiperIskak.on('touchEnd', function() {
+        stopAutoplay(); // Кол тийип сүрүлгөндө таймер токтойт
+        wrapper.classList.add('active'); // Байланыш баскычтарын ачык калтыруу
+
+        let touch = swiperIskak.touches;
+        let timeSpan = Date.now() - swiperIskak.touchEventsData.touchStartTime;
+        let diff = touch.diff;
+
+        if (swiperIskak.isEnd && diff < -40) {
+            let duration = getCustomDuration(diff, timeSpan);
+            updateAuthor(1, duration);
         }
     });
+
+    // 2. Шумкарбектен Искакка кайра өтүү (Оңго сүргөндө)
+    swiperShumkar.on('touchEnd', function() {
+        stopAutoplay(); // Кол тийип сүрүлгөндө таймер токтойт
+        wrapper.classList.add('active');
+
+        let touch = swiperShumkar.touches;
+        let timeSpan = Date.now() - swiperShumkar.touchEventsData.touchStartTime;
+        let diff = touch.diff;
+
+        if (swiperShumkar.isBeginning && diff > 40) {
+            let duration = getCustomDuration(diff, timeSpan);
+            updateAuthor(0, duration);
+        }
+    });
+});
 </script>
 {% endblock %}

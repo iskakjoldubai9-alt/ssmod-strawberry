@@ -12,7 +12,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-default-key-for-local
 # Render'де дайыма False болушу керек. Локалдык режим үчүн Environment Variable колдонсоңуз болот.
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['ssmod-strawberry-1.onrender.com', 'lux.kg', 'www.lux.kg', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['*']
 
 # --- ТИРКЕМЕЛЕР ---
 INSTALLED_APPS = [
