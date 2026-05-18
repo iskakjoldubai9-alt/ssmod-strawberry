@@ -342,6 +342,53 @@
         .lang-list.show {
             display: block;
         }
+
+
+        /* КАТЕГОРИЯЛАРДЫН БАСКЫЧТАРЫНЫН СТИЛИ (ЖАҢЫ КОШУЛДУ) */
+        .category-filter-container {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            justify-content: center;
+            padding: 20px 5%;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            scrollbar-width: none; /* Firefox үчүн скроллду жашыруу */
+        }
+
+        .category-filter-container::-webkit-scrollbar {
+            display: none; /* Chrome жана Safari үчүн */
+        }
+
+        @media (max-width: 768px) {
+            .category-filter-container {
+                justify-content: flex-start; /* Мобилдикте солдон оңго сыдырылат */
+            }
+        }
+
+        .filter-btn {
+            padding: 12px 26px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: var(--input-bg);
+            color: var(--text);
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 8px 20px rgba(255, 77, 109, 0.3);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body id="body" data-lang="ky">

@@ -416,9 +416,16 @@
 
 <div class="showcase-wrapper">
     <div class="showcase-header"><h1 data-lang-key="menu_title">Биздин Меню</h1></div>
+    <div class="category-filter-container">
+    <button class="filter-btn active" data-filter="all">Баары</button>
+    <button class="filter-btn" data-filter="flowers">Гүлдөр</button>
+    <button class="filter-btn" data-filter="bears">Мишкалар</button>
+    <button class="filter-btn" data-filter="strawberry">Кулпунайлар</button>
+    <button class="filter-btn" data-filter="boxes">Топтомдор</button>
+</div>
     <div class="royal-grid">
         {% for set in sets %}
-        <div class="royal-card" data-id="{{ set.id }}" data-title="{{ set.title }}" data-price="{{ set.price }}">
+       <div class="royal-card {% if set.category.slug %}{{ set.category.slug }}{% endif %}" data-id="{{ set.id }}" data-title="{{ set.title }}" data-price="{{ set.price }}">
             <div class="like-container">
                 <button class="like-btn {% if set.id in liked_sets %}active{% endif %}"
                         id="like-btn-{{ set.id }}"
@@ -963,5 +970,28 @@ body: JSON.stringify({
     // ... башка маалыматтарыңыз ...
     delivery_time: dTime, // МЫНА УШУЛ ЖЕРГЕ КОШУЛДУ
 })
+    document.addEventListener("DOMContentLoaded", function() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const productCards = document.querySelectorAll('.royal-card');
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+
+            const filterValue = this.getAttribute('data-filter');
+
+            productCards.forEach(card => {
+                if (filterValue === 'all') {
+                    card.style.display = 'block';
+                } else if (card.classList.contains(filterValue)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+});
 </script>
 {% endblock %}

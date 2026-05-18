@@ -1,18 +1,24 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from .models import ProductSet, BackgroundMusic
+from .models import ProductSet, BackgroundMusic, Category  # Category модели кошулду
 
 
-# 1. МУЗЫКА ҮЧҮН АДМИН ПАНЕЛЬ
+# ====================== 📂 1. КАТЕГОРИЯЛАР ҮЧҮН АДМИН ПАНЕЛЬ ======================
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    # Категориянын аты жана анын HTML фильтрдеги коду (slug) көрүнүп турат
+    list_display = ('title', 'slug')
+
+    # Аталышын жазганда slug автоматтык түрдө өзү жазылышы үчүн (ыңгайлуулук үчүн)
+    prepopulated_fields = {'slug': ('title',)}
+
+
+# ====================== 🎵 2. МУЗЫКА ҮЧҮН АДМИН ПАНЕЛЬ ======================
 @admin.register(BackgroundMusic)
 class BackgroundMusicAdmin(admin.ModelAdmin):
-    # Тизмеде аталышы жана активдүүлүгү көрүнөт
     list_display = ('title', 'is_active', 'get_audio_player')
-
-    # Тизмеден эле "is_active" кутучасын басып алмаштырса болот
     list_editable = ('is_active',)
 
-    # Админ панелден музыканы угуп көрүү үчүн плеер
     def get_audio_player(self, obj):
         if obj.audio_file:
             return mark_safe(
@@ -23,24 +29,25 @@ class BackgroundMusicAdmin(admin.ModelAdmin):
     get_audio_player.short_description = "Угуп көрүү"
 
 
-# 2. ПРОДУКЦИЯ ҮЧҮН АДМИН ПАНЕЛЬ (ЛАЙК МЕНЕН ЖАҢЫРТЫЛДЫ)
+# ====================== 🎁 3. ПРОДУКЦИЯ ҮЧҮН АДМИН ПАНЕЛЬ ======================
 @admin.register(ProductSet)
 class ProductSetAdmin(admin.ModelAdmin):
-    # Тизмеге 'likes' талаасы кошулду, эми канча лайк басылганын көрөсүз
-    list_display = ('title', 'price', 'pieces', 'likes', 'get_media_preview')
+    # Тизмеге 'category' кошулду. Эми кайсы категорияда экени дароо көрүнөт жана тизмеден түз эле өзгөртсө болот
+    list_display = ('title', 'category', 'price', 'pieces', 'likes', 'get_media_preview')
 
-    # Лайктарды кокустан өзгөртүп албаш үчүн 'readonly_fields' кылып койдук
+    # Тизмеден эле категорияны заматта алмаштыруу мүмкүнчүлүгү
+    list_editable = ('category',)
+
     readonly_fields = ('likes', 'get_media_preview')
-
-    # Популярдуу товарларды башында көрсөтүү үчүн лайк боюнча иреттөө
     ordering = ('-likes',)
 
-    # Админ панелдин ичиндеги форманын талаалары
+    # Форманын ичине да 'category' талаасы кошулду (тандап киргизүү үчүн)
     fields = (
         'title',
+        'category',  # <--- Ушул жерден тандап киргизесиз
         'pieces',
         'price',
-        'likes',  # Бул жерден да көрүнүп турат
+        'likes',
         'ready_time',
         'image',
         'video',

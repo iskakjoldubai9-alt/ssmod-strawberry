@@ -2,8 +2,33 @@ from django.db import models
 from cloudinary.models import CloudinaryField
 
 
-# ====================== 🎁 ТОПТОМДОР МОДЕЛИ ======================
+# ====================== 📂 КАТЕГОРИЯЛАР МОДЕЛИ (ЖАҢЫ КОШУЛДУ) ======================
+class Category(models.Model):
+    title = models.CharField(max_length=100, verbose_name="Категория аталышы")
+    slug = models.SlugField(
+        max_length=100,
+        unique=True,
+        verbose_name="Slug (HTML фильтр үчүн)"
+    )
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "Категория"
+        verbose_name_plural = "Категориялар"
+
+
+# ====================== 🎁 ТОПТОМДОР МОДЕЛИ (КАТЕГОРИЯ МЕНЕН БАЙЛАНЫШТЫ) ======================
 class ProductSet(models.Model):
+    # Категория талаасы кошулду
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Категориясы"
+    )
     title = models.CharField(max_length=200, verbose_name="Топтомдун аталышы")
     pieces = models.IntegerField(verbose_name="Даана саны")
     price = models.DecimalField(max_digits=10, decimal_places=0, verbose_name="Баасы (сом)")
@@ -41,13 +66,12 @@ class ProductSet(models.Model):
         verbose_name_plural = "Топтомдор"
 
 
-## ====================== 💬 ПИКИРЛЕР МОДЕЛИ (ОҢДОЛДУ) ======================
+## ====================== 💬 ПИКИРЛЕР МОДЕЛИ ======================
 class Review(models.Model):
     name = models.CharField(max_length=100, verbose_name="Кардардын аты")
     message = models.TextField(verbose_name="Пикирдин тексти")
     stars = models.IntegerField(default=5, verbose_name="Жылдыз саны")
 
-    # БУЛ ТАЛААНЫ КОШУҢУЗ:
     image = CloudinaryField(
         folder='reviews/images/',
         blank=True,
@@ -55,7 +79,7 @@ class Review(models.Model):
         verbose_name="Кардардын сүрөтү"
     )
 
-    # Админдин жообу (Эгер мурунку коддо бар болсо)
+    # Админдин жообу
     admin_reply = models.TextField(blank=True, null=True, verbose_name="Админдин жообу")
 
     likes = models.PositiveIntegerField(default=0, verbose_name="Лайктар")
